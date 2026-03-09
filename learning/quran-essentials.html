@@ -1,4 +1,64 @@
-1) QUR'AN ESSENTIALS (15)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Qur'an Essentials - Islamic Questz</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    /* Exact same styles as your master code for a seamless experience */
+    :root {
+      --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b;
+      --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7;
+      --border: #e2e8f0; --shadow: rgba(0,0,0,0.1);
+    }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: var(--bg-color); 
+      margin: 0; 
+      color: var(--text-main); 
+    }
+    .app-card { margin: 0 auto; max-width: 500px; padding: 20px; }
+    .main-btn { 
+      background: var(--card-bg); border: 1px solid var(--border); 
+      padding: 15px; border-radius: 15px; cursor: pointer; 
+      transition: 0.2s; font-weight: 600; color: var(--text-main); 
+      width: 100%; margin-bottom: 10px; text-align: left;
+    }
+    .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .back-btn { 
+      background: none; border: none; color: var(--gold); 
+      font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; 
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+      <div id="modal-icon" style="font-size: 3rem; margin-bottom: 10px;"></div>
+      <h3 id="modal-title" style="font-family: 'Cinzel'; margin-top: 0; color: var(--emerald);"></h3>
+      <p id="modal-message" style="margin-bottom: 25px; line-height: 1.5; color: var(--text-main); white-space: pre-wrap; text-align: left;"></p>
+      <button id="modal-btn" class="main-btn" style="text-align:center; background: var(--emerald); color: white; border: none;">Continue</button>
+    </div>
+  </div>
+
+  <div class="app-card">
+    <button class="back-btn" onclick="window.location.href='../index.html'">← Back to Menu</button>
+    
+    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);">Qur'an Essentials</h2>
+    
+    <div id="quiz-area" style="margin-top: 20px;">
+      </div>
+  </div>
+
+  <script>
+    // 1. Define your questions for this specific category here
+    const PAGE_TITLE = "Qur'an Essentials";
+    const QUESTIONS = 1) QUR'AN ESSENTIALS (15)
      ======================================================= */
   quran_essentials: [
     {
@@ -265,4 +325,78 @@
         e: "Many recite Al‑Baqarah in homes; overall, guidance and protection are in the entire Qur’an.",
         eh: "Bohat se log Al‑Baqarah parhte hain; asl me hidayat aur hifazat poore Quran me hai."
       }
-  ],
+  ];
+
+    let currentIndex = 0;
+
+    // 2. Utility function to show popups
+    function showPopup(title, message, icon, callback) {
+      const modal = document.getElementById('app-modal');
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-message').innerText = message;
+      document.getElementById('modal-icon').innerText = icon || '';
+      modal.classList.remove('hidden');
+      document.getElementById('modal-btn').onclick = () => {
+        modal.classList.add('hidden');
+        if (callback) callback();
+      };
+    }
+
+    // 3. Load the current question onto the screen
+    function loadQuestion() {
+      const qData = QUESTIONS[currentIndex];
+      const area = document.getElementById('quiz-area');
+      
+      let html = `
+        <p style="color:var(--gold); font-weight:600; text-align:center;">Question ${currentIndex + 1} of ${QUESTIONS.length}</p>
+        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px;">
+          <h4 style="margin-top:0; margin-bottom:5px; line-height:1.4;">${qData.q}</h4>
+          <p style="margin:0; font-style:italic; color:var(--emerald); font-size:0.95rem;">${qData.qh || ""}</p>
+        </div>
+        <div id="options-box"></div>
+      `;
+      area.innerHTML = html;
+
+      const optionsBox = document.getElementById('options-box');
+      qData.o.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.className = 'main-btn';
+        btn.innerHTML = `<strong>${opt}</strong>`;
+        btn.onclick = () => checkAnswer(opt, qData);
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    // 4. Check the answer and show the explanation
+    function checkAnswer(selectedOption, qData) {
+      const isCorrect = selectedOption === qData.a;
+      const title = isCorrect ? "Correct! ✨" : "Explanation";
+      const icon = isCorrect ? "✅" : "ℹ️";
+      
+      // Combine English and Hinglish explanations
+      const fullExplanation = (qData.e || "") + (qData.eh ? `\n\n(${qData.eh})` : "");
+
+      showPopup(title, fullExplanation, icon, () => {
+        currentIndex++;
+        if (currentIndex < QUESTIONS.length) {
+          loadQuestion();
+        } else {
+          showPopup("Topic Completed!", "Masha'Allah, you have finished this learning module.", "🎓", () => {
+            window.location.href = '../index.html'; // Send them back to the main app
+          });
+        }
+      });
+    }
+
+    // 5. Start the quiz when the page loads
+    window.onload = () => {
+      document.getElementById('page-title').innerText = PAGE_TITLE;
+      loadQuestion();
+    };
+  </script>
+</body>
+</html>
+
+
+
+
