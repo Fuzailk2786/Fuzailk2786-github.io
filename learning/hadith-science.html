@@ -1,8 +1,184 @@
- hadith_science: [
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hadith Sciences - Islamic Questz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b;
+      --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7;
+      --border: #e2e8f0; --shadow: rgba(0,0,0,0.1);
+    }
+    body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; color: var(--text-main); }
+    .app-card { margin: 0 auto; max-width: 500px; padding: 20px; }
+    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); width: 100%; margin-bottom: 10px; text-align: left; }
+    .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
+    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+    <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+      <div id="modal-icon" style="font-size: 3rem; margin-bottom: 10px;"></div>
+      <h3 id="modal-title" style="font-family: 'Cinzel'; margin-top: 0; color: var(--emerald);"></h3>
+      <p id="modal-message" style="margin-bottom: 25px; line-height: 1.5; color: var(--text-main); white-space: pre-wrap; text-align: left;"></p>
+      <button id="modal-btn" class="main-btn" style="text-align:center; background: var(--emerald); color: white; border: none;">Continue</button>
+    </div>
+  </div>
+
+  <div class="app-card">
+    <button class="back-btn" onclick="window.location.href='../index.html'">← Back to Menu</button>
+    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);">Hadith Sciences</h2>
+    <div id="quiz-area" style="margin-top: 20px;"></div>
+  </div>
+
+  <script>
+    const PAGE_TITLE = "Hadith & Hadith Sciences";
+    const QUESTIONS = [
+      {
+        q: "What does 'Hadith' comprise in Islamic sciences?",
+        qh: "'Hadith' se Islami uloom mein kya murad hoti hai?",
+        o: ["Only law", "Sayings/actions/approvals of the Prophet ﷺ", "Only biography", "Only history"],
+        oh: ["Sirf qanoon", "Nabi ﷺ ke aqwal/af’al/taqreer", "Sirf seerat", "Sirf tareekh"],
+        a: "Sayings/actions/approvals of the Prophet ﷺ",
+        e: "Hadith includes what the Prophet ﷺ said, did, or silently approved.",
+        eh: "Hadith mein Nabi ﷺ ki baatein, a’maal, aur jo aap ne tasdeeq farmayi shamil hota hai."
+      },
+      {
+        q: "What is 'Isnad'?",
+        qh: "'Isnad' kya hota hai?",
+        o: ["Text", "Chain of narrators", "Commentary", "Chapter"],
+        oh: ["Matn", "Rawayat ki sanad", "Sharh", "Baab"],
+        a: "Chain of narrators",
+        e: "Isnad is the chain connecting narrators back to the Prophet ﷺ.",
+        eh: "Isnad rawiyon ki wo zanjeer hai jo Nabi ﷺ tak pohanchti hai."
+      },
+      {
+        q: "What is 'Matn' in Hadith terminology?",
+        qh: "'Matn' se Hadith ke hawale se kya murad hoti hai?",
+        o: ["Chain", "Content of the report", "Footnote", "Fiqh ruling"],
+        oh: ["Sanad", "Riwayat ka matn/muha’tawa", "Hawashi", "Fiqhi hukm"],
+        a: "Content of the report",
+        e: "Matn is the wording/content of a Hadith.",
+        eh: "Matn Hadith ka lafzi muha’tawa hota hai."
+      },
+      {
+        q: "What is a 'Sahih' Hadith?",
+        qh: "'Sahih' Hadith kisay kehte hain?",
+        o: ["Weak chain", "Authentic chain & text", "Unknown chain", "Abrogated text"],
+        oh: ["Kamzor sanad", "Sahih sanad aur matn", "Ghair ma’loom sanad", "Mansookh matn"],
+        a: "Authentic chain & text",
+        e: "Sahih = reliable narrators, continuous chain, sound text.",
+        eh: "Sahih mein rawi sadiq, sanad muttasil, aur matn sehat-mand hota hai."
+      },
+      {
+        q: "How is 'Hasan' different from 'Sahih'?",
+        qh: "'Hasan' aur 'Sahih' mein kya farq hai?",
+        o: ["Hasan is fabricated", "Hasan is authentic but slightly lower strength", "No difference", "Sahih is weaker"],
+        oh: ["Hasan jhooti", "Hasan sahih hai magar quwwat thodi kam", "Koi farq nahi", "Sahih kamzor"],
+        a: "Hasan is authentic but slightly lower strength",
+        e: "Both accepted; Hasan narrators have slightly less precision than Sahih.",
+        eh: "Dono maqbool; Hasan ke rawi ki zabt Sahih se kuch kam hoti hai."
+      },
+      {
+        q: "What is a 'Da’if' Hadith?",
+        qh: "'Da’if' Hadith kise kehte hain?",
+        o: ["Authentic", "Weak due to chain/text issue", "Mutawatir", "Hasan"],
+        oh: ["Bilkul sahih", "Sanad/matn ki kami", "Mutawatir", "Hasan"],
+        a: "Weak due to chain/text issue",
+        e: "Da’if has weakness in the chain or the text.",
+        eh: "Da’if mein sanad ya matn ki kamzori hoti hai."
+      },
+      {
+        q: "What is 'Mutawatir' Hadith?",
+        qh: "'Mutawatir' Hadith kya hai?",
+        o: ["Only one narrator", "Narrated by many at every level", "Anonymous", "Contradictory"],
+        oh: ["Aik rawi", "Har tabaqe mein bahut se rawi", "Gumnam", "Mutazaad"],
+        a: "Narrated by many at every level",
+        e: "Mutawatir: so many narrators at each layer that collusion is impossible.",
+        eh: "Har satah par itne rawi ke jhoot par ittefaq mumkin nahi."
+      },
+      {
+        q: "Which collection is widely considered most authentic after the Qur’an?",
+        qh: "Quran ke baad sab se sahih majmooa aam tor par kaunsa mana jata hai?",
+        o: ["Sahih al-Bukhari", "Musnad Ahmad", "Sunan Ibn Majah", "Muwatta Malik"],
+        oh: ["Sahih al-Bukhari", "Musnad Ahmad", "Sunan Ibn Majah", "Muwatta Malik"],
+        a: "Sahih al-Bukhari",
+        e: "Sahih al-Bukhari is regarded as the most authentic compilation.",
+        eh: "Sahih Bukhari ko sab se zyada sahih majmooa mana jata hai."
+      },
+      {
+        q: "What is 'Jarh wa Ta’dil'?",
+        qh: "'Jarh wa Ta’dil' kya hota hai?",
+        o: ["Qur’an grammar", "Criticism/validation of narrators", "Seerah events", "Prayer timings"],
+        oh: ["Qur’an ki nahw", "Rawiyon ki tanqeed o tasdiq", "Seerah", "Namaz ke auqat"],
+        a: "Criticism/validation of narrators",
+        e: "A science that evaluates narrators’ reliability and precision.",
+        eh: "Rawiyon ki adaalt aur zabt ka jaiza lene ka fun."
+      },
+      {
+        q: "What does 'Gharib' in Hadith classification refer to?",
+        qh: "Hadith ki istilah mein 'Gharib' ka kya matlab hai?",
+        o: ["Well-known", "Singleton narrator at some level", "Fabricated", "Continuous chain"],
+        oh: ["Mashhoor", "Kisi marhala par aik rawi", "Mawdu’", "Muttasil"],
+        a: "Singleton narrator at some level",
+        e: "Gharib suggests a narration with singularity at a layer of the chain.",
+        eh: "Gharib se murad wo riwayat jahan kisi tabqe par riwayat tanha ho."
+      },
+      {
+        q: "What is 'Mawdu’' Hadith?",
+        qh: "'Mawdu’' Hadith kise kehte hain?",
+        o: ["Sound", "Weak", "Fabricated", "Mutawatir"],
+        oh: ["Sahih", "Da’if", "Jhooti/ghair-asli", "Mutawatir"],
+        a: "Fabricated",
+        e: "Mawdu’ indicates a fabricated narration falsely attributed.",
+        eh: "Mawdu’ jhooti riwayat hoti hai jo jali tor par mansoob ki jati hai."
+      },
+      {
+        q: "What is a 'Musnad' compilation?",
+        qh: "'Musnad' majmooa kya hota hai?",
+        o: ["Arranged by topics", "Arranged by narrator (Companion)", "Arranged by years", "Arranged by city"],
+        oh: ["Mauzuaat kay mutabiq", "Ravi/Sahabi ke mutabiq", "Saal ke mutabiq", "Shehr ke mutabiq"],
+        a: "Arranged by narrator (Companion)",
+        e: "A Musnad groups narrations under each Companion’s name.",
+        eh: "Musnad mein riwayat Sahaba ke naam ke neeche jama ki jati hain."
+      },
+      {
+        q: "What is 'Mursal' Hadith?",
+        qh: "'Mursal' Hadith se kya murad hai?",
+        o: ["Companion omitted", "Multiple chains", "Strong chain", "Narration in poetry"],
+        oh: ["Sahabi chhoot gaya", "Kai sanad", "Mazboot sanad", "Nazm ki riwayat"],
+        a: "Companion omitted",
+        e: "In Mursal, a Successor narrates directly from the Prophet ﷺ skipping the Companion.",
+        eh: "Mursal mein Tabi’i ne seedha Nabi ﷺ se riwayat batayi ho aur Sahabi ka zikar na ho."
+      },
+      {
+        q: "What is 'Mu’allaq' Hadith?",
+        qh: "'Mu’allaq' Hadith kya hoti hai?",
+        o: ["Chain entirely present", "Beginning of chain missing", "Text missing", "Contradiction present"],
+        oh: ["Puri sanad", "Sanad ka ibtidai hissa nahin", "Matn nahin", "Tazad"],
+        a: "Beginning of chain missing",
+        e: "Mu’allaq: one or more narrators are omitted from the start.",
+        eh: "Mu’allaq mein sanad ke aaghaz se ek ya zyada rawi chhoot jate hain."
+      },
+      {
+        q: "Which book is known for concise, foundational 40 Hadith?",
+        qh: "Mukhtasar bunyadi chalees Ahadith ka majmooa kaunsa mashhoor hai?",
+        o: ["Riyad as-Salihin", "Forty Nawawi", "Sahih Muslim", "Adab al-Mufrad"],
+        oh: ["Riyad as-Salihin", "Chalees Nawawi", "Sahih Muslim", "Adab al-Mufrad"],
+        a: "Forty Nawawi",
+        e: "Imam Nawawi’s 40 Hadith summarize key principles of Islam.",
+        eh: "Imam Nawawi ki Chalees Ahadith Islam ke bunyadi asoolon ka khulasa deti hain."
+      },
       {
         q: "What does 'Mashhur' Hadith indicate in terms of transmission?",
         qh: "'Mashhur' Hadith rawayat ki kis haisiyat ko dikhati hai?",
         o: ["Known by very few", "Known by many after initial level", "Only fabricated", "Only in poetry"],
+        oh: ["Bohat kam log jante hain", "Ibtidai satah ke baad bohat log jante hain", "Sirf jhooti", "Sirf shairi me"],
         a: "Known by many after initial level",
         e: "Mashhur becomes widely known in later levels of transmission.",
         eh: "Mashhur baad ke tabaqat me zyada mashhoor ho jati hai."
@@ -11,6 +187,7 @@
         q: "What is 'Aziz' Hadith?",
         qh: "'Aziz' Hadith kya hoti hai?",
         o: ["Narrated by two or more at some level", "Only one narrator", "Fabricated", "Mutawatir"],
+        oh: ["Kisi satah par do ya zyada rawi", "Sirf ek rawi", "Jhooti", "Mutawatir"],
         a: "Narrated by two or more at some level",
         e: "Aziz has at least two chains at a given level.",
         eh: "Aziz me kisi marhala par kam az kam do rawi hotay hain."
@@ -19,6 +196,7 @@
         q: "What is 'Musalsal' Hadith?",
         qh: "'Musalsal' Hadith kisay kehte hain?",
         o: ["Continuous chain with common pattern", "Broken chain", "Unknown text", "Abrogated report"],
+        oh: ["Ek jaise andaaz ke sath muttasil sanad", "Tooti hui sanad", "Na-maloom matn", "Mansookh riwayat"],
         a: "Continuous chain with common pattern",
         e: "Musalsal maintains a recurring attribute in each link (e.g., same wording/act).",
         eh: "Musalsal me har rawi me mushtarik andaaz/fi’l paaya jata hai."
@@ -27,6 +205,7 @@
         q: "What is 'Mudallas' narration?",
         qh: "'Mudallas' riwayat ka kya matlab hai?",
         o: ["Fully explicit chain", "Ambiguity introduced in chain", "Fabrication", "Mutawatir strength"],
+        oh: ["Bilkool wazeh sanad", "Sanad me ibham (dhundhlapan) dalna", "Jhooti/Banawati", "Mutawatir jaisi quwwat"],
         a: "Ambiguity introduced in chain",
         e: "Tadlees hides a weakness or changes the apparent link.",
         eh: "Tadlees sanad ke nuqs ko chhupa deti ya kirdar ko dhundhla karti hai."
@@ -35,6 +214,7 @@
         q: "What is 'Maqlub' Hadith?",
         qh: "'Maqlub' Hadith kya hoti hai?",
         o: ["Text reversed or narrator swapped", "Continuous strong chain", "Narration by children only", "Legal verdict only"],
+        oh: ["Matn ulat diya ya rawi badal diya", "Muttasil mazboot sanad", "Sirf bachon ki riwayat", "Sirf shar'i faisla"],
         a: "Text reversed or narrator swapped",
         e: "Maqlub refers to reversal in text or switching narrators’ names.",
         eh: "Maqlub me matn ulat sakta ya rawi ke naam badal jate hain."
@@ -43,6 +223,7 @@
         q: "What is 'Mu’dal' Hadith?",
         qh: "'Mu’dal' Hadith kisay kehte hain?",
         o: ["Two or more consecutive missing narrators", "Only Companion missing", "Only one missing link", "All links present"],
+        oh: ["Do ya zyada lagatar chhoote hue rawi", "Sirf Sahabi chhoot gaya", "Sirf ek kadi (link) ghayab", "Sari kadiyan maujood"],
         a: "Two or more consecutive missing narrators",
         e: "Mu’dal denotes multiple adjacent drops in the chain.",
         eh: "Mu’dal me musalsal do ya zyada rawi chhoot jate hain."
@@ -51,6 +232,7 @@
         q: "What is 'Munqati’' Hadith?",
         qh: "'Munqati’' Hadith kya hoti hai?",
         o: ["Fully connected chain", "Chain with a gap (not consecutive)", "Fabricated", "Mutawatir"],
+        oh: ["Poori muttasil sanad", "Sanad me waqfa/gap (lagatar nahi)", "Jhooti", "Mutawatir"],
         a: "Chain with a gap (not consecutive)",
         e: "Munqati’ has a break in the chain at some point.",
         eh: "Munqati’ me sanad me kahin na kahin rabt toot jata hai."
@@ -59,6 +241,7 @@
         q: "What is a 'Shadh' narration?",
         qh: "'Shadh' riwayat se kya murad hai?",
         o: ["Widely supported", "Opposes more reliable narrators", "Fabricated", "Anonymous"],
+        oh: ["Bari himayat yafta", "Zyada mazboot rawiyon ke khilaf", "Jhooti", "Gumnam"],
         a: "Opposes more reliable narrators",
         e: "Shadh conflicts with stronger narrators/chains.",
         eh: "Shadh mazboot rawiyon ke muqable me mukhalifat karti hai."
@@ -67,6 +250,7 @@
         q: "What is 'Illah' (hidden defect) in Hadith?",
         qh: "Hadith me 'Illah' (khufia aib) se kya murad hai?",
         o: ["A clear weakness", "A subtle flaw discovered by experts", "Fabrication", "Excessive length"],
+        oh: ["Wazeh kamzori", "Mahiron ki pakdi hui khufiya khami", "Jhooti/Banawati", "Bohat zyada lambai"],
         a: "A subtle flaw discovered by experts",
         e: "Illah is a concealed defect in chain/text understood by hadith masters.",
         eh: "Illah me sanad/matn ka pinhawa nuqs hota hai jo mahir pehchante hain."
@@ -75,6 +259,7 @@
         q: "Which of the following is a canonical Hadith collection?",
         qh: "In me se kaunsi maruf Hadith ki majmooa hai?",
         o: ["Sahih Muslim", "Tabaqat Ibn Sa’d", "Al-Bidaya wan-Nihaya", "Tarikh at-Tabari"],
+        oh: ["Sahih Muslim", "Tabaqat Ibn Sa’d", "Al-Bidaya wan-Nihaya", "Tarikh at-Tabari"],
         a: "Sahih Muslim",
         e: "Sahih Muslim is among the canonical, highly authentic collections.",
         eh: "Sahih Muslim maruf sihah sitta me se hai."
@@ -83,6 +268,7 @@
         q: "What is the purpose of 'Al-Jarh wa at-Ta’dil'?",
         qh: "'Al‑Jarh wa at‑Ta’dil' ka maqsad kya hai?",
         o: ["Grading narrators", "Explaining verses", "Comparing madhhabs", "Recording battles"],
+        oh: ["Rawiyon ki darja bandi", "Ayaton ki tafseer", "Mazhabon ka muwazna", "Jangon ka zikar"],
         a: "Grading narrators",
         e: "It assesses narrator reliability and precision.",
         eh: "Yeh rawiyon ki adalat aur zabt ka andaza lagata hai."
@@ -91,6 +277,7 @@
         q: "Which term denotes 'continuous chain without any gap'?",
         qh: "Kaunsi istilah 'baghair kisi faaslay ke muttasil sanad' ko dikhati hai?",
         o: ["Muttasil", "Munqati’", "Mu’dal", "Mu’allaq"],
+        oh: ["Muttasil", "Munqati’", "Mu’dal", "Mu’allaq"],
         a: "Muttasil",
         e: "Muttasil indicates an unbroken chain of transmission.",
         eh: "Muttasil se muraad hai sanad me rapt muttasil ho."
@@ -99,6 +286,7 @@
         q: "Which book by Imam al-Bukhari focuses on manners and character?",
         qh: "Imam Bukhari ki kaunsi kitab akhlaq aur adab par markaz hai?",
         o: ["Adab al-Mufrad", "Ar-Risalah", "Al-Muwatta", "Al-Mustadrak"],
+        oh: ["Adab al-Mufrad", "Ar-Risalah", "Al-Muwatta", "Al-Mustadrak"],
         a: "Adab al-Mufrad",
         e: "Adab al‑Mufrad collects narrations on manners and conduct.",
         eh: "Adab al‑Mufrad adab wa akhlaq par riwayat jama karti hai."
@@ -107,6 +295,7 @@
         q: "Which set is commonly referred to as 'Sihah Sittah' (Six Books)?",
         qh: "Sihah Sittah (chhe maruf majame’ Hadith) me se kaunsi misal durust hai?",
         o: ["Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, Ibn Majah", "Bukhari, Muslim, Muwatta, Ahmad, Bayhaqi, Darimi", "Muslim, Tirmidhi, Tabarani, Bayhaqi, Nisai, Ibn Hibban", "Bukhari, Muslim, Razi, Baydawi, Qurtubi, Tabari"],
+        oh: ["Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, Ibn Majah", "Bukhari, Muslim, Muwatta, Ahmad, Bayhaqi, Darimi", "Muslim, Tirmidhi, Tabarani, Bayhaqi, Nisai, Ibn Hibban", "Bukhari, Muslim, Razi, Baydawi, Qurtubi, Tabari"],
         a: "Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, Ibn Majah",
         e: "The classic six are: Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, and Ibn Majah.",
         eh: "Mashhur chhe: Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, Ibn Majah."
@@ -115,147 +304,70 @@
         q: "What is the primary aim of 'Mustalah al-Hadith'?",
         qh: "'Mustalah al‑Hadith' ka asal maqsad kya hai?",
         o: ["Narrator biographies", "Terminology & rules to evaluate hadith", "Grammar of Arabic", "Fiqh verdicts"],
+        oh: ["Rawiyon ki seerat", "Hadith parakhne ke qawaid aur istilahat", "Arabi ki grammar", "Fiqhi faislay"],
         a: "Terminology & rules to evaluate hadith",
         e: "Mustalah explains the technical terms and evaluation rules.",
         eh: "Mustalah hadith ke qawaid aur istilahat ki wazahat karta hai."
-      },
-HADITH & HADITH SCIENCES (15)
-     ======================================================= */
-  hadith_science: [
-    {
-      q: "What does 'Hadith' comprise in Islamic sciences?",
-      qh: "'Hadith' se Islami uloom mein kya murad hoti hai?",
-      o: ["Only law", "Sayings/actions/approvals of the Prophet ﷺ", "Only biography", "Only history"],
-      oh: ["Sirf qanoon", "Nabi ﷺ ke aqwal/af’al/taqreer", "Sirf seerat", "Sirf tareekh"],
-      a: "Sayings/actions/approvals of the Prophet ﷺ",
-      e: "Hadith includes what the Prophet ﷺ said, did, or silently approved.",
-      eh: "Hadith mein Nabi ﷺ ki baatein, a’maal, aur jo aap ne tasdeeq farmayi shamil hota hai."
-    },
-    {
-      q: "What is 'Isnad'?",
-      qh: "'Isnad' kya hota hai?",
-      o: ["Text", "Chain of narrators", "Commentary", "Chapter"],
-      oh: ["Matn", "Rawayat ki sanad", "Sharh", "Baab"],
-      a: "Chain of narrators",
-      e: "Isnad is the chain connecting narrators back to the Prophet ﷺ.",
-      eh: "Isnad rawiyon ki wo zanjeer hai jo Nabi ﷺ tak pohanchti hai."
-    },
-    {
-      q: "What is 'Matn' in Hadith terminology?",
-      qh: "'Matn' se Hadith ke hawale se kya murad hoti hai?",
-      o: ["Chain", "Content of the report", "Footnote", "Fiqh ruling"],
-      oh: ["Sanad", "Riwayat ka matn/muha’tawa", "Hawashi", "Fiqhi hukm"],
-      a: "Content of the report",
-      e: "Matn is the wording/content of a Hadith.",
-      eh: "Matn Hadith ka lafzi muha’tawa hota hai."
-    },
-    {
-      q: "What is a 'Sahih' Hadith?",
-      qh: "'Sahih' Hadith kisay kehte hain?",
-      o: ["Weak chain", "Authentic chain & text", "Unknown chain", "Abrogated text"],
-      oh: ["Kamzor sanad", "Sahih sanad aur matn", "Ghair ma’loom sanad", "Mansookh matn"],
-      a: "Authentic chain & text",
-      e: "Sahih = reliable narrators, continuous chain, sound text.",
-      eh: "Sahih mein rawi sadiq, sanad muttasil, aur matn sehat-mand hota hai."
-    },
-    {
-      q: "How is 'Hasan' different from 'Sahih'?",
-      qh: "'Hasan' aur 'Sahih' mein kya farq hai?",
-      o: ["Hasan is fabricated", "Hasan is authentic but slightly lower strength", "No difference", "Sahih is weaker"],
-      oh: ["Hasan jhooti", "Hasan sahih hai magar quwwat thodi kam", "Koi farq nahi", "Sahih kamzor"],
-      a: "Hasan is authentic but slightly lower strength",
-      e: "Both accepted; Hasan narrators have slightly less precision than Sahih.",
-      eh: "Dono maqbool; Hasan ke rawi ki zabt Sahih se kuch kam hoti hai."
-    },
-    {
-      q: "What is a 'Da’if' Hadith?",
-      qh: "'Da’if' Hadith kise kehte hain?",
-      o: ["Authentic", "Weak due to chain/text issue", "Mutawatir", "Hasan"],
-      oh: ["Bilkul sahih", "Sanad/matn ki kami", "Mutawatir", "Hasan"],
-      a: "Weak due to chain/text issue",
-      e: "Da’if has weakness in the chain or the text.",
-      eh: "Da’if mein sanad ya matn ki kamzori hoti hai."
-    },
-    {
-      q: "What is 'Mutawatir' Hadith?",
-      qh: "'Mutawatir' Hadith kya hai?",
-      o: ["Only one narrator", "Narrated by many at every level", "Anonymous", "Contradictory"],
-      oh: ["Aik rawi", "Har tabaqe mein bahut se rawi", "Gumnam", "Mutazaad"],
-      a: "Narrated by many at every level",
-      e: "Mutawatir: so many narrators at each layer that collusion is impossible.",
-      eh: "Har satah par itne rawi ke jhoot par ittefaq mumkin nahi."
-    },
-    {
-      q: "Which collection is widely considered most authentic after the Qur’an?",
-      qh: "Quran ke baad sab se sahih majmooa aam tor par kaunsa mana jata hai?",
-      o: ["Sahih al-Bukhari", "Musnad Ahmad", "Sunan Ibn Majah", "Muwatta Malik"],
-      oh: ["Sahih al-Bukhari", "Musnad Ahmad", "Sunan Ibn Majah", "Muwatta Malik"],
-      a: "Sahih al-Bukhari",
-      e: "Sahih al-Bukhari is regarded as the most authentic compilation.",
-      eh: "Sahih Bukhari ko sab se zyada sahih majmooa mana jata hai."
-    },
-    {
-      q: "What is 'Jarh wa Ta’dil'?",
-      qh: "'Jarh wa Ta’dil' kya hota hai?",
-      o: ["Qur’an grammar", "Criticism/validation of narrators", "Seerah events", "Prayer timings"],
-      oh: ["Qur’an ki nahw", "Rawiyon ki tanqeed o tasdiq", "Seerah", "Namaz ke auqat"],
-      a: "Criticism/validation of narrators",
-      e: "A science that evaluates narrators’ reliability and precision.",
-      eh: "Rawiyon ki adaalt aur zabt ka jaiza lene ka fun."
-    },
-    {
-      q: "What does 'Gharib' in Hadith classification refer to?",
-      qh: "Hadith ki istilah mein 'Gharib' ka kya matlab hai?",
-      o: ["Well-known", "Singleton narrator at some level", "Fabricated", "Continuous chain"],
-      oh: ["Mashhoor", "Kisi marhala par aik rawi", "Mawdu’", "Muttasil"],
-      a: "Singleton narrator at some level",
-      e: "Gharib suggests a narration with singularity at a layer of the chain.",
-      eh: "Gharib se murad wo riwayat jahan kisi tabqe par riwayat tanha ho."
-    },
-    {
-      q: "What is 'Mawdu’' Hadith?",
-      qh: "'Mawdu’' Hadith kise kehte hain?",
-      o: ["Sound", "Weak", "Fabricated", "Mutawatir"],
-      oh: ["Sahih", "Da’if", "Jhooti/ghair-asli", "Mutawatir"],
-      a: "Fabricated",
-      e: "Mawdu’ indicates a fabricated narration falsely attributed.",
-      eh: "Mawdu’ jhooti riwayat hoti hai jo jali tor par mansoob ki jati hai."
-    },
-    {
-      q: "What is a 'Musnad' compilation?",
-      qh: "'Musnad' majmooa kya hota hai?",
-      o: ["Arranged by topics", "Arranged by narrator (Companion)", "Arranged by years", "Arranged by city"],
-      oh: ["Mauzuaat kay mutabiq", "Ravi/Sahabi ke mutabiq", "Saal ke mutabiq", "Shehr ke mutabiq"],
-      a: "Arranged by narrator (Companion)",
-      e: "A Musnad groups narrations under each Companion’s name.",
-      eh: "Musnad mein riwayat Sahaba ke naam ke neeche jama ki jati hain."
-    },
-    {
-      q: "What is 'Mursal' Hadith?",
-      qh: "'Mursal' Hadith se kya murad hai?",
-      o: ["Companion omitted", "Multiple chains", "Strong chain", "Narration in poetry"],
-      oh: ["Sahabi chhoot gaya", "Kai sanad", "Mazboot sanad", "Nazm ki riwayat"],
-      a: "Companion omitted",
-      e: "In Mursal, a Successor narrates directly from the Prophet ﷺ skipping the Companion.",
-      eh: "Mursal mein Tabi’i ne seedha Nabi ﷺ se riwayat batayi ho aur Sahabi ka zikar na ho."
-    },
-    {
-      q: "What is 'Mu’allaq' Hadith?",
-      qh: "'Mu’allaq' Hadith kya hoti hai?",
-      o: ["Chain entirely present", "Beginning of chain missing", "Text missing", "Contradiction present"],
-      oh: ["Puri sanad", "Sanad ka ibtidai hissa nahin", "Matn nahin", "Tazad"],
-      a: "Beginning of chain missing",
-      e: "Mu’allaq: one or more narrators are omitted from the start.",
-      eh: "Mu’allaq mein sanad ke aaghaz se ek ya zyada rawi chhoot jate hain."
-    },
-    {
-      q: "Which book is known for concise, foundational 40 Hadith?",
-      qh: "Mukhtasar bunyadi chalees Ahadith ka majmooa kaunsa mashhoor hai?",
-      o: ["Riyad as-Salihin", "Forty Nawawi", "Sahih Muslim", "Adab al-Mufrad"],
-      oh: ["Riyad as-Salihin", "Chalees Nawawi", "Sahih Muslim", "Adab al-Mufrad"],
-      a: "Forty Nawawi",
-      e: "Imam Nawawi’s 40 Hadith summarize key principles of Islam.",
-      eh: "Imam Nawawi ki Chalees Ahadith Islam ke bunyadi asoolon ka khulasa deti hain."
-    }
-  ],
+      }
+    ];
 
+    let currentIndex = 0;
+    function showPopup(title, message, icon, callback) {
+      const modal = document.getElementById('app-modal');
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-message').innerText = message;
+      document.getElementById('modal-icon').innerText = icon || '';
+      modal.classList.remove('hidden');
+      document.getElementById('modal-btn').onclick = () => {
+        modal.classList.add('hidden');
+        if (callback) callback();
+      };
+    }
+
+    function loadQuestion() {
+      const qData = QUESTIONS[currentIndex];
+      const area = document.getElementById('quiz-area');
+      let html = `
+        <p style="color:var(--gold); font-weight:600; text-align:center;">Question ${currentIndex + 1} of ${QUESTIONS.length}</p>
+        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px;">
+          <h4 style="margin-top:0; margin-bottom:5px; line-height:1.4;">${qData.q}</h4>
+          <p style="margin:0; font-style:italic; color:var(--emerald); font-size:0.95rem;">${qData.qh || ""}</p>
+        </div>
+        <div id="options-box"></div>
+      `;
+      area.innerHTML = html;
+      const optionsBox = document.getElementById('options-box');
+      qData.o.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'main-btn';
+        const hinglishOpt = (qData.oh && qData.oh[i]) ? `<br><span style="font-size:0.85rem; opacity:0.8;">${qData.oh[i]}</span>` : "";
+        btn.innerHTML = `<strong>${opt}</strong>${hinglishOpt}`;
+        btn.onclick = () => checkAnswer(opt, qData);
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selectedOption, qData) {
+      const isCorrect = selectedOption === qData.a;
+      const title = isCorrect ? "Correct! ✨" : "Explanation";
+      const icon = isCorrect ? "✅" : "ℹ️";
+      const fullExplanation = (qData.e || "") + (qData.eh ? `\n\n(${qData.eh})` : "");
+      showPopup(title, fullExplanation, icon, () => {
+        currentIndex++;
+        if (currentIndex < QUESTIONS.length) {
+          loadQuestion();
+        } else {
+          showPopup("Topic Completed!", "Masha'Allah, you have finished this learning module.", "🎓", () => {
+            window.location.href = '../index.html'; 
+          });
+        }
+      });
+    }
+
+    window.onload = () => {
+      document.getElementById('page-title').innerText = PAGE_TITLE;
+      loadQuestion();
+    };
+  </script>
+</body>
+</html>
