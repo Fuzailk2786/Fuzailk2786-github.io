@@ -261,7 +261,6 @@ function startTimer(targetDate) {
 }
 function renderRamadanGrid() {
   const container = document.getElementById('dynamic-body');
-  // FIXED: Explicitly set to Feb 19th and added IST timezone
   const ramadanStart = new Date('2026-02-19T00:00:00+05:30'); 
   const now = new Date();
   const diffInMs = now - ramadanStart;
@@ -415,7 +414,6 @@ function printCertificate() {
   window.location.reload();
 }
 
-/* ------------------ Learning Module (Folder Linking Setup) ------------------ */
 function openLearningQuiz() {
     renderLearningCategories();
     document.getElementById('screen-content').classList.remove('hidden');
@@ -425,7 +423,6 @@ function renderLearningCategories() {
     const container = document.getElementById('dynamic-body');
     let html = '<h2 style="font-family:\'Cinzel\'; text-align:center;">📖 Learning Pathways</h2><div class="mode-grid" style="grid-template-columns: 1fr;">';
     
-    // Direct links to the new files you will create in the "learning" folder
     const categories = [
         { title: "Qur'an Essentials", link: "learning/quran-essentials.html" },
         { title: "Hadith & Hadith Sciences", link: "learning/hadith-sciences.html" },
@@ -448,7 +445,6 @@ function renderLearningCategories() {
     container.innerHTML = html;
 }
 
-/* ------------------ Duas ------------------ */
 const DUA_DB = [
   { t: "Before Eating",  a: "بِسْمِ اللَّهِ", tr: "In the name of Allah" },
   { t: "After Eating",   a: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا", tr: "Praise be to Allah who fed us" },
@@ -463,13 +459,6 @@ function showDuas() {
   });
 }
 
-/* ------------------ Hadith (Firebase) ------------------ */
-const HADITH_LIST = [
-  "The best among you are those who learn the Quran and teach it.",
-  "Cleanliness is half of faith.",
-  "A good word is a charity.",
-  "He who does not show mercy to others will not be shown mercy."
-];
 function showHadith() {
   showScreen('content');
   const body = document.getElementById('dynamic-body');
@@ -477,10 +466,9 @@ function showHadith() {
   db.ref('dailyHadith').on('value', (snapshot) => {
     const data = snapshot.val();
     if (!data) {
-      const dayIdx = new Date().getDate() % HADITH_LIST.length;
       body.innerHTML = `
         <h2 style="font-family:'Cinzel'; text-align:center;">Hadith of the Day</h2>
-        <div class="dua-card" style="font-size:1.1rem; line-height:1.6; text-align:center;">"${HADITH_LIST[dayIdx]}"</div>
+        <div class="dua-card" style="font-size:1.1rem; line-height:1.6; text-align:center;">"Cleanliness is half of faith."</div>
       `;
       return;
     }
@@ -494,7 +482,6 @@ function showHadith() {
   });
 }
 
-/* ------------------ Leaderboard (FIXED: Real-time .on Listener) ------------------ */
 function safeKey(name) {
   return String(name || 'guest').replace(/[.#$/\[\]\/]/g, '_').slice(0, 60);
 }
@@ -505,7 +492,7 @@ function submitScore(username, score) {
     const current = snap.val();
     if (!current || Number(score) > Number((current || {}).score)) {
       ref.set({ name: username, score: Number(score), timestamp: Date.now() })
-        .catch(err => console.error("Leaderboard Write Error (Check Firebase Rules):", err));
+        .catch(err => console.error("Leaderboard Write Error", err));
     }
   }).catch(err => console.error('Leaderboard Read Error:', err));
 }
@@ -515,7 +502,6 @@ function loadLeaderboard() {
   body.innerHTML = "<h2 style=\"font-family:'Cinzel'; text-align:center;\">🏆 Global Leaderboard</h2><p>Loading Top 50...</p>";
   
   const ref = db.ref('leaderboardUsers');
-  // FIXED: Changed .once to .on for live updates
   ref.orderByChild('score').limitToLast(50).on('value', (snapshot) => {
     let rows = [];
     snapshot.forEach(c => rows.push(c.val()));
@@ -532,12 +518,16 @@ function loadLeaderboard() {
     html += '</table>';
     body.innerHTML = html;
   }, (err) => {
-    body.innerHTML = `<p style="color:crimson; text-align:center;">Error loading leaderboard. Please check Firebase rules. <br><small>${err.message}</small></p>`;
+    body.innerHTML = `<p style="color:crimson; text-align:center;">Error loading leaderboard.</p>`;
   });
 }
 
-/* ------------------ Overlay Hide (Robust) ------------------ */
+/* ------------------ UPGRADED: Overlay Hide & URL Parser ------------------ */
 (function ensureOverlayHides() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const skipSplash = urlParams.get('skipSplash') === 'true';
+  const screenTarget = urlParams.get('screen');
+
   function hide() {
     const overlay = document.getElementById('bismillah-overlay');
     const main = document.getElementById('main-container');
@@ -548,14 +538,31 @@ function loadLeaderboard() {
       overlay.classList.add('hidden');
       main.classList.remove('hidden');
       checkExistingLogin();
+      
+      // Feature 1 Fix: Auto-route back to Learning Menu without clicking home
+      if (screenTarget === 'learning') { 
+        openLearningQuiz(); 
+      }
     }, 800);
   }
-  window.addEventListener('load', () => setTimeout(() => { hide(); }, 2500));
-  setTimeout(() => {
+
+  // Feature 1 Fix: Skip splash animation instantly if returning from learning page
+  if (skipSplash) {
     const overlay = document.getElementById('bismillah-overlay');
-    if (overlay && !overlay.classList.contains('hidden')) { hide(); }
-  }, 5000);
+    const main = document.getElementById('main-container');
+    if (overlay) overlay.classList.add('hidden');
+    if (main) main.classList.remove('hidden');
+    checkExistingLogin();
+    if (screenTarget === 'learning') openLearningQuiz();
+  } else {
+    // Normal first-time load
+    window.addEventListener('load', () => setTimeout(() => { hide(); }, 2500));
+    setTimeout(() => {
+      const overlay = document.getElementById('bismillah-overlay');
+      if (overlay && !overlay.classList.contains('hidden')) { hide(); }
+    }, 5000);
+  }
 })();
- </script>
+  </script>
 </body>
 </html>
