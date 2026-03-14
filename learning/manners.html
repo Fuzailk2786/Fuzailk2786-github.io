@@ -3,19 +3,74 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manners & Akhlaq - Islamic Questz</title>
+  <title>Manners & Akhlaq </title>
+
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+
   <style>
-    :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b; --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7; --border: #e2e8f0; --shadow: rgba(0,0,0,0.1); }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; color: var(--text-main); }
+    :root {
+      --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b;
+      --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7;
+      --border: #e2e8f0; --shadow: rgba(0,0,0,0.1);
+    }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: var(--bg-color); 
+      margin: 0; 
+      color: var(--text-main); 
+      overflow-x: hidden;
+    }
     .app-card { margin: 0 auto; max-width: 500px; padding: 20px; }
-    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); width: 100%; margin-bottom: 10px; text-align: left; }
+    
+    .main-btn { 
+      background: var(--card-bg); border: 1px solid var(--border); 
+      padding: 15px; border-radius: 15px; cursor: pointer; 
+      transition: 0.2s; font-weight: 600; color: var(--text-main); 
+      width: 100%; margin-bottom: 10px; text-align: left;
+    }
     .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
-    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
+    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; font-size: 1rem; margin:0;}
     .hidden { display: none !important; }
+
+    /* New Sidebars CSS for Feature 2 & 3 */
+    .sidebar { 
+      position: fixed; top: 0; height: 100%; width: 280px; 
+      background: var(--card-bg); z-index: 3000; 
+      box-shadow: 0 0 15px rgba(0,0,0,0.5); 
+      transition: transform 0.3s ease; padding: 20px; 
+      overflow-y: auto; box-sizing: border-box;
+    }
+    .left-sidebar { left: 0; transform: translateX(-100%); }
+    .left-sidebar.open { transform: translateX(0); }
+    .right-sidebar { right: 0; transform: translateX(100%); }
+    .right-sidebar.open { transform: translateX(0); }
+    
+    .close-btn { background: none; border: none; font-size: 2rem; float: right; cursor: pointer; color: var(--gold); line-height: 0.8; margin-bottom: 10px;}
+    .topic-link { display: block; padding: 15px 10px; border-bottom: 1px solid var(--border); color: var(--text-main); text-decoration: none; font-weight: 600; transition: 0.2s;}
+    .topic-link:hover { background: var(--soft-gold); border-radius: 8px; border-bottom: none;}
+    
+    .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card-bg); padding: 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); }
   </style>
 </head>
 <body>
+
+  <div id="progress-sidebar" class="sidebar left-sidebar">
+    <button class="close-btn" onclick="toggleProgress()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📊 My Progress</h3>
+    <div id="progress-list"></div>
+  </div>
+
+  <div id="topics-sidebar" class="sidebar right-sidebar">
+    <button class="close-btn" onclick="toggleTopics()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📚 All Topics</h3>
+    <a href="quran-essentials.html" class="topic-link">Qur'an Essentials</a>
+    <a href="hadith-sciences.html" class="topic-link">Hadith & Hadith Sciences</a>
+    <a href="seerah.html" class="topic-link">Seerah (Life of Prophet)</a>
+    <a href="aqeedah.html" class="topic-link">Aqeedah - Creation to Hereafter</a>
+    <a href="fiqh.html" class="topic-link">Fiqh of Worship</a>
+    <a href="manners.html" class="topic-link">Manners & Akhlaq</a>
+    <a href="general-knowledge.html" class="topic-link">General Knowledge</a>
+  </div>
 
   <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
@@ -27,19 +82,120 @@
   </div>
 
   <div class="app-card">
-    <button class="back-btn" onclick="window.location.href='../index.html'">← Back to Menu</button>
-    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);">Manners & Akhlaq</h2>
+    
+    <div class="top-nav">
+      <button class="back-btn" onclick="window.location.href='../index.html?skipSplash=true&screen=learning'">← Menu</button>
+      <div style="display:flex; gap:10px;">
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto; background:var(--emerald); color:white;" onclick="toggleProgress()">📊 Progress</button>
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto;" onclick="toggleTopics()">📚 Topics</button>
+      </div>
+    </div>
+    
+    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);"></h2>
+    
     <div id="quiz-area" style="margin-top: 20px;"></div>
   </div>
 
   <script>
-    const PAGE_TITLE = "Manners & Akhlaq";
+    // ==========================================
+    // 1. UPDATE YOUR TOPIC INFO HERE FOR EACH FILE
+    // ==========================================
+    const PAGE_TITLE = "Manners & Akhlaq ";
     const QUESTIONS = [
-      {
+    {
+      q: "Which greeting is Sunnah when meeting a Muslim?",
+      qh: "Musalman se milte waqt Sunnat salaam kya hai?",
+      o: ["Good morning", "As‑Salamu ‘Alaykum", "Peace", "Hello"],
+      oh: ["Good morning", "As‑Salamu ‘Alaykum", "Peace", "Hello"],
+      a: "As‑Salamu ‘Alaykum",
+      e: "Initiating salam is Sunnah; responding is obligatory.",
+      eh: "Salaam shuru karna Sunnat, jawab dena wajib."
+    },
+    {
+      q: "Which hand should one eat with according to Sunnah?",
+      qh: "Sunnat ke mutabiq khana kis haath se khaya jaye?",
+      o: ["Left", "Right", "Either", "Alternating"],
+      oh: ["Baen", "Dain", "Koi bhi", "Bari-bari"],
+      a: "Right",
+      e: "Eat with the right hand; say Bismillah; eat from what is nearest.",
+      eh: "Dain haath se khayein, Bismillah kahe, najdeek se khayein."
+    },
+    {
+      q: "Which is **not** from Prophetic etiquette of speech?",
+      qh: "Adaab-e-Nabawi-e-kalam mein se kaunsa **nahi**?",
+      o: ["Truthfulness", "Interrupting frequently", "Lowering voice", "Clarity"],
+      oh: ["Sachai", "Bar bar tokna", "Aawaz neeche rakhna", "Wazahat"],
+      a: "Interrupting frequently",
+      e: "The Sunnah is clarity, truthfulness, gentleness — not interrupting.",
+      eh: "Sunnat narmi, sach, wazahat; tokna adaab ke khilaf."
+    },
+    {
+      q: "What is Sunnah to say after someone sneezes?",
+      qh: "Kisi ko chheenk aaye to kya kehna Sunnat hai?",
+      o: ["Alhamdulillah", "Yarhamukallah (by listener)", "SubhanAllah", "Bismillah"],
+      oh: ["Alhamdulillah", "Yarhamukallah (sunne wala)", "SubhanAllah", "Bismillah"],
+      a: "Yarhamukallah (by listener)",
+      e: "Sneezer says Alhamdulillah; listener replies Yarhamukallah.",
+      eh: "Chheenkne wala Alhamdulillah; sunne wala Yarhamukallah kehta hai."
+    },
+    {
+      q: "A Muslim’s right over another includes which action?",
+      qh: "Muslim par Muslim ke huqooq mein kaunsa amal hai?",
+      o: ["Ignoring illness", "Responding to salam", "Boasting", "Backbiting"],
+      oh: ["Be-dhyan", "Salaam ka jawab", "Fakhr", "Gheebat"],
+      a: "Responding to salam",
+      e: "Rights: reply to salam, visit sick, attend funeral, accept invitations, bless the sneezer.",
+      eh: "Huqooq: salam ka jawab, a’yadat, janazah, dawat qabool, chheenk par dua."
+    },
+    {
+      q: "Which character trait is most emphasized in dealings?",
+      qh: "Muamilaat mein kaunsa akhlaqi sifat sab se zyada aham?",
+      o: ["Harshness", "Integrity/Trustworthiness", "Mockery", "Greed"],
+      oh: ["Sakhti", "Amanatdari", "Tamaskhur", "Hirs"],
+      a: "Integrity/Trustworthiness",
+      e: "Honesty builds trust and social harmony.",
+      eh: "Sachchai aur amanatdari muashray mein itminan paida karti hai."
+    },
+    {
+      q: "What should one do if angry according to many narrations?",
+      qh: "Gussa aay to kai riwayaton ke mutabiq kya karna chahiye?",
+      o: ["Shout louder", "Seek refuge, keep silent, change posture", "Hit a wall", "Leave Islam"],
+      oh: ["Zyada chillana", "A’udhu billah padhein, khamoshi, halat badlein", "Deewar peetna", "Ma’azAllah"],
+      a: "Seek refuge, keep silent, change posture",
+      e: "Say A’udhu billah, sit/lie if standing, keep silent till calm.",
+      eh: "A’udhu billah, agar kharay ho to baith jayein, chup rahain."
+    },
+    {
+      q: "Which act maintains family ties (Silat-ur-Rahm)?",
+      qh: "Silat-ur-Rahm (rishton ko jodna) ke liye kaunsa amal?",
+      o: ["Ignoring relatives", "Backbiting", "Visiting and helping kin", "Cutting off ties"],
+      oh: ["Rishtedaron ko nazar andaaz", "Gheebat", "Aulad/qarabat ki madad aur mulaqat", "Talluq torna"],
+      a: "Visiting and helping kin",
+      e: "Maintaining kinship is strongly emphasized.",
+      eh: "Qarabat ka rishte jorna bohat aham hai."
+    },
+    {
+      q: "Which eating manner is recommended?",
+      qh: "Khana khane ka kaunsa adaab masnoon hai?",
+      o: ["Wasting food", "Eating excessively", "Moderation and gratitude", "Standing always"],
+      oh: ["Khana zaya karna", "Hadd se zyada khana", "I’tidal aur shukar", "Hamesha kharay ho kar"],
+      a: "Moderation and gratitude",
+      e: "Eat moderately and thank Allah for the provision.",
+      eh: "I’tidal se khayein aur Allah ka shukar ada karein."
+    },
+    {
+      q: "Which manner regarding neighbors is stressed?",
+      qh: "Humsayon ke hawale se kaunsa adaab qati tor par aham?",
+      o: ["Harm them", "Ignore them", "Be kind and do not harm", "Compete in noise"],
+      oh: ["Nuksan pohanchana", "Nazar andaaz", "Meharban aur be-nuksan", "Shor machana"],
+      a: "Be kind and do not harm",
+      e: "Good neighborly conduct is repeatedly emphasized.",
+      eh: "Achha humsayagi muashray ka muhim usool hai."
+    },
+ {
         q: "Which deed is described as charity in many narrations?",
         qh: "Kai riwayaton me kis amal ko sadaqah bataya gaya?",
         o: ["Smiling to your brother", "Mockery", "Backbiting", "Boasting"],
-        oh: ["Bhai ko dekh kar muskurana", "Mazaq udana", "Gheebat karna", "Shekhi bagharna"],
         a: "Smiling to your brother",
         e: "A pleasant smile fosters brotherhood and is rewarded.",
         eh: "Muskurahat ukhuwwat badhati aur ajar milta."
@@ -48,7 +204,6 @@
         q: "Which behavior should be avoided in gatherings?",
         qh: "Majalis me kaun sa rawaiya tarak karna chahiye?",
         o: ["Giving way & sitting where available", "Pushing and forcing others", "Greeting everyone", "Listening well"],
-        oh: ["Rasta dena aur jahan jagah mile baith jana", "Dhakka dena aur dusron par zor dalna", "Sab ko salam karna", "Ghaur se sun-na"],
         a: "Pushing and forcing others",
         e: "Islamic manners encourage respect and avoiding harm.",
         eh: "Islami adaab me izzat aur be-aziat muamila shamil."
@@ -57,7 +212,6 @@
         q: "Which is from rights of parents in Akhlaq?",
         qh: "Akhlaq me walidain ke huqooq me kya shamil?",
         o: ["Speaking harshly", "Obedience in good & respect", "Ignoring them", "Mocking advice"],
-        oh: ["Sakhti se baat karna", "Neki me farmabardari aur izzat", "Unhein nazar andaaz karna", "Nasihat ka mazaq udana"],
         a: "Obedience in good & respect",
         e: "Birr al‑walidayn (dutifulness to parents) is emphasized.",
         eh: "Walidain ki khidmat aur izzat par zor diya gaya."
@@ -66,7 +220,6 @@
         q: "Which trait should a believer avoid regarding others' faults?",
         qh: "Momin ko dusron ki khamiyon ke hawale se kaunsa rawaiya tarak karna chahiye?",
         o: ["Concealing and advising kindly", "Public shaming", "Backbiting", "Spreading rumors"],
-        oh: ["Parda poshi aur naram nasihat", "Sare aam zaleel karna", "Gheebat karna", "Afwahein phailana"],
         a: "Concealing and advising kindly",
         e: "Correct with wisdom; avoid scandalizing.",
         eh: "Hikmat se bhalai ka mashwara; ruswayi se parhez."
@@ -75,7 +228,6 @@
         q: "Which behavior is praised in buying and selling?",
         qh: "Khareed‑o‑farokht me kaunsa rawaiya pasandida?",
         o: ["Cheating", "Honesty & clarity", "Hiding defects", "Foul language"],
-        oh: ["Dhoka dena", "Imandari aur wazahat", "Nuqs chhupana", "Buri zaban"],
         a: "Honesty & clarity",
         e: "Truthfulness brings barakah in transactions.",
         eh: "Sachai aur wazahat se barakat hoti."
@@ -84,7 +236,6 @@
         q: "Which approach is best when you make a mistake?",
         qh: "Ghalti ho jaye to behtareen rawaiya kya hai?",
         o: ["Deny always", "Admit & seek forgiveness", "Blame others", "Hide it forever"],
-        oh: ["Hamesha inkar karna", "Maan lena aur maafi maangna", "Dusron par ilzam lagana", "Hamesha ke liye chhupana"],
         a: "Admit & seek forgiveness",
         e: "Acknowledgment with correction is praiseworthy.",
         eh: "E’tiraf aur islah karnay wala rawaiya pasandeeda."
@@ -93,7 +244,6 @@
         q: "Which is encouraged about promises?",
         qh: "Wadon ke bare me kya talqeen hai?",
         o: ["Break them", "Fulfill them", "Delay indefinitely", "Forget them"],
-        oh: ["Tod dena", "Poora karna", "Bila wajah taakhir karna", "Bhool jana"],
         a: "Fulfill them",
         e: "Keeping promises is a mark of integrity.",
         eh: "Wada nibhana amanatdari ki alamat hai."
@@ -102,7 +252,6 @@
         q: "Which attitude is valued during disagreements?",
         qh: "Ikhtilaf me kaun sa rawaiya qeemati samjha jata?",
         o: ["Insulting", "Listening & fairness", "Shouting", "Mockery"],
-        oh: ["Be-izzati karna", "Sun-na aur insaf karna", "Chillana", "Mazaq udana"],
         a: "Listening & fairness",
         e: "Adab demands listening, justice and kind speech.",
         eh: "Adab yehi ke tawajju, insaf aur narm kalam ikhtiyar ho."
@@ -111,7 +260,6 @@
         q: "Which habit cleanses the heart in daily life?",
         qh: "Rozmarra me kaunsi aadat dil ko saaf karti?",
         o: ["Gratitude and remembrance of Allah", "Persistent envy", "Arrogance", "Suspicion"],
-        oh: ["Shukar aur Allah ka zikr", "Musalsal hasad", "Takabbur", "Badgumani"],
         a: "Gratitude and remembrance of Allah",
         e: "Shukr and dhikr enlighten the heart.",
         eh: "Shukr aur zikr se dil roshan hota."
@@ -120,16 +268,14 @@
         q: "Which social duty is highly rewarded?",
         qh: "Kaunsa samaji farz bohat ajar lay kar aata?",
         o: ["Caring for orphans and the needy", "Ignoring the weak", "Mocking the poor", "Withholding charity"],
-        oh: ["Yateemon aur zaroorat-mandon ki dekh bhal", "Kamzoron ko nazar andaaz karna", "Ghareebon ka mazaq udana", "Sadaqah rokna"],
         a: "Caring for orphans and the needy",
         e: "Supporting the vulnerable is greatly rewarded.",
         eh: "Yateemon/gareebon ki madad par bada ajar hai."
       },
-      {
+ {
         q: "Which attitude is best when receiving advice?",
         qh: "Nasihat milne par kaunsa rawaiya behtar?",
         o: ["Humility & reflection", "Anger", "Mocking", "Ignoring"],
-        oh: ["Aajizi aur ghaur-o-fikr", "Gussa", "Mazaq udana", "Nazar andaaz karna"],
         a: "Humility & reflection",
         e: "Accepting sincere advice refines character.",
         eh: "Khulus se di gayi nasihat qabool karna akhlaq sudharta."
@@ -138,7 +284,6 @@
         q: "Which habit strengthens trust in social dealings?",
         qh: "Muashray me bharosa barhane wali kaunsi aadat?",
         o: ["Keeping promises", "Breaking promises", "Exaggeration", "Cheating"],
-        oh: ["Wade nibhana", "Wade todna", "Mubalgha aari", "Dhoka dena"],
         a: "Keeping promises",
         e: "Wafa-e-ahd is a mark of faithfulness.",
         eh: "Wada nibhana iman ki alamat hai."
@@ -147,7 +292,6 @@
         q: "Which is praised regarding neighbors in Islam?",
         qh: "Islam me humsayon ke bare me kya pasandida?",
         o: ["Kindness and no harm", "Noise and harm", "Ignoring", "Spying"],
-        oh: ["Meharbani aur be-nuksan", "Shor aur nuksan", "Nazar andaaz karna", "Jasoosi karna"],
         a: "Kindness and no harm",
         e: "Good neighborly conduct is strongly emphasized.",
         eh: "Humsayagi me meharbani aur be-aziat par zor."
@@ -156,7 +300,6 @@
         q: "Which trait should a Muslim avoid in speech?",
         qh: "Baat cheet me Musalman ko kis khami se bachna chahiye?",
         o: ["Truthfulness", "Harsh insult", "Gentleness", "Clarity"],
-        oh: ["Sachaai", "Sakht be-izzati", "Narmi", "Wazahat"],
         a: "Harsh insult",
         e: "Harshness harms hearts; gentle truth is Sunnah.",
         eh: "Sakhti dil todo sakti; narm sach Sunnat hai."
@@ -165,7 +308,6 @@
         q: "Which practice deepens family bonds?",
         qh: "Khandani rishton ko mazboot karne wali kaunsi practice?",
         o: ["Maintaining ties & forgiving", "Cutting off ties", "Backbiting", "Mockery"],
-        oh: ["Rishte jode rakhna aur maaf karna", "Rishte tod dena", "Gheebat karna", "Mazaq udana"],
         a: "Maintaining ties & forgiving",
         e: "Silat-ur-Rahm and forgiveness build harmony.",
         eh: "Silat-ur-Rahm aur maafi se ittefaq paida hota."
@@ -174,7 +316,6 @@
         q: "Which ethics apply to business in Islam?",
         qh: "Tijarat me Islam ke kaun se usool laagu?",
         o: ["Honesty, no cheating, clear disclosure", "Cheating allowed", "Hide defects", "Exploit the weak"],
-        oh: ["Imandari, koi dhoka nahi, saaf wazahat", "Dhoke ki ijazat", "Nuqs chhupana", "Kamzor ka fayda uthana"],
         a: "Honesty, no cheating, clear disclosure",
         e: "Truthfulness brings barakah to trade.",
         eh: "Sachai barakat laati; dhoka haram hai."
@@ -183,7 +324,6 @@
         q: "Which habit purifies wealth and the heart?",
         qh: "Kaunsi aadat maal aur dil ko paak karti?",
         o: ["Charity", "Greed", "Boasting", "Envy"],
-        oh: ["Sadaqah", "Lalach", "Shekhi bagharna", "Hasad"],
         a: "Charity",
         e: "Sadaqah cleanses wealth and nurtures empathy.",
         eh: "Sadaqah maal saaf aur rehmat ka sabab banti."
@@ -192,7 +332,6 @@
         q: "Which is encouraged when differences arise?",
         qh: "Ikhtilaf ki surat me kya tashjee' ki jati?",
         o: ["Adab & gentle dialogue", "Abuse", "Shouting", "Boycott instantly"],
-        oh: ["Adab aur narm guftagu", "Gali galoch", "Chillana", "Fori boycott karna"],
         a: "Adab & gentle dialogue",
         e: "Courteous dialogue resolves differences.",
         eh: "Ba-adab guftagu ikhtilaf door karti."
@@ -201,7 +340,6 @@
         q: "Which habit brings Allah's mercy per many narrations?",
         qh: "Kai riwayaton ke mutabiq kaunsi aadat Allah ki rehmat ka sabab?",
         o: ["Mercy to creation", "Cruelty", "Deception", "Arrogance"],
-        oh: ["Makhluq par reham", "Zulm", "Dhoka", "Takabbur"],
         a: "Mercy to creation",
         e: "Those who show mercy are shown mercy by the Most Merciful.",
         eh: "Jo makhluq par reham karta, Allah us par reham farmata."
@@ -210,104 +348,57 @@
         q: "Which character is a hallmark of the Prophet's Sunnah?",
         qh: "Nabi ki Sunnat me kaunsi akhlaqi pehchan numayan?",
         o: ["Gentleness", "Harshness", "Cheating", "Mockery"],
-        oh: ["Narmi", "Sakhti", "Dhoka", "Mazaq udana"],
         a: "Gentleness",
         e: "The Prophet was gentle and forbearing.",
         eh: "Nabi narm mizaj aur haleem thay."
-      },
-      {
-        q: "Which greeting is Sunnah when meeting a Muslim?",
-        qh: "Musalman se milte waqt Sunnat salaam kya hai?",
-        o: ["Good morning", "As‑Salamu ‘Alaykum", "Peace", "Hello"],
-        oh: ["Good morning", "As‑Salamu ‘Alaykum", "Peace", "Hello"],
-        a: "As‑Salamu ‘Alaykum",
-        e: "Initiating salam is Sunnah; responding is obligatory.",
-        eh: "Salaam shuru karna Sunnat, jawab dena wajib."
-      },
-      {
-        q: "Which hand should one eat with according to Sunnah?",
-        qh: "Sunnat ke mutabiq khana kis haath se khaya jaye?",
-        o: ["Left", "Right", "Either", "Alternating"],
-        oh: ["Baen", "Dain", "Koi bhi", "Bari-bari"],
-        a: "Right",
-        e: "Eat with the right hand; say Bismillah; eat from what is nearest.",
-        eh: "Dain haath se khayein, Bismillah kahe, najdeek se khayein."
-      },
-      {
-        q: "Which is **not** from Prophetic etiquette of speech?",
-        qh: "Adaab-e-Nabawi-e-kalam mein se kaunsa **nahi**?",
-        o: ["Truthfulness", "Interrupting frequently", "Lowering voice", "Clarity"],
-        oh: ["Sachai", "Bar bar tokna", "Aawaz neeche rakhna", "Wazahat"],
-        a: "Interrupting frequently",
-        e: "The Sunnah is clarity, truthfulness, gentleness — not interrupting.",
-        eh: "Sunnat narmi, sach, wazahat; tokna adaab ke khilaf."
-      },
-      {
-        q: "What is Sunnah to say after someone sneezes?",
-        qh: "Kisi ko chheenk aaye to kya kehna Sunnat hai?",
-        o: ["Alhamdulillah", "Yarhamukallah (by listener)", "SubhanAllah", "Bismillah"],
-        oh: ["Alhamdulillah", "Yarhamukallah (sunne wala)", "SubhanAllah", "Bismillah"],
-        a: "Yarhamukallah (by listener)",
-        e: "Sneezer says Alhamdulillah; listener replies Yarhamukallah.",
-        eh: "Chheenkne wala Alhamdulillah; sunne wala Yarhamukallah kehta hai."
-      },
-      {
-        q: "A Muslim’s right over another includes which action?",
-        qh: "Muslim par Muslim ke huqooq mein kaunsa amal hai?",
-        o: ["Ignoring illness", "Responding to salam", "Boasting", "Backbiting"],
-        oh: ["Be-dhyan", "Salaam ka jawab", "Fakhr", "Gheebat"],
-        a: "Responding to salam",
-        e: "Rights: reply to salam, visit sick, attend funeral, accept invitations, bless the sneezer.",
-        eh: "Huqooq: salam ka jawab, a’yadat, janazah, dawat qabool, chheenk par dua."
-      },
-      {
-        q: "Which character trait is most emphasized in dealings?",
-        qh: "Muamilaat mein kaunsa akhlaqi sifat sab se zyada aham?",
-        o: ["Harshness", "Integrity/Trustworthiness", "Mockery", "Greed"],
-        oh: ["Sakhti", "Amanatdari", "Tamaskhur", "Hirs"],
-        a: "Integrity/Trustworthiness",
-        e: "Honesty builds trust and social harmony.",
-        eh: "Sachchai aur amanatdari muashray mein itminan paida karti hai."
-      },
-      {
-        q: "What should one do if angry according to many narrations?",
-        qh: "Gussa aay to kai riwayaton ke mutabiq kya karna chahiye?",
-        o: ["Shout louder", "Seek refuge, keep silent, change posture", "Hit a wall", "Leave Islam"],
-        oh: ["Zyada chillana", "A’udhu billah padhein, khamoshi, halat badlein", "Deewar peetna", "Ma’azAllah"],
-        a: "Seek refuge, keep silent, change posture",
-        e: "Say A’udhu billah, sit/lie if standing, keep silent till calm.",
-        eh: "A’udhu billah, agar kharay ho to baith jayein, chup rahain."
-      },
-      {
-        q: "Which act maintains family ties (Silat-ur-Rahm)?",
-        qh: "Silat-ur-Rahm (rishton ko jodna) ke liye kaunsa amal?",
-        o: ["Ignoring relatives", "Backbiting", "Visiting and helping kin", "Cutting off ties"],
-        oh: ["Rishtedaron ko nazar andaaz", "Gheebat", "Aulad/qarabat ki madad aur mulaqat", "Talluq torna"],
-        a: "Visiting and helping kin",
-        e: "Maintaining kinship is strongly emphasized.",
-        eh: "Qarabat ka rishte jorna bohat aham hai."
-      },
-      {
-        q: "Which eating manner is recommended?",
-        qh: "Khana khane ka kaunsa adaab masnoon hai?",
-        o: ["Wasting food", "Eating excessively", "Moderation and gratitude", "Standing always"],
-        oh: ["Khana zaya karna", "Hadd se zyada khana", "I’tidal aur shukar", "Hamesha kharay ho kar"],
-        a: "Moderation and gratitude",
-        e: "Eat moderately and thank Allah for the provision.",
-        eh: "I’tidal se khayein aur Allah ka shukar ada karein."
-      },
-      {
-        q: "Which manner regarding neighbors is stressed?",
-        qh: "Humsayon ke hawale se kaunsa adaab qati tor par aham?",
-        o: ["Harm them", "Ignore them", "Be kind and do not harm", "Compete in noise"],
-        oh: ["Nuksan pohanchana", "Nazar andaaz", "Meharban aur be-nuksan", "Shor machana"],
-        a: "Be kind and do not harm",
-        e: "Good neighborly conduct is repeatedly emphasized.",
-        eh: "Achha humsayagi muashray ka muhim usool hai."
       }
     ];
-
     let currentIndex = 0;
+
+    // ==========================================
+    // SIDEBAR & PROGRESS LOGIC
+    // ==========================================
+    function toggleProgress() {
+      document.getElementById('progress-sidebar').classList.toggle('open');
+      document.getElementById('topics-sidebar').classList.remove('open');
+      renderProgress();
+    }
+    
+    function toggleTopics() {
+      document.getElementById('topics-sidebar').classList.toggle('open');
+      document.getElementById('progress-sidebar').classList.remove('open');
+    }
+
+    function renderProgress() {
+       let savedProgress = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+       let html = '';
+       const allTopics = [
+         "Qur'an Essentials", "Hadith & Hadith Sciences", "Seerah (Life of the Prophet ﷺ)", 
+         "Aqeedah - Creation to Hereafter", "Fiqh of Worship (Non-Ramadan)", 
+         "Manners & Akhlaq", "General Knowledge (Islamic Themes)"
+       ];
+       
+       allTopics.forEach(t => {
+           let score = savedProgress[t] || 0;
+           let isCurrent = (t === PAGE_TITLE) ? "background: var(--soft-gold);" : "";
+           html += `<div style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding: 10px; border-radius:8px; ${isCurrent}">
+               <div style="color:var(--text-main); font-weight:600; line-height:1.2; margin-bottom:5px;">${t}</div>
+               <span style="color:var(--emerald); font-size: 0.85rem; font-weight:bold;">📍 Completed: ${score}</span>
+           </div>`;
+       });
+       document.getElementById('progress-list').innerHTML = html;
+    }
+
+    function saveProgress() {
+        let prog = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+        // Save the highest question number they reached
+        prog[PAGE_TITLE] = Math.max(prog[PAGE_TITLE] || 0, currentIndex + 1);
+        localStorage.setItem('iq_learning_prog', JSON.stringify(prog));
+    }
+
+    // ==========================================
+    // QUIZ LOGIC
+    // ==========================================
     function showPopup(title, message, icon, callback) {
       const modal = document.getElementById('app-modal');
       document.getElementById('modal-title').innerText = title;
@@ -323,16 +414,19 @@
     function loadQuestion() {
       const qData = QUESTIONS[currentIndex];
       const area = document.getElementById('quiz-area');
+      
       let html = `
         <p style="color:var(--gold); font-weight:600; text-align:center;">Question ${currentIndex + 1} of ${QUESTIONS.length}</p>
-        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px;">
+        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px; border: 1px solid var(--gold);">
           <h4 style="margin-top:0; margin-bottom:5px; line-height:1.4;">${qData.q}</h4>
           <p style="margin:0; font-style:italic; color:var(--emerald); font-size:0.95rem;">${qData.qh || ""}</p>
         </div>
         <div id="options-box"></div>
       `;
       area.innerHTML = html;
+
       const optionsBox = document.getElementById('options-box');
+      
       qData.o.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.className = 'main-btn';
@@ -347,14 +441,18 @@
       const isCorrect = selectedOption === qData.a;
       const title = isCorrect ? "Correct! ✨" : "Explanation";
       const icon = isCorrect ? "✅" : "ℹ️";
+      
       const fullExplanation = (qData.e || "") + (qData.eh ? `\n\n(${qData.eh})` : "");
+
       showPopup(title, fullExplanation, icon, () => {
+        saveProgress(); // Automatically saves progress on every question!
+        
         currentIndex++;
         if (currentIndex < QUESTIONS.length) {
           loadQuestion();
         } else {
           showPopup("Topic Completed!", "Masha'Allah, you have finished this learning module.", "🎓", () => {
-            window.location.href = '../index.html'; 
+            window.location.href = '../index.html?skipSplash=true&screen=learning'; 
           });
         }
       });
