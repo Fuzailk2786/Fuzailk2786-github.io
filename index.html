@@ -1,15 +1,35 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Islamic Questz - 2026</title>
+
   <link rel="manifest" href="manifest.json"/>
+
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+
   <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
   <style>
+    /* Qibla Compass UI */
+.compass-container {
+    position: relative; width: 260px; height: 260px;
+    margin: 30px auto; border: 8px solid var(--gold);
+    border-radius: 50%; background: radial-gradient(circle, var(--soft-gold) 0%, var(--card-bg) 100%);
+    box-shadow: 0 10px 25px var(--shadow);
+}
+.compass-face { position: relative; width: 100%; height: 100%; transition: transform 0.1s ease-out; }
+.kaaba-icon { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); font-size: 2.2rem; z-index: 5; }
+.needle {
+    position: absolute; top: 50%; left: 50%; width: 6px; height: 110px;
+    background: linear-gradient(to top, transparent 50%, var(--emerald) 50%);
+    transform-origin: bottom center; transform: translate(-50%, -100%) rotate(0deg);
+}
+.needle::after { content: '▲'; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); color: var(--emerald); font-size: 24px; }
+.qibla-info { text-align: center; padding: 15px; background: var(--soft-gold); border-radius: 12px; margin-top: 20px; border: 1px solid var(--gold); }
     :root {
       --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b;
       --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7;
@@ -20,32 +40,53 @@
       --emerald: #10b981; --gold: #fbbf24; --soft-gold: #334155;
       --border: #334155; --shadow: rgba(0,0,0,0.4);
     }
+
     body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; color: var(--text-main); transition: 0.3s; overflow-x: hidden; }
+
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    #bismillah-overlay { position: fixed; inset: 0; background: #064e3b; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; transition: 1s; pointer-events: none; user-select: none; }
+
+    #bismillah-overlay {
+      position: fixed; inset: 0; background: #064e3b;
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; z-index: 10000; transition: 1s;
+      pointer-events: none; user-select: none;
+    }
     .bismillah-text { color: #fbbf24; font-size: 2rem; margin-bottom: 20px; font-family: 'Cinzel'; opacity: 0; animation: fadeIn 2s forwards; }
-    #sidebar { position: fixed; right: -280px; top: 0; width: 280px; height: 100%; background: var(--card-bg); z-index: 2000; transition: 0.3s; box-shadow: -5px 0 15px var(--shadow); padding-top: 20px; }
+
+    /* Sidebar */
+    #sidebar {
+      position: fixed; right: -280px; top: 0; width: 280px; height: 100%;
+      background: var(--card-bg); z-index: 2000; transition: 0.3s;
+      box-shadow: -5px 0 15px var(--shadow); padding-top: 20px;
+    }
     #sidebar.open { right: 0; }
     .profile-section { padding: 20px; text-align: center; border-bottom: 2px solid var(--gold); }
     .avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--soft-gold); margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; border: 2px solid var(--gold); position: relative; cursor: pointer; overflow: hidden; }
     #profile-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none; }
+
     .nav-item { padding: 12px 25px; display: flex; align-items: center; gap: 10px; color: var(--text-main); text-decoration: none; cursor: pointer; border-bottom: 1px solid var(--border); }
     .nav-item:hover { background: var(--soft-gold); }
-    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); text-align: center; }
+
+   .mode-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 15px; 
+    margin-top: 20px; 
+    text-align: center; /* Centers the emoji and text */
+}
+    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); }
     .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
+
     .level-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
     .lvl { padding: 15px 5px; border-radius: 12px; border: 2px solid var(--emerald); background: none; color: var(--text-main); font-weight: bold; cursor: pointer; }
+    .lvl.locked { opacity: 0.3; background: #eee; cursor: not-allowed; }
     .lvl.completed { background: var(--emerald) !important; color: white !important; }
+
     .dua-card { background: var(--card-bg); border-left: 5px solid var(--gold); padding: 15px; margin: 10px 0; border-radius: 10px; box-shadow: 0 2px 5px var(--shadow); text-align: right; }
+
     .hidden { display: none !important; }
     #menu-btn { position: fixed; top: 15px; right: 15px; font-size: 1.5rem; z-index: 2001; cursor: pointer; background: var(--gold); color: white; border: none; border-radius: 8px; width: 40px; height: 40px; }
     .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
-    .compass-container { position: relative; width: 260px; height: 260px; margin: 30px auto; border: 8px solid var(--gold); border-radius: 50%; background: radial-gradient(circle, var(--soft-gold) 0%, var(--card-bg) 100%); }
-    .compass-face { position: relative; width: 100%; height: 100%; transition: transform 0.1s ease-out; }
-    .kaaba-icon { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); font-size: 2.2rem; }
-    .needle { position: absolute; top: 50%; left: 50%; width: 6px; height: 110px; background: linear-gradient(to top, transparent 50%, var(--emerald) 50%); transform-origin: bottom center; transform: translate(-50%, -100%) rotate(0deg); }
-    .needle::after { content: '▲'; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); color: var(--emerald); font-size: 24px; }
   </style>
 </head>
 <body>
@@ -56,11 +97,11 @@
   </div>
 
   <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
-    <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold);">
+    <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
       <div id="modal-icon" style="font-size: 3rem; margin-bottom: 10px;"></div>
       <h3 id="modal-title" style="font-family: 'Cinzel'; margin-top: 0; color: var(--emerald);"></h3>
-      <p id="modal-message" style="margin-bottom: 25px; color: var(--text-main);"></p>
-      <button id="modal-btn" class="main-btn" style="width: 100%; background: var(--emerald); color: white;">Continue</button>
+      <p id="modal-message" style="margin-bottom: 25px; line-height: 1.5; color: var(--text-main);"></p>
+      <button id="modal-btn" class="main-btn" style="width: 100%; background: var(--emerald); color: white; border: none;">Continue</button>
     </div>
   </div>
 
@@ -79,20 +120,21 @@
     <div class="nav-item" onclick="showScreen('home'); toggleMenu();">🏠 Home</div>
     <div class="nav-item" onclick="showScreen('ramadan-grid'); toggleMenu();">🌙 Ramadan Quiz</div>
     <div class="nav-item" onclick="openLearningQuiz(); toggleMenu();">📖 Knowledge & Learning</div>
-    <div class="nav-item" onclick="showDailyAyah(); toggleMenu();">📖 Daily Ayah</div>
     <div class="nav-item" onclick="showHadith(); toggleMenu();">📜 Daily Hadith</div>
-    <div class="nav-item" onclick="showDuas(); toggleMenu();">🤲 Daily Duas</div>
-    <div class="nav-item" onclick="showQiblaCompass(); toggleMenu();">🕋 Qibla Direction</div>
     <div class="nav-item" onclick="loadLeaderboard(); toggleMenu();">🏆 Leaderboard</div>
-    <div class="nav-item" onclick="showSavedAyahs(); toggleMenu();">⭐ Saved Verses</div>
+    <div class="nav-item" onclick="showDuas(); toggleMenu();">🤲 Duas for Daily Living</div>
     <div class="nav-item" onclick="showFeedback(); toggleMenu();">💡 Feedback</div>
     <div class="nav-item" onclick="shareApp(); toggleMenu();">📤 Invite or Share</div>
     <div class="nav-item" onclick="toggleTheme(); toggleMenu();">🌓 Theme Mode</div>
-    <div class="nav-item" onclick="toggleMenu()" style="color:gray;">Close</div>
+    <div class="nav-item" onclick="showDailyAyah(); toggleMenu();">📖 Daily Qur'an Verse</div>
+<div class="nav-item" onclick="showQiblaCompass(); toggleMenu();">🕋 Qibla Direction</div>
+<div class="nav-item" onclick="showSavedAyahs(); toggleMenu();">⭐ Saved Verses</div>
+    <div class="nav-item" onclick="toggleMenu()" style="color:gray; border-top: 1px solid var(--border);">Close</div>
   </nav>
 
   <div id="main-container" class="hidden">
-    <div class="app-card" style="margin: 0 auto; max-width: 600px;">
+    <div class="app-card" style="margin: 0 auto; max-width: 500px; padding: 20px;">
+
       <div id="screen-auth">
         <h2 style="font-family: 'Cinzel'; text-align:center;">Welcome</h2>
         <div id="login-box" style="text-align:center;">
@@ -103,20 +145,22 @@
         </div>
       </div>
 
-      <div id="screen-home" class="hidden">
-        <h1 style="font-family: 'Cinzel'; text-align:center; color:var(--emerald);">Islamic Questz</h1>
-        <div class="mode-grid">
-          <div class="main-btn" onclick="showScreen('ramadan-grid')">🌙<br>Ramadan Quiz</div>
-          <div class="main-btn" onclick="openLearningQuiz()">📖<br>Learning</div>
-          <div class="main-btn" onclick="showDailyAyah()">📖<br>Daily Ayah</div>
-          <div class="main-btn" onclick="showHadith()">📜<br>Daily Hadith</div>
-          <div class="main-btn" onclick="showDuas()">🤲<br>Daily Duas</div>
-          <div class="main-btn" onclick="showQiblaCompass()">🕋<br>Qibla</div>
-          <div class="main-btn" onclick="loadLeaderboard()">🏆<br>Leaderboard</div>
-          <div class="main-btn" onclick="showSavedAyahs()">⭐<br>Saved</div>
-          <div class="main-btn" onclick="showFeedback()">💡<br>Feedback</div>
-          <div class="main-btn" onclick="shareApp()">📤<br>Invite</div>
-        </div>
+  <div id="screen-home" class="hidden">
+    <h1 style="font-family: 'Cinzel'; text-align:center;">Islamic Questz</h1>
+    <div class="mode-grid">
+        <div class="main-btn" onclick="showScreen('ramadan-grid')">🌙<br>Ramadan Quiz</div>
+        <div class="main-btn" onclick="openLearningQuiz()">📖<br>Learning</div>
+        
+        <div class="main-btn" onclick="showDailyAyah()">📖<br>Daily Ayah</div>
+        <div class="main-btn" onclick="showHadith()">📜<br>Daily Hadith</div>
+        <div class="main-btn" onclick="showDuas()">🤲<br>Daily Duas</div>
+        
+        <div class="main-btn" onclick="showQiblaCompass()">🕋<br>Qibla</div>
+        <div class="main-btn" onclick="loadLeaderboard()">🏆<br>Leaderboard</div>
+        <div class="main-btn" onclick="showSavedAyahs()">⭐<br>Saved</div>
+        <div class="main-btn" onclick="showFeedback()">💡<br>Feedback</div>
+        <div class="main-btn" onclick="shareApp()">📤<br>Invite</div>
+    </div>
         <button id="install-btn" class="main-btn" style="width: 100%; margin-top: 20px; background: #3b82f6; color: white;">📲 Install App</button>
       </div>
 
@@ -124,108 +168,587 @@
         <button class="back-btn" onclick="showScreen('home')">← Back</button>
         <div id="dynamic-body"></div>
       </div>
+
     </div>
   </div>
 
   <script src="questions_ramadan.js"></script>
 
   <script>
-    /* ------------------ Firebase & Global ------------------ */
-    const firebaseConfig = {
-      apiKey: "AIzaSyD6v6BFkqUmgfJWGIm1eMEEOQX7wnWkq8k",
-      authDomain: "islamicquestz.firebaseapp.com",
-      databaseURL: "https://islamicquestz-default-rtdb.firebaseio.com",
-      projectId: "islamicquestz",
-      storageBucket: "islamicquestz.firebasestorage.app",
-      appId: "1:740000996250:web:444a3b4ba9c92dad64b823",
-      messagingSenderId: "740000996250",
-      measurementId: "G-YSH95XR38D"
+
+/* ------------------ Firebase Init ------------------ */
+const firebaseConfig = {
+  apiKey: "AIzaSyD6v6BFkqUmgfJWGIm1eMEEOQX7wnWkq8k",
+  authDomain: "islamicquestz.firebaseapp.com",
+  databaseURL: "https://islamicquestz-default-rtdb.firebaseio.com",
+  projectId: "islamicquestz",
+  storageBucket: "islamicquestz.firebasestorage.app",
+  appId: "1:740000996250:web:444a3b4ba9c92dad64b823",
+  messagingSenderId: "740000996250",
+  measurementId: "G-YSH95XR38D"
+};
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* ------------------ Modal / Utilities ------------------ */
+function showPopup(title, message, icon, callback) {
+  const modal = document.getElementById('app-modal');
+  document.getElementById('modal-title').innerText = title;
+  document.getElementById('modal-message').innerText = message;
+  document.getElementById('modal-icon').innerText = icon || '';
+  modal.classList.remove('hidden');
+  document.getElementById('modal-btn').onclick = () => {
+    modal.classList.add('hidden');
+    if (callback) callback();
+  };
+}
+function toggleMenu() { const s = document.getElementById('sidebar'); if (s) s.classList.toggle('open'); }
+function toggleTheme() {
+  const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.body.setAttribute('data-theme', t);
+}
+function shareApp() { if (navigator.share) navigator.share({ title:'Islamic Questz', url: location.href }); }
+
+/* ------------------ Auth / Profile ------------------ */
+function handleAuth(type) {
+  let user = { name: "", avatar: "" };
+  if (type === 'guest') {
+    user.name = "Guest_" + Math.floor(Math.random() * 9000);
+  } else {
+    const val = document.getElementById('auth-email').value;
+    if (!val.includes('@')) {
+      showPopup("Input Error", "A valid email is required to register.", "📧");
+      return;
+    }
+    user.name = val.split('@')[0];
+  }
+  localStorage.setItem('iq_user', JSON.stringify(user));
+  localStorage.setItem('user_name', user.name);
+  loginUser(user);
+}
+function loginUser(user) {
+  document.getElementById('screen-auth').classList.add('hidden');
+  document.getElementById('screen-home').classList.remove('hidden');
+  document.getElementById('menu-btn').classList.remove('hidden');
+  document.getElementById('user-display-name').innerText = user.name;
+  document.getElementById('avatar-init').innerText = (user.name || '?')[0].toUpperCase();
+}
+function checkExistingLogin() {
+  const saved = localStorage.getItem('iq_user');
+  if (saved) {
+    loginUser(JSON.parse(saved));
+  }
+}
+function uploadImage(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('profile-img').src = e.target.result;
+      document.getElementById('profile-img').style.display = 'block';
+      document.getElementById('avatar-init').style.display = 'none';
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    reader.readAsDataURL(input.files[0]);
+  }
+}
 
-    function showPopup(title, message, icon, callback) {
-      const modal = document.getElementById('app-modal');
-      document.getElementById('modal-title').innerText = title;
-      document.getElementById('modal-message').innerText = message;
-      document.getElementById('modal-icon').innerText = icon || '';
-      modal.classList.remove('hidden');
-      document.getElementById('modal-btn').onclick = () => { modal.classList.add('hidden'); if (callback) callback(); };
+/* ------------------ Per-User Progress (Ramadan) ------------------ */
+function getCurrentUserName() {
+  const u = JSON.parse(localStorage.getItem('iq_user') || '{}');
+  return (u && u.name) ? u.name : (localStorage.getItem('user_name') || 'Guest');
+}
+function progressKey() { return `iq_progress_${getCurrentUserName()}`; }
+function getProgress() { try { return JSON.parse(localStorage.getItem(progressKey()) || '{}'); } catch { return {}; } }
+function setProgressMap(map) { localStorage.setItem(progressKey(), JSON.stringify(map)); }
+function markLevelCompleted(levelNum) { const m = getProgress(); m[String(levelNum)] = true; setProgressMap(m); }
+function isLevelCompleted(levelNum) { const m = getProgress(); return !!m[String(levelNum)]; }
+function resetLevel(levelNum) { const m = getProgress(); delete m[String(levelNum)]; setProgressMap(m); }
+
+/* ------------------ Screens ------------------ */
+function showScreen(id) {
+  const screens = ['screen-auth', 'screen-home', 'screen-content'];
+  screens.forEach(s => document.getElementById(s).classList.add('hidden'));
+  if (id === 'ramadan-grid') {
+    renderRamadanGrid();
+    document.getElementById('screen-content').classList.remove('hidden');
+  } else {
+    document.getElementById('screen-' + id).classList.remove('hidden');
+  }
+  const s = document.getElementById('sidebar');
+  if (s && s.classList.contains('open')) toggleMenu();
+}
+
+/* ------------------ Ramadan Grid / Timer ------------------ */
+function startTimer(targetDate) {
+  function updateClock() {
+    const now = new Date().getTime();
+    const distance = targetDate - now;
+    if (distance < 0) { clearInterval(timerInterval); renderRamadanGrid(); return; }
+    const hours = Math.floor((distance % (1000*60*60*24))/(1000*60*60));
+    const minutes = Math.floor((distance % (1000*60*60))/(1000*60));
+    const seconds = Math.floor((distance % (1000*60))/1000);
+    const clock = document.getElementById('countdown-clock');
+    if (clock) clock.innerText =
+      (hours<10?"0"+hours:hours)+":"+(minutes<10?"0"+minutes:minutes)+":"+(seconds<10?"0"+seconds:seconds);
+  }
+  const timerInterval = setInterval(updateClock, 1000);
+  updateClock();
+}
+function renderRamadanGrid() {
+  const container = document.getElementById('dynamic-body');
+  const ramadanStart = new Date('2026-02-19T00:00:00+05:30'); 
+  const now = new Date();
+  const diffInMs = now - ramadanStart;
+  const currentDay = Math.floor(diffInMs / (1000 * 60 * 60 * 24)) + 1;
+  const nextUnlock = new Date(now); nextUnlock.setHours(24, 0, 0, 0);
+  container.innerHTML = `
+    <div id="timer-banner" style="background:var(--soft-gold); padding:15px; border-radius:15px; margin-bottom:20px; text-align:center; border:1px solid var(--gold); border-left:5px solid var(--gold);">
+      <small style="color:var(--gold); font-weight:600; text-transform:uppercase; letter-spacing:1px;">Next Level Unlocks In / Agla Level Khulega:</small>
+      <div id="countdown-clock" style="font-family:'Cinzel'; font-size:1.8rem; color:var(--emerald); margin-top:5px;">00:00:00</div>
+    </div>
+    <h2 style="font-family:'Cinzel'; text-align:center;">Ramadan Challenge 2026</h2>
+    <div class="level-grid" id="grid"></div>
+  `;
+  startTimer(nextUnlock);
+  for (let i = 1; i <= 31; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'lvl';
+    btn.innerText = i === 31 ? "EID" : i;
+    if (i > currentDay && i !== 31) {
+      btn.classList.add('locked');
+      btn.onclick = () => showPopup("Locked / Band Hai", `This challenge unlocks on Day ${i}.\n(Yeh challenge Day ${i} ko khulega.)`, "🔒");
+    } else {
+      if (isLevelCompleted(i)) btn.classList.add('completed');
+      btn.onclick = () => i === 31 ? startEidQuiz() : startRamadanLevel(i);
     }
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-    function toggleTheme() { const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.body.setAttribute('data-theme', t); }
-    function shareApp() { if (navigator.share) navigator.share({ title:'Islamic Questz', url: location.href }); }
+    document.getElementById('grid').appendChild(btn);
+  }
+}
+function startRamadanLevel(levelNum) {
+  if (typeof window.RAMADAN_QUESTIONS === 'undefined') {
+    return showPopup("Loading", "Questions are still loading, please wait.", "⏳");
+  }
+  const questions = window.RAMADAN_QUESTIONS[`level${levelNum}`];
+  if (!questions) return showPopup("Coming Soon", "Content for this day is being prepared.", "📅");
+  const body = document.getElementById('dynamic-body');
+  const restartBtn = isLevelCompleted(levelNum) ? `
+    <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+      <button class="main-btn" style="background:#fee2e2; border-color:#fecaca; color:#b91c1c;"
+        onclick="confirmRestartLevel(${levelNum})">↺ Restart this Level</button>
+    </div>` : '';
+  body.innerHTML = `<h3 id="quiz-title">Day ${levelNum}</h3>${restartBtn}<div id="quiz-area"></div>`;
+  loadQuestion(levelNum, 0);
+}
+function confirmRestartLevel(levelNum) {
+  showPopup("Restart Level?", "This will clear completion status for this level and let you replay it. Proceed?", "⚠️", () => {
+    resetLevel(levelNum);
+    renderRamadanGrid();
+    startRamadanLevel(levelNum);
+  });
+}
 
-    /* ------------------ Automatic Hadith System ------------------ */
-    const AUTO_HADITH_LIST = [
-      "The best among you are those who learn the Quran and teach it.",
-      "Cleanliness is half of faith.",
-      "A good word is a charity.",
-      "He who does not show mercy to others will not be shown mercy.",
-      "The most beloved of deeds to Allah are those that are most consistent.",
-      "Seek knowledge from the cradle to the grave.",
-      "None of you truly believes until he loves for his brother what he loves for himself."
-    ];
-
-    function showHadith() {
-      showScreen('content');
-      const body = document.getElementById('dynamic-body');
-      body.innerHTML = "<h2 style='text-align:center;'>Hadith of the Day</h2><p style='text-align:center;'>Loading...</p>";
-
-      db.ref('dailyHadith').on('value', snap => {
-        const data = snap.val();
-        const today = new Date().toLocaleDateString();
-        const isAdmin = localStorage.getItem('is_admin') === 'true';
-        const adminBtn = isAdmin ? `<button onclick="renderAdminPanel()" class="main-btn" style="margin-top:20px; background:var(--gold); color:white;">📝 Master: Override Hadith</button>` : '';
-
-        if (data && new Date(data.timestamp).toLocaleDateString() === today) {
-          body.innerHTML = `<h2>Hadith of the Day</h2><div class="dua-card">"${data.content}"</div><p style="text-align:right; font-size:0.8rem; color:gray;">(Master Verified)</p>${adminBtn}`;
+function loadQuestion(level, index) {
+  const qData = window.RAMADAN_QUESTIONS[`level${level}`][index];
+  const area = document.getElementById('quiz-area');
+  if (!qData) return;
+  area.innerHTML = `
+    <p style="color:var(--gold); font-weight:600;">Question ${index + 1} of ${window.RAMADAN_QUESTIONS[`level${level}`].length}</p>
+    <div style="margin-bottom:20px;">
+      <h4 style="margin-bottom:5px; line-height:1.4;">${qData.q}</h4>
+      <p style="margin:0; font-style:italic; color:var(--emerald); font-size:0.95rem; opacity:0.9;">${qData.qh || ""}</p>
+    </div>
+    <div id="options-box"></div>
+  `;
+  qData.o.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'main-btn';
+    b.style.width = "100%";
+    b.style.marginBottom = "10px";
+    b.style.textAlign = "left";
+    const hinglishOpt = (qData.oh && qData.oh[i]) ? `<br><span style="font-size:0.85rem; opacity:0.8;">${qData.oh[i]}</span>` : "";
+    b.innerHTML = `<strong>${opt}</strong>${hinglishOpt}`;
+    b.onclick = (e) => { e.preventDefault(); checkAnswer(level, index, opt); };
+    document.getElementById('options-box').appendChild(b);
+  });
+}
+function checkAnswer(level, index, selected) {
+  const qData = window.RAMADAN_QUESTIONS[`level${level}`][index];
+  if ((selected || '').trim() === (qData.a || '').trim()) {
+    const fullExplanation = (qData.e || "") + (qData.eh ? `\n\n(${qData.eh})` : "");
+    showPopup("Correct! ✨", fullExplanation, "🌙", () => {
+      const nextIndex = index + 1;
+      if (nextIndex < window.RAMADAN_QUESTIONS[`level${level}`].length) {
+        loadQuestion(level, nextIndex);
+      } else {
+        markLevelCompleted(level);
+        if (level === 31) {
+          showPopup("MABROOK!", "Finale Completed! / Finale Poora Hua!", "🏆", () => showCertificate());
         } else {
-          const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
-          const autoH = AUTO_HADITH_LIST[dayOfYear % AUTO_HADITH_LIST.length];
-          body.innerHTML = `<h2>Hadith of the Day</h2><div class="dua-card">"${autoH}"</div><p style="text-align:right; font-size:0.8rem; color:gray;">Daily Inspiration</p>${adminBtn}`;
+          showPopup("Day Completed!", `Day ${level} finished. / Din ${level} poora hua.`, "⭐", () => renderRamadanGrid());
         }
-      });
-    }
-
-    function renderAdminPanel() {
-      const body = document.getElementById('dynamic-body');
-      body.innerHTML = `<div style="padding:20px; background:var(--soft-gold); border-radius:15px; border:2px solid var(--gold);"><h2>📜 Master Override</h2><textarea id="hadith-text" style="width:100%; height:150px; border-radius:10px; padding:10px; margin-bottom:10px;"></textarea><button onclick="saveHadithToCloud()" class="main-btn" style="width:100%; background:var(--emerald); color:white;">Broadcast Override</button></div>`;
-    }
-    function saveHadithToCloud() {
-      const text = document.getElementById('hadith-text').value;
-      if (!text) return alert("Enter text!");
-      db.ref('dailyHadith').set({ content: text, timestamp: Date.now() }).then(() => showPopup("Success", "Updated for all!", "✨", showHadith));
-    }
-
-    /* ------------------ Logic for Home & Navigation ------------------ */
-    function showScreen(id) {
-      ['screen-auth', 'screen-home', 'screen-content'].forEach(s => document.getElementById(s).classList.add('hidden'));
-      const target = id === 'ramadan-grid' ? 'content' : id;
-      document.getElementById('screen-' + target).classList.remove('hidden');
-      if (id === 'ramadan-grid') renderRamadanGrid();
-      if (document.getElementById('sidebar').classList.contains('open')) toggleMenu();
-    }
-
-    function handleAuth(type) {
-      let u = { name: type === 'guest' ? "Guest_" + Math.floor(Math.random()*9000) : document.getElementById('auth-email').value.split('@')[0] };
-      localStorage.setItem('iq_user', JSON.stringify(u)); localStorage.setItem('user_name', u.name);
-      loginUser(u);
-    }
-    function loginUser(u) {
-      ['screen-auth', 'menu-btn'].forEach((id, i) => i ? document.getElementById(id).classList.remove('hidden') : document.getElementById(id).classList.add('hidden'));
-      document.getElementById('screen-home').classList.remove('hidden');
-      document.getElementById('user-display-name').innerText = u.name;
-      document.getElementById('avatar-init').innerText = (u.name || '?')[0].toUpperCase();
-    }
-    function checkExistingLogin() { const s = localStorage.getItem('iq_user'); if (s) loginUser(JSON.parse(s)); }
-
-    /* ------------------ Initialization ------------------ */
-    window.addEventListener('load', () => {
-      const checkAdmin = new URLSearchParams(window.location.search).get('master');
-      if (checkAdmin === 'admin786') { localStorage.setItem('is_admin', 'true'); showPopup("Verified", "Master Access Activated", "🔑"); }
-      setTimeout(() => { document.getElementById('bismillah-overlay').classList.add('hidden'); document.getElementById('main-container').classList.remove('hidden'); checkExistingLogin(); }, 2500);
+        const currentPoints = (parseInt(localStorage.getItem('totalPoints')) || 0) + 10;
+        localStorage.setItem('totalPoints', currentPoints);
+        const savedName = localStorage.getItem('user_name');
+        if (savedName) submitScore(savedName, currentPoints);
+      }
     });
+  } else {
+    showPopup("Try Again", "Incorrect answer. / Galat jawab. Dobara sochein! 🤔", "❌");
+  }
+}
+function startEidQuiz() {
+  if (!isLevelCompleted(30)) {
+    showPopup("Grand Finale Locked", "Please complete all 30 days of Ramadan first.", "🔒", () => showScreen('ramadan-grid'));
+    return;
+  }
+  showPopup("Grand Finale", "Answer all 10 questions correctly to earn your certificate.", "🌟", () => startRamadanLevel(31));
+}
+function showCertificate() {
+  const isCompleted = isLevelCompleted(31);
+  const body = document.getElementById('dynamic-body');
+  if (!isCompleted) {
+    body.innerHTML = `
+      <div style="text-align:center; padding:40px;">
+        <div style="font-size:50px;">🔒</div>
+        <h3>Certificate Locked</h3>
+        <button class="main-btn" onclick="showScreen('ramadan-grid')">Go to Quiz</button>
+      </div>`;
+    showScreen('content');
+    return;
+  }
+  const user = JSON.parse(localStorage.getItem('iq_user') || '{}') || { name: "Valued Learner" };
+  const name = user.name || "Valued Learner";
+  const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  body.innerHTML = `
+    <div id="certificate-print-area" style="border:15px double var(--gold); padding:30px; text-align:center; background:white; color:#064e3b; position:relative; font-family:'Cinzel', serif;">
+      <div style="border:2px solid var(--emerald); padding:20px;">
+        <h1 style="margin:0; font-size:2.5rem;">CERTIFICATE</h1>
+        <p style="letter-spacing:3px;">OF COMPLETION</p>
+        <hr style="width:50%; border:1px solid var(--gold);">
+        <p>This is to certify that</p>
+        <h2 style="font-size:2rem; text-decoration:underline; margin:10px 0;">${name}</h2>
+        <p>has successfully completed the</p>
+        <h3 style="color:var(--emerald)">30-DAY RAMADAN QUEST 2026</h3>
+        <p>Demonstrating excellent knowledge of Islamic history, <br>Quranic studies, and Ramadan traditions.</p>
+        <div style="margin-top:30px; display:flex; justify-content:space-between; align-items:flex-end;">
+          <div style="text-align:left;"><small>Date: ${date}</small></div>
+          <div style="text-align:right;"><img src="https://img.icons8.com/fluency/64/verified-badge.png" width="40" alt="verified"><br><small>Islamic Questz Certified</small></div>
+        </div>
+      </div>
+    </div>
+    <button class="main-btn" style="width:100%; margin-top:20px; background:var(--emerald); color:white;" onclick="printCertificate()">📥 Download / Save PDF</button>
+  `;
+  showScreen('content');
+}
+function printCertificate() {
+  const printContent = document.getElementById('certificate-print-area').innerHTML;
+  const originalContent = document.body.innerHTML;
+  document.body.innerHTML = printContent;
+  window.print();
+  document.body.innerHTML = originalContent;
+  window.location.reload();
+}
+
+function openLearningQuiz() {
+    renderLearningCategories();
+    document.getElementById('screen-content').classList.remove('hidden');
+}
+
+function renderLearningCategories() {
+    const container = document.getElementById('dynamic-body');
+    let html = '<h2 style="font-family:\'Cinzel\'; text-align:center;">📖 Learning Pathways</h2><div class="mode-grid" style="grid-template-columns: 1fr;">';
+    
+    const categories = [
+        { title: "Qur'an Essentials", link: "learning/quran-essentials.html" },
+        { title: "Hadith & Hadith Sciences", link: "learning/hadith-sciences.html" },
+        { title: "Seerah (Life of the Prophet ﷺ)", link: "learning/seerah.html" },
+        { title: "Aqeedah – Creation to Hereafter", link: "learning/aqeedah.html" },
+        { title: "Fiqh of Worship (Non-Ramadan)", link: "learning/fiqh.html" },
+        { title: "Manners & Akhlaq", link: "learning/manners.html" },
+        { title: "General Knowledge (Islamic Themes)", link: "learning/general-knowledge.html" }
+    ];
+    
+    categories.forEach(cat => {
+        html += `<a href="${cat.link}" style="text-decoration:none;">
+                    <div class="main-btn" style="text-align:center; padding:20px; color:var(--text-main);">
+                        ${cat.title}
+                    </div>
+                 </a>`;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+const DUA_DB = [
+  { t: "Before Eating",  a: "بِسْمِ اللَّهِ", tr: "In the name of Allah" },
+  { t: "After Eating",   a: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنَا", tr: "Praise be to Allah who fed us" },
+  { t: "Before Sleeping",a: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", tr: "In Your name O Allah I die and live" }
+];
+function showDuas() {
+  showScreen('content');
+  const body = document.getElementById('dynamic-body');
+  body.innerHTML = '<h2 style="font-family:\'Cinzel\'; text-align:center;">Daily Duas</h2>';
+  DUA_DB.forEach(d => {
+    body.innerHTML += `<div class="dua-card"><strong>${d.t}</strong><br><span style="font-size:1.5rem;">${d.a}</span><br><small>${d.tr}</small></div>`;
+  });
+}
+
+/* --- UPDATED: AUTOMATIC HADITH WITH MASTER OVERRIDE --- */
+const AUTO_HADITH_LIST = [
+  "The best among you are those who learn the Quran and teach it.",
+  "Cleanliness is half of faith.",
+  "A good word is a charity.",
+  "He who does not show mercy to others will not be shown mercy.",
+  "The most beloved of deeds to Allah are those that are most consistent, even if they are small.",
+  "Seek knowledge from the cradle to the grave.",
+  "None of you truly believes until he loves for his brother what he loves for himself."
+];
+
+function showHadith() {
+  showScreen('content');
+  const body = document.getElementById('dynamic-body');
+  body.innerHTML = "<h2 style=\"font-family:'Cinzel'; text-align:center;\">Hadith of the Day</h2><p style='text-align:center;'>Loading...</p>";
+
+  // 1. Check Firebase for a manual 'Master' update first
+  db.ref('dailyHadith').on('value', (snapshot) => {
+    const data = snapshot.val();
+    const todayStr = new Date().toLocaleDateString(); // DD/MM/YYYY
+    const isAdmin = localStorage.getItem('is_admin') === 'true'; // Check Master Access
+    
+    const adminBtn = isAdmin ? `<button onclick="renderAdminPanel()" class="main-btn" style="margin-top:20px; background:var(--gold); color:white;">📝 Master: Override Hadith</button>` : '';
+
+    // 2. Logic: If Firebase has data AND it was updated today, show it
+    if (data && new Date(data.timestamp).toLocaleDateString() === todayStr) {
+      body.innerHTML = `
+        <h2 style="font-family:'Cinzel'; text-align:center;">Hadith of the Day</h2>
+        <div class="dua-card" style="font-size:1.1rem; line-height:1.6; border-left:5px solid var(--gold);">
+          "${data.content}"
+        </div>
+        <p style="text-align:right; font-size:0.8rem; color:gray; margin-top:10px;">
+          (Verified Update)
+        </p>
+        ${adminBtn}
+      `;
+    } 
+    // 3. Otherwise: Show the Automatic Rotating Hadith
+    else {
+      const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+      const autoHadith = AUTO_HADITH_LIST[dayOfYear % AUTO_HADITH_LIST.length];
+      
+      body.innerHTML = `
+        <h2 style="font-family:'Cinzel'; text-align:center;">Hadith of the Day</h2>
+        <div class="dua-card" style="font-size:1.1rem; line-height:1.6;">
+          "${autoHadith}"
+        </div>
+        <p style="text-align:right; font-size:0.8rem; color:gray; margin-top:10px;">
+          Daily Inspiration
+        </p>
+        ${adminBtn}
+      `;
+    }
+  });
+}
+
+function renderAdminPanel() {
+  if (localStorage.getItem('is_admin') !== 'true') return;
+  const body = document.getElementById('dynamic-body');
+  body.innerHTML = `
+    <div style="padding:20px; background:var(--soft-gold); border-radius:15px; border:2px solid var(--gold);">
+      <h2 style="color:var(--emerald);">📜 Master Override</h2>
+      <p style="font-size:0.85rem;">Entering text here will replace the automatic Hadith for everyone today.</p>
+      <textarea id="hadith-text" placeholder="Type the correct Hadith here..." 
+        style="width:100%; height:150px; border-radius:10px; border:1px solid #ccc; padding:10px; margin-bottom:10px; font-family:inherit;"></textarea>
+      <button onclick="saveHadithToCloud()" class="main-btn" style="width:100%; background:var(--emerald); color:white;">Broadcast Override</button>
+      <button onclick="showHadith()" class="main-btn" style="width:100%; margin-top:10px; background:gray; color:white;">Cancel</button>
+    </div>
+  `;
+}
+
+function safeKey(name) {
+  return String(name || 'guest').replace(/[.#$/\[\]\/]/g, '_').slice(0, 60);
+}
+function submitScore(username, score) {
+  const key = safeKey(username);
+  const ref = db.ref('leaderboardUsers/' + key);
+  ref.once('value').then(snap => {
+    const current = snap.val();
+    if (!current || Number(score) > Number((current || {}).score)) {
+      ref.set({ name: username, score: Number(score), timestamp: Date.now() })
+        .catch(err => console.error("Leaderboard Write Error", err));
+    }
+  }).catch(err => console.error('Leaderboard Read Error:', err));
+}
+function loadLeaderboard() {
+  showScreen('content');
+  const body = document.getElementById('dynamic-body');
+  body.innerHTML = "<h2 style=\"font-family:'Cinzel'; text-align:center;\">🏆 Global Leaderboard</h2><p>Loading Top 50...</p>";
+  
+  const ref = db.ref('leaderboardUsers');
+  ref.orderByChild('score').limitToLast(50).on('value', (snapshot) => {
+    let rows = [];
+    snapshot.forEach(c => rows.push(c.val()));
+    rows.sort((a,b) => b.score - a.score);
+    let html = '<table style="width:100%; margin-top:20px; border-collapse:collapse; text-align:left;">';
+    html += '<tr style="border-bottom:2px solid var(--gold);"><th style="padding:10px;">Rank</th><th>Name</th><th>Points</th></tr>';
+    rows.forEach((p, i) => {
+      html += `<tr style="border-bottom:1px solid #eee; height:45px;">
+        <td style="padding:10px; font-weight:bold;">${i + 1}</td>
+        <td>${(p && p.name) ? p.name : '-'}</td>
+        <td style="color:var(--gold); font-weight:bold;">${(p && p.score) ? p.score : 0}</td>
+      </tr>`;
+    });
+    html += '</table>';
+    body.innerHTML = html;
+  }, (err) => {
+    body.innerHTML = `<p style="color:crimson; text-align:center;">Error loading leaderboard.</p>`;
+  });
+}
+
+/* ------------------ UPGRADED: Overlay Hide & URL Parser ------------------ */
+(function ensureOverlayHides() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const skipSplash = urlParams.get('skipSplash') === 'true';
+  const screenTarget = urlParams.get('screen');
+
+  function hide() {
+    const overlay = document.getElementById('bismillah-overlay');
+    const main = document.getElementById('main-container');
+    if (!overlay || !main) return;
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none';
+    setTimeout(() => {
+      overlay.classList.add('hidden');
+      main.classList.remove('hidden');
+      checkExistingLogin();
+      
+      // Feature 1 Fix: Auto-route back to Learning Menu without clicking home
+      if (screenTarget === 'learning') { 
+        openLearningQuiz(); 
+      }
+    }, 800);
+  }
+/* ------------------ QIBLA COMPASS LOGIC ------------------ */
+function showQiblaCompass() {
+    showScreen('content');
+    const body = document.getElementById('dynamic-body');
+    body.innerHTML = `
+        <h2 style="font-family:'Cinzel'; text-align:center;">🕋 Qibla Direction</h2>
+        <p style="text-align:center; font-size:0.85rem; color:gray;">Enable Location (GPS) and lay phone flat.</p>
+        <div class="compass-container">
+            <div id="compass-face" class="compass-face">
+                <div class="kaaba-icon">🕋</div>
+                <div id="qibla-needle" class="needle"></div>
+            </div>
+        </div>
+        <div class="qibla-info">
+            <div id="qibla-status">Finding North...</div>
+            <div id="qibla-degree" style="font-weight:bold; font-size:1.4rem; color:var(--emerald);">--°</div>
+        </div>`;
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+            const qibla = calculateQibla(pos.coords.latitude, pos.coords.longitude);
+            document.getElementById('qibla-status').innerText = "Qibla Angle from North:";
+            document.getElementById('qibla-degree').innerText = Math.round(qibla) + "°";
+
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientationabsolute', (e) => {
+                    let heading = e.alpha || e.webkitCompassHeading;
+                    if (heading !== undefined) {
+                        const needleRotation = qibla - heading;
+                        document.getElementById('qibla-needle').style.transform = `translate(-50%, -100%) rotate(${needleRotation}deg)`;
+                    }
+                }, true);
+            }
+        }, () => showPopup("GPS Error", "Please enable location to use the compass.", "📍"));
+    }
+}
+
+function calculateQibla(lat, lng) {
+    const mLat = 21.4225 * Math.PI / 180; const mLng = 39.8262 * Math.PI / 180;
+    const uLat = lat * Math.PI / 180; const uLng = lng * Math.PI / 180;
+    const y = Math.sin(mLng - uLng);
+    const x = Math.cos(uLat) * Math.tan(mLat) - Math.sin(uLat) * Math.cos(mLng - uLng);
+    return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+}
+
+/* ------------------ DAILY AYAH & FAVORITES ------------------ */
+function showDailyAyah() {
+    showScreen('content');
+    const body = document.getElementById('dynamic-body');
+    body.innerHTML = `<h2 style="font-family:'Cinzel'; text-align:center;">📖 Daily Verse</h2><div id="ayah-box">Loading...</div>`;
+
+    db.ref('dailyAyah/current').on('value', snap => {
+        const d = snap.val();
+        if (!d) return body.innerHTML = "<p>No verse posted today.</p>";
+        
+        document.getElementById('ayah-box').innerHTML = `
+            <div class="dua-card" style="text-align:center;">
+                <div style="font-size:1.8rem; direction:rtl; margin-bottom:15px; font-family:serif;">${d.arabic}</div>
+                <div style="color:var(--emerald); font-weight:600;">${d.english}</div>
+                <div style="color:var(--gold); border-top:1px solid #eee; margin-top:10px; padding-top:10px;">${d.urdu}</div>
+                <div style="margin-top:20px; display:flex; gap:10px; justify-content:center;">
+                    <button class="main-btn" onclick="new Audio('${d.audioUrl}').play()">▶ Play</button>
+                    <button class="main-btn" style="background:var(--gold); color:white;" onclick='saveAyah(${JSON.stringify(d)})'>⭐ Save</button>
+                </div>
+                <small style="display:block; margin-top:10px; color:gray;">Surah ${d.surah}, Ayah ${d.ayah}</small>
+            </div>`;
+    });
+}
+
+function saveAyah(ayahObj) {
+    let saved = JSON.parse(localStorage.getItem('iq_saved_ayahs') || '[]');
+    // Check for duplicates
+    if (saved.some(a => a.surah === ayahObj.surah && a.ayah === ayahObj.ayah)) {
+        return showPopup("Already Saved", "This verse is already in your favorites.", "⭐");
+    }
+    saved.push(ayahObj);
+    localStorage.setItem('iq_saved_ayahs', JSON.stringify(saved));
+    showPopup("Saved!", "Verse added to your permanent collection.", "✨");
+}
+
+function showSavedAyahs() {
+    showScreen('content');
+    const body = document.getElementById('dynamic-body');
+    let saved = JSON.parse(localStorage.getItem('iq_saved_ayahs') || '[]');
+    body.innerHTML = `<h2 style="font-family:'Cinzel'; text-align:center;">⭐ Your Saved Verses</h2>`;
+    
+    if (saved.length === 0) body.innerHTML += "<p style='text-align:center;'>No saved verses yet.</p>";
+    
+    saved.reverse().forEach((d, idx) => {
+        body.innerHTML += `
+            <div class="dua-card">
+                <div style="font-size:1.4rem; direction:rtl; margin-bottom:10px;">${d.arabic}</div>
+                <p style="font-size:0.9rem;">${d.english}</p>
+                <button class="main-btn" onclick="new Audio('${d.audioUrl}').play()">▶ Listen</button>
+                <button class="main-btn" onclick="deleteSavedAyah(${idx})" style="color:red;">Remove</button>
+            </div>`;
+    });
+}
+
+function deleteSavedAyah(idx) {
+    let saved = JSON.parse(localStorage.getItem('iq_saved_ayahs') || '[]');
+    saved.reverse().splice(idx, 1);
+    localStorage.setItem('iq_saved_ayahs', JSON.stringify(saved.reverse()));
+    showSavedAyahs();
+}
+  // Feature 1 Fix: Skip splash animation instantly if returning from learning page
+  if (skipSplash) {
+    const overlay = document.getElementById('bismillah-overlay');
+    const main = document.getElementById('main-container');
+    if (overlay) overlay.classList.add('hidden');
+    if (main) main.classList.remove('hidden');
+    checkExistingLogin();
+    if (screenTarget === 'learning') openLearningQuiz();
+  } else {
+    // Normal first-time load
+    window.addEventListener('load', () => setTimeout(() => { hide(); }, 2500));
+    setTimeout(() => {
+      const overlay = document.getElementById('bismillah-overlay');
+      if (overlay && !overlay.classList.contains('hidden')) { hide(); }
+    }, 5000);
+  }
+})();
   </script>
 </body>
 </html>
