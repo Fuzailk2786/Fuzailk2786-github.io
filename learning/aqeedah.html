@@ -3,19 +3,74 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aqeedah - Islamic Questz</title>
+  <title>Aqeedah - Creation to Hereafter</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+
   <style>
-    :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b; --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7; --border: #e2e8f0; --shadow: rgba(0,0,0,0.1); }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; color: var(--text-main); }
+    :root {
+      --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b;
+      --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7;
+      --border: #e2e8f0; --shadow: rgba(0,0,0,0.1);
+    }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: var(--bg-color); 
+      margin: 0; 
+      color: var(--text-main); 
+      overflow-x: hidden;
+    }
     .app-card { margin: 0 auto; max-width: 500px; padding: 20px; }
-    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); width: 100%; margin-bottom: 10px; text-align: left; }
+    
+    .main-btn { 
+      background: var(--card-bg); border: 1px solid var(--border); 
+      padding: 15px; border-radius: 15px; cursor: pointer; 
+      transition: 0.2s; font-weight: 600; color: var(--text-main); 
+      width: 100%; margin-bottom: 10px; text-align: left;
+    }
     .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
-    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
+    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; font-size: 1rem; margin:0;}
     .hidden { display: none !important; }
+
+    /* New Sidebars CSS for Feature 2 & 3 */
+    .sidebar { 
+      position: fixed; top: 0; height: 100%; width: 280px; 
+      background: var(--card-bg); z-index: 3000; 
+      box-shadow: 0 0 15px rgba(0,0,0,0.5); 
+      transition: transform 0.3s ease; padding: 20px; 
+      overflow-y: auto; box-sizing: border-box;
+    }
+    .left-sidebar { left: 0; transform: translateX(-100%); }
+    .left-sidebar.open { transform: translateX(0); }
+    .right-sidebar { right: 0; transform: translateX(100%); }
+    .right-sidebar.open { transform: translateX(0); }
+    
+    .close-btn { background: none; border: none; font-size: 2rem; float: right; cursor: pointer; color: var(--gold); line-height: 0.8; margin-bottom: 10px;}
+    .topic-link { display: block; padding: 15px 10px; border-bottom: 1px solid var(--border); color: var(--text-main); text-decoration: none; font-weight: 600; transition: 0.2s;}
+    .topic-link:hover { background: var(--soft-gold); border-radius: 8px; border-bottom: none;}
+    
+    .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card-bg); padding: 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); }
   </style>
 </head>
 <body>
+
+  <div id="progress-sidebar" class="sidebar left-sidebar">
+    <button class="close-btn" onclick="toggleProgress()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📊 My Progress</h3>
+    <div id="progress-list"></div>
+  </div>
+
+  <div id="topics-sidebar" class="sidebar right-sidebar">
+    <button class="close-btn" onclick="toggleTopics()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📚 All Topics</h3>
+    <a href="quran-essentials.html" class="topic-link">Qur'an Essentials</a>
+    <a href="hadith-sciences.html" class="topic-link">Hadith & Hadith Sciences</a>
+    <a href="seerah.html" class="topic-link">Seerah (Life of Prophet)</a>
+    <a href="aqeedah.html" class="topic-link">Aqeedah - Creation to Hereafter</a>
+    <a href="fiqh.html" class="topic-link">Fiqh of Worship</a>
+    <a href="manners.html" class="topic-link">Manners & Akhlaq</a>
+    <a href="general-knowledge.html" class="topic-link">General Knowledge</a>
+  </div>
 
   <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
@@ -27,28 +82,218 @@
   </div>
 
   <div class="app-card">
-    <button class="back-btn" onclick="window.location.href='../index.html'">← Back to Menu</button>
-    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);">Aqeedah</h2>
+    
+    <div class="top-nav">
+      <button class="back-btn" onclick="window.location.href='../index.html?skipSplash=true&screen=learning'">← Menu</button>
+      <div style="display:flex; gap:10px;">
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto; background:var(--emerald); color:white;" onclick="toggleProgress()">📊 Progress</button>
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto;" onclick="toggleTopics()">📚 Topics</button>
+      </div>
+    </div>
+    
+    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);"></h2>
+    
     <div id="quiz-area" style="margin-top: 20px;"></div>
   </div>
 
   <script>
+    // ==========================================
+    // 1. UPDATE YOUR TOPIC INFO HERE FOR EACH FILE
+    // ==========================================
     const PAGE_TITLE = "Aqeedah - Creation to Hereafter";
     const QUESTIONS = [
+    {
+      q: "Who was the first human created by Allah?",
+      qh: "Sab se pehla insaan Allah ne kisko paida kiya?",
+      o: ["Nuh (AS)", "Adam (AS)", "Idris (AS)", "Ibrahim (AS)"],
+      oh: ["Nuh (AS)", "Adam (AS)", "Idris (AS)", "Ibrahim (AS)"],
+      a: "Adam (AS)",
+      e: "Adam (AS) is the father of humanity.",
+      eh: "Hazrat Adam (AS) abul-bashar hain."
+    },
+    {
+      q: "Which creation is made from smokeless fire?",
+      qh: "Kaunsi makhlooq be-dhuan aag se paida hui?",
+      o: ["Angels", "Jinn", "Humans", "Animals"],
+      oh: ["Farishtay", "Jinn", "Insaan", "Janwar"],
+      a: "Jinn",
+      e: "Jinn from fire, Angels from light, humans from clay.",
+      eh: "Jinn aag se, Farishtay noor se, Insan mitti se paida huay."
+    },
+    {
+      q: "What does 'Tawheed al-Rububiyyah' emphasize?",
+      qh: "'Tawheed al-Rububiyyah' kis cheez par zor deti hai?",
+      o: ["Oneness in worship", "Oneness in Lordship", "Oneness in prophethood", "Oneness in lineage"],
+      oh: ["Ibadat ki wahdaniyat", "Rububiyyah ki wahdaniyat", "Nabuwwat", "Nasab"],
+      a: "Oneness in Lordship",
+      e: "Allah alone is Creator, Sustainer, Controller.",
+      eh: "Sirf Allah Khaliq, Razzaq aur Mudabbir hai."
+    },
+    {
+      q: "What does 'Tawheed al-Uluhiyyah' emphasize?",
+      qh: "'Tawheed al-Uluhiyyah' kya sikhati hai?",
+      o: ["Oneness in worship", "Oneness in creation", "Oneness in language", "Oneness in people"],
+      oh: ["Ibadat ki wahdaniyat", "Paidaish", "Zaban", "Log"],
+      a: "Oneness in worship",
+      e: "Only Allah deserves acts of worship (dua, salah, reliance).",
+      eh: "Ibadat ka haq sirf Allah ko hai."
+    },
+    {
+      q: "What does 'Tawheed al-Asma wa Sifat' mean?",
+      qh: "'Tawheed al-Asma wa Sifat' se kya murad hai?",
+      o: ["One Ummah", "Affirming Allah’s Names/Attributes as revealed", "One language", "One madhhab"],
+      oh: ["Aik Ummat", "Allah ke Asma wa Sifat ka iqrar jaisa bataya", "Aik zaban", "Aik madhhab"],
+      a: "Affirming Allah’s Names/Attributes as revealed",
+      e: "Affirm without distortion, denial, or likening to creation.",
+      eh: "Tahreef, ta’til aur tashbih ke baghair tasdiq."
+    },
+    {
+      q: "Which two Angels record a person’s deeds?",
+      qh: "Kaun se Farishtay insaan ke a’maal likhte hain?",
+      o: ["Munkar & Nakir", "Ridwan & Malik", "Kiraman Katibin", "Israfil & Jibril"],
+      oh: ["Munkar & Nakir", "Ridwan & Malik", "Kiraman Katibin", "Israfil & Jibril"],
+      a: "Kiraman Katibin",
+      e: "Right and left angels record deeds.",
+      eh: "Dayen-bayen Farishtay a’maal likhte hain."
+    },
+    {
+      q: "What is 'Barzakh'?",
+      qh: "'Barzakh' kya hai?",
+      o: ["Bridge over Hell", "Realm between death and resurrection", "Highest Paradise", "Lowest Hell"],
+      oh: ["Pul-e-Jahannam", "Maut aur Hashr ke darmiyan ka alam", "Aala Jannat", "Neechi Jahannam"],
+      a: "Realm between death and resurrection",
+      e: "Intermediate state until the Day of Resurrection.",
+      eh: "Qayamat tak ka darmiyani alam."
+    },
+    {
+      q: "Which Angel will blow the Trumpet?",
+      qh: "Soor kaun se Farishte foonkenge?",
+      o: ["Jibril", "Mikail", "Israfil", "Malik"],
+      oh: ["Jibril", "Mikail", "Israfil", "Malik"],
+      a: "Israfil",
+      e: "By the Trumpet the Last Day begins.",
+      eh: "Soor se Qayamat ka aaghaz hoga."
+    },
+    {
+      q: "What is the 'Sirat' in the Hereafter?",
+      qh: "Akhirat mein 'Pul-e-Sirat' kya hai?",
+      o: ["Valley in Paradise", "Scale of deeds", "Bridge over Hell to be crossed", "Name of an Angel"],
+      oh: ["Jannat ki wadi", "A’maal ka tarazu", "Jahannam par se guzarne wala pul", "Farishte ka naam"],
+      a: "Bridge over Hell to be crossed",
+      e: "People cross it in accordance with their deeds.",
+      eh: "Log apne a’maal ke mutabiq isay paar karenge."
+    },
+    {
+      q: "What happens at the 'Mizan' on the Last Day?",
+      qh: "Qayamat ke din 'Meezan' par kya hota hai?",
+      o: ["Names called", "Deeds weighed", "Languages tested", "Routes assigned"],
+      oh: ["Naam pukare jate", "A’maal tole jate", "Zabanein aazmai jati", "Raaste bataye jate"],
+      a: "Deeds weighed",
+      e: "Allah’s perfect justice is manifested.",
+      eh: "Meezan par Allah ka be-’ayb insaf zahir hota hai."
+    },
+    {
+      q: "What is 'Hawdh al-Kawthar'?",
+      qh: "'Hawdh al-Kawthar' kya hai?",
+      o: ["A cave", "A blessed basin to drink from", "A star", "A valley"],
+      oh: ["Ghaar", "Barkat wala howz", "Sitaara", "Wadi"],
+      a: "A blessed basin to drink from",
+      e: "Believers will drink and never thirst again.",
+      eh: "Mumineen is se piyenge aur phir kabhi pyaas na lagegi."
+    },
+    {
+      q: "What is emphasized as the greatest means for entry into Paradise?",
+      qh: "Jannat mein dakhil hone ka sab se bada zariya kya bataya gaya?",
+      o: ["Wealth", "Lineage", "Taqwa & good deeds", "Travel"],
+      oh: ["Daulat", "Nasab", "Taqwa aur nek a’maal", "Safar"],
+      a: "Taqwa & good deeds",
+      e: "By Allah’s mercy upon people of Taqwa and good action.",
+      eh: "Allah ki Rehmat Taqwa walon par nazil hoti hai."
+    },
+    {
+      q: "What is the end for those who reject faith and persist in evil without repentance?",
+      qh: "Jo iman ka inkar karke burai par qayam rahein unka anjaam kya?",
+      o: ["A’raf", "Jahannam", "Sirat", "Barzakh"],
+      oh: ["A’raf", "Jahannam", "Sirat", "Barzakh"],
+      a: "Jahannam",
+      e: "Hell is the abode for persistent rejection & evil.",
+      eh: "Musir inkar aur burai ka anjaam Jahannam hai."
+    },
+    {
+      q: "What is the highest level of Paradise called?",
+      qh: "Jannat ka sab se buland darja kya kehlata hai?",
+      o: ["Adn", "Na’im", "Mawa", "Firdaws"],
+      oh: ["Adn", "Na’im", "Mawa", "Firdaws"],
+      a: "Firdaws",
+      e: "The Prophet ﷺ encouraged asking Allah for Al‑Firdaws.",
+      eh: "Nabi ﷺ ne Al‑Firdaws maangne ki talqeen ki."
+    },
+    {
+      q: "What is 'Qadr' (Divine Decree) a pillar of?",
+      qh: "'Qadr' (Taqdeer) kis cheez ka rukun hai?",
+      o: ["Islam", "Iman", "Ihsan", "Jihad"],
+      oh: ["Islam", "Iman", "Ihsan", "Jihad"],
+      a: "Iman",
+      e: "Belief in Qadr is among the six articles of faith.",
+      eh: "Taqdeer par iman, Iman ke chhe arkan mein se hai."
+    },
+    {
+      q: "What is meant by Allah’s Mercy encompassing all things?",
+      qh: "Allah ki Rehmat har cheez ko gher leti hai — is ka kya matlab?",
+      o: ["No justice", "Infinite mercy alongside justice", "Only mercy", "Only punishment"],
+      oh: ["Bila insaf", "Be-intiha Rehmat sath sath insaf", "Sirf Rehmat", "Sirf azaab"],
+      a: "Infinite mercy alongside justice",
+      e: "Allah is Most Merciful yet perfectly Just.",
+      eh: "Allah sab se Zyada Rehm karne wale hain aur bilkul Aadil bhi."
+    },
+    {
+      q: "What does repentance (Tawbah) require?",
+      qh: "Taubah ke liye kya sharaait hain?",
+      o: ["Only words", "Regret, stopping sin, resolve not to return", "Public announcement", "Charity only"],
+      oh: ["Sirf alfaaz", "Nadamat, gunah chhorna, dobara na karne ka iraada", "Aam elan", "Sirf khairat"],
+      a: "Regret, stopping sin, resolve not to return",
+      e: "Real Tawbah needs regret, immediate stop, firm resolve, and restitution if rights were violated.",
+      eh: "Haqooq tode to adaigi zaroori; warna nadamat, fori tark aur mustaqbil ka iraada."
+    },
+    {
+      q: "Whose intercession will be granted by Allah on the Last Day?",
+      qh: "Qayamat ke din kiska shafa’at Allah ke izn se qabool hoga?",
+      o: ["Prophets and righteous with Allah’s permission", "Anyone freely", "No one", "Angels only"],
+      oh: ["Anbiya aur saleheen Allah ke izn se", "Koi bhi", "Koi nahi", "Sirf Farishtay"],
+      a: "Prophets and righteous with Allah’s permission",
+      e: "Intercession occurs by Allah’s permission and pleasure.",
+      eh: "Shafa’at sirf Allah ke izn aur raza se hoti hai."
+    },
+    {
+      q: "What is the meaning of 'Asmaul Husna'?",
+      qh: "'Asmaul Husna' ka kya matlab hai?",
+      o: ["Beautiful Names of Allah", "Names of Angels", "Names of Prophets", "Names of Books"],
+      oh: ["Allah ke khubsurat Asma", "Farishton ke naam", "Nabiyon ke naam", "Kitabon ke naam"],
+      a: "Beautiful Names of Allah",
+      e: "They describe Allah’s perfect attributes.",
+      eh: "Ye Allah ki kamil sifat ka bayan hain."
+    },
+    {
+      q: "What is meant by 'Arsh' in Islamic creed?",
+      qh: "Aqeedah mein 'Arsh' se kya murad hai?",
+      o: ["Sky", "Throne of Allah", "Paradise", "Kursi"],
+      oh: ["Aasman", "Allah ka Arsh", "Jannat", "Kursi"],
+      a: "Throne of Allah",
+      e: "The Arsh is the grand Throne; its reality is known to Allah.",
+      eh: "Arsh Allah ka azeem arsh hai; iska kamil ilm Allah ko hai."
+    },
       {
         q: "Which Angel brings revelation to the Prophets by Allah’s permission?",
         qh: "Allah ke izn se wahi kaun se Farishta laate hain?",
         o: ["Israfil", "Jibril", "Mikail", "Malik"],
-        oh: ["Israfil", "Jibril", "Mikail", "Malik"],
         a: "Jibril",
         e: "Jibril (AS) is entrusted with revelation.",
-        eh: "Jibril (AS) wahi lates hain."
+        eh: "Jibril (AS) wahi lाते hain."
       },
       {
         q: "Which Angel is associated with provision (rain, sustenance) by Allah’s command?",
         qh: "Rizq (baarish waghera) ke amoor kis Farishte ke zimme hain (Allah ke hukm se)?",
         o: ["Mikail", "Israfil", "Ridwan", "Munkar"],
-        oh: ["Mikail", "Israfil", "Ridwan", "Munkar"],
         a: "Mikail",
         e: "Mikail (AS) is associated with provision and rain by Allah’s command.",
         eh: "Mikail (AS) ko rizq/baarish ke amoor se marbut kiya jata hai."
@@ -57,7 +302,6 @@
         q: "Which two angels question the deceased in the grave?",
         qh: "Qabr me mayyit se sawal karne wale do Farishte kaun hain?",
         o: ["Ridwan & Malik", "Munkar & Nakir", "Israfil & Jibril", "Kiraman Katibin"],
-        oh: ["Ridwan & Malik", "Munkar & Nakir", "Israfil & Jibril", "Kiraman Katibin"],
         a: "Munkar & Nakir",
         e: "They ask about Lord, religion, and Prophet—by Allah’s will.",
         eh: "Qabr me Rabb, deen, Nabi ﷺ ke bare me sawal hotay hain."
@@ -66,7 +310,6 @@
         q: "Which record contains the fate of the righteous per Qur’anic mention?",
         qh: "Quran ke zikar ke mutabiq nek logon ke a’maal ki kitabat kahan hai?",
         o: ["Sijjin", "‘Illiyyin", "Hawdh", "A’raf"],
-        oh: ["Sijjin", "‘Illiyyin", "Hawdh", "A’raf"],
         a: "‘Illiyyin",
         e: "‘Illiyyin denotes the high record of the righteous (Qur’anic expression).",
         eh: "‘Illiyyin nekon ki buland darja ki kitabat ka zikar hai."
@@ -75,7 +318,6 @@
         q: "Which record denotes the register of the wicked (Qur’anic mention)?",
         qh: "Quran me badkaar logon ki kitabat kis naam se ayi hai?",
         o: ["‘Illiyyin", "Sijjin", "Mizan", "Sirat"],
-        oh: ["‘Illiyyin", "Sijjin", "Mizan", "Sirat"],
         a: "Sijjin",
         e: "Sijjin refers to the register of the wicked, as in the Qur’an.",
         eh: "Sijjin badkaar logon ki kitabat ke liye zikar hota hai."
@@ -84,7 +326,6 @@
         q: "Which of the following is from the components of belief in Qadr?",
         qh: "Taqdeer par iman ke arkan me se ek kya hai?",
         o: ["Knowledge of Allah", "Randomness", "Denial of decree", "Luck only"],
-        oh: ["Allah ka ilm", "Ittefaq", "Taqdeer ka inkar", "Sirf qismat"],
         a: "Knowledge of Allah",
         e: "Qadr includes Allah’s knowledge, writing, will, and creation.",
         eh: "Qadr me Allah ka ilm, likhna, mashiyyat aur khalq shamil hain."
@@ -93,7 +334,6 @@
         q: "Which statement best reflects sincerity (Ikhlas)?",
         qh: "Ikhlas (khalis niyyat) ko kaunsi baat behtar dikhati hai?",
         o: ["Show off to inspire", "Seek only Allah’s pleasure", "Seek people’s praise", "Compete for fame"],
-        oh: ["Mutasir karne ke liye dikhawa", "Sirf Allah ki raza chaahna", "Logon ki tareef chaahna", "Shohrat ke liye muqabla"],
         a: "Seek only Allah’s pleasure",
         e: "Ikhlas means doing deeds solely for Allah.",
         eh: "Ikhlas me amal sirf Allah ke liye hota hai."
@@ -102,7 +342,6 @@
         q: "Which is NOT part of the six pillars of faith (Iman)?",
         qh: "Iman ke chhe bunyadi arkan me se kaunsa nahin?",
         o: ["Belief in Allah", "Belief in Angels", "Belief in Saints unconditionally", "Belief in the Last Day"],
-        oh: ["Allah par iman", "Farishton par iman", "Auliya par andha iman", "Aakhirat par iman"],
         a: "Belief in Saints unconditionally",
         e: "The pillars are Allah, Angels, Books, Prophets, Last Day, Qadr.",
         eh: "Auliya par aqidah arkan me nahin; arkan makhsoos hain."
@@ -111,7 +350,6 @@
         q: "What is the Qur’anic term for the Scale used to weigh deeds?",
         qh: "A’maal tulne ke liye Quran me kis lafz ka zikar aata hai?",
         o: ["Mizan", "Sirat", "Hawdh", "Raf’"],
-        oh: ["Mizan", "Sirat", "Hawdh", "Raf’"],
         a: "Mizan",
         e: "Mizan denotes the scale of deeds on the Last Day.",
         eh: "Mizan Qayamat me a’maal ke tol ka mizaan hai."
@@ -120,34 +358,30 @@
         q: "Which term denotes the barrier/realm between death and Resurrection?",
         qh: "Maut aur Hashr ke darmiyan ke darmiyani alam ko kya kehte hain?",
         o: ["Arsh", "Kursi", "Barzakh", "A’raf"],
-        oh: ["Arsh", "Kursi", "Barzakh", "A’raf"],
         a: "Barzakh",
-        e: "Barzakh is the inter-world period after death.",
+        e: "Barzakh is the inter‑world period after death.",
         eh: "Barzakh maut ke baad ka darmiyani marhala hai."
       },
       {
-        q: "Which deed is emphasized repeatedly as a sign of God-consciousness (Taqwa)?",
-        qh: "Kis amal ko baar-baar Taqwa ki alamat ke taur par bayaan kiya jata hai?",
+        q: "Which deed is emphasized repeatedly as a sign of God‑consciousness (Taqwa)?",
+        qh: "Kis amal ko baar‑baar Taqwa ki alamat ke taur par bayaan kiya jata hai?",
         o: ["Lying", "Justice and fulfilling trusts", "Backbiting", "Arrogance"],
-        oh: ["Jhoot", "Insaf aur amanat ki adaigi", "Gheebat", "Takabbur"],
         a: "Justice and fulfilling trusts",
         e: "Upholding justice and trust reflects Taqwa.",
         eh: "Amanat aur insaf Taqwa ki pehchan hai."
       },
       {
-        q: "What is meant by 'Husn adh-Dhan' with Allah?",
-        qh: "Allah ke sath 'Husn adh-Dhan' ka kya matlab hai?",
+        q: "What is meant by 'Husn adh‑Dhan' with Allah?",
+        qh: "Allah ke sath 'Husn adh‑Dhan' ka kya matlab hai?",
         o: ["Bad opinion", "Good expectation and hope", "Despair", "Argument"],
-        oh: ["Buri raye", "Achhi umeed aur tawaqqo", "Mayoosi", "Behas"],
         a: "Good expectation and hope",
         e: "Having good hope in Allah’s mercy with obedience.",
         eh: "Allah ki Rehmat par behtareen umeed rakhna."
       },
       {
-        q: "Which trait is warned against as 'Shirk al-Asghar' by many scholars?",
-        qh: "Kai ulamah ke nazdeek kaun sa amal 'Shirk al-Asghar' warn kiya gaya?",
+        q: "Which trait is warned against as 'Shirk al‑Asghar' by many scholars?",
+        qh: "Kai ulamah ke nazdeek kaun sa amal 'Shirk al‑Asghar' warn kiya gaya?",
         o: ["Sincerity", "Riya (showing off)", "Humility", "Thankfulness"],
-        oh: ["Ikhlas", "Riya (dikhawa)", "Aajizi", "Shukrguzari"],
         a: "Riya (showing off)",
         e: "Riya corrupts intention; deeds are for Allah alone.",
         eh: "Riya niyyat kharab karti; amal sirf Allah ke liye hon."
@@ -156,7 +390,6 @@
         q: "Which of the following best describes 'Ihsan'?",
         qh: "'Ihsan' ki behtareen wazahat kya hai?",
         o: ["Doing minimum", "Worshipping Allah as if you see Him", "No effort", "Only theory"],
-        oh: ["Kam az kam karna", "Allah ki ibadat aise karna jaise usay dekh rahe ho", "Koi koshish nahi", "Sirf nazriya"],
         a: "Worshipping Allah as if you see Him",
         e: "Ihsan is excellence in worship with awareness of Allah.",
         eh: "Ihsan me ibadat me kamal aur Allah ki nigrani ka shu’oor hota hai."
@@ -165,7 +398,6 @@
         q: "What does the Qur’an emphasize about Allah’s knowledge?",
         qh: "Quran Allah ke ilm ke bare me kya batata hai?",
         o: ["Limited", "Encompasses all things", "Only future", "Only past"],
-        oh: ["Mehdood", "Har cheez ko ghere hue", "Sirf mustaqbil", "Sirf maazi"],
         a: "Encompasses all things",
         e: "Allah’s knowledge is complete—past, present, future.",
         eh: "Allah ka ilm har cheez ko gheray huay hai."
@@ -174,43 +406,38 @@
         q: "Which concept balances hope and fear in the believer’s heart?",
         qh: "Momin ke dil me umeed aur khauf ka tawazun kis mafhoom se hai?",
         o: ["Husn adh-Dhan and Taqwa", "Despair", "Recklessness", "Pride"],
-        oh: ["Husn adh-Dhan aur Taqwa", "Mayoosi", "Laparwahi", "Ghuroor"],
         a: "Husn adh-Dhan and Taqwa",
         e: "Good hope in Allah with Taqwa balances the heart.",
         eh: "Rehmat ki umeed aur Taqwa ka milap dil ko mutawazin rakhta."
       },
       {
-        q: "Which title among Prophets denotes might and resolve (Ulul-Azm)?",
-        qh: "Anbiya me 'Ulul-Azm' ka laqab kin ki azmat dikhata?",
+        q: "Which title among Prophets denotes might and resolve (Ulul‑Azm)?",
+        qh: "Anbiya me 'Ulul‑Azm' ka laqab kin ki azmat dikhata?",
         o: ["A group of resolute Prophets", "All mankind", "Angels", "Only one Prophet"],
-        oh: ["Azeem aur sabir Anbiya ka giroh", "Tamam insaan", "Farishtay", "Sirf ek Nabi"],
         a: "A group of resolute Prophets",
-        e: "Ulul-Azm refers to resolute Prophets such as Nuh, Ibrahim, Musa, Isa, Muhammad ﷺ.",
-        eh: "Ulul-Azm se murad kuch azeem Paighambar hain."
+        e: "Ulul‑Azm refers to resolute Prophets such as Nuh, Ibrahim, Musa, Isa, Muhammad ﷺ.",
+        eh: "Ulul‑Azm se murad kuch azeem Paighambar hain."
       },
       {
         q: "What is the Prophet’s ﷺ special basin promised on the Last Day?",
         qh: "Qayamat ke din Nabi ﷺ ko diya gaya khaas howz kya kehlata?",
         o: ["Kauthar", "Tasnim", "Salsabil", "Barzakh"],
-        oh: ["Kauthar", "Tasnim", "Salsabil", "Barzakh"],
         a: "Kauthar",
-        e: "Hawdh al-Kawthar is the blessed basin granted to the Prophet ﷺ.",
-        eh: "Hawdh al-Kawthar Nabi ﷺ ka khas howz hai."
+        e: "Hawdh al‑Kawthar is the blessed basin granted to the Prophet ﷺ.",
+        eh: "Hawdh al‑Kawthar Nabi ﷺ ka khas howz hai."
       },
       {
         q: "Which statement is correct regarding intercession (Shafa’ah)?",
         qh: "Shafa’ah ke bare me kaunsi baat theek hai?",
         o: ["Happens without Allah’s permission", "Only by Allah’s permission", "No intercession at all", "By idols"],
-        oh: ["Allah ki ijazat ke baghair", "Sirf Allah ki ijazat se", "Koi shafa'at nahi", "Buton ke zariye"],
         a: "Only by Allah’s permission",
         e: "Intercession occurs only with Allah’s permission and pleasure.",
         eh: "Shafa’ah sirf Allah ke izn aur raza se hoti hai."
       },
       {
         q: "What attitude should accompany good deeds for acceptance?",
-        qh: "A’maal-e-saleh ki qubooliyat ke liye kaun si soch zaroori hai?",
+        qh: "A’maal‑e‑saleh ki qubooliyat ke liye kaun si soch zaroori hai?",
         o: ["Arrogance", "Sincerity and humility", "Showing off", "Despair"],
-        oh: ["Takabbur", "Ikhlas aur aajizi", "Dikhawa", "Mayoosi"],
         a: "Sincerity and humility",
         e: "Ikhlas with humility fosters acceptance by Allah.",
         eh: "Ikhlas aur inkisari qubooliyat me madadgar hoti hain."
@@ -219,7 +446,6 @@
         q: "What is the correct understanding of Allah's Attributes?",
         qh: "Allah ki Sifaat ke bare me durust mafhoom kya hai?",
         o: ["Affirm as revealed without likening or denial", "Explain away all literally", "Deny them", "Say they are unknown inventions"],
-        oh: ["Jaisa nazil hua waisa man-na baghair kisi tashbeeh ke", "Sab ko zahiri maani se pherna", "Unka inkar karna", "Inhe namaloom ijaad kehna"],
         a: "Affirm as revealed without likening or denial",
         e: "Ahl as-Sunnah affirm Names/Attributes as revealed, without tashbih or ta'til.",
         eh: "Asma o Sifaat ka iqrar baghair tashbih ya ta'til ke kiya jata."
@@ -228,7 +454,6 @@
         q: "Which is part of belief in the Last Day?",
         qh: "Akhri Din par iman me se kya shamil hai?",
         o: ["Resurrection, Reckoning, Paradise & Hell", "Only Paradise", "Only Hell", "None"],
-        oh: ["Hashr, Hisab, Jannat aur Jahannam", "Sirf Jannat", "Sirf Jahannam", "Koi nahi"],
         a: "Resurrection, Reckoning, Paradise & Hell",
         e: "Ba'ath, hisab, Jannah/Jahannam are integral to belief.",
         eh: "Dobara uthna, hisab, Jannat/Jahannam aqeede ka hissa hain."
@@ -237,7 +462,6 @@
         q: "What does belief in the Books entail?",
         qh: "Kutub par iman se kya murad?",
         o: ["Believe Allah revealed scriptures to prophets", "Only read translations", "Reject previous books", "None"],
-        oh: ["Iman lana ke Allah ne Anbiya par kitabein nazil ki", "Sirf tarjuma parhna", "Pichli kitabon ka inkar karna", "Koi nahi"],
         a: "Believe Allah revealed scriptures to prophets",
         e: "Belief includes the Torah, Zabur, Injeel, and Qur'an.",
         eh: "Iman me Taurat, Zabur, Injeel, Qur'an par iman shamil hai."
@@ -246,7 +470,6 @@
         q: "What is the balance between qadr and human effort?",
         qh: "Taqdeer aur insani koshish me tawazun kya hai?",
         o: ["Both affirmed: Allah's decree & human accountability", "Only decree exists", "Only free will", "Neither"],
-        oh: ["Dono tasleem: Allah ki taqdeer aur insani zimmedari", "Sirf taqdeer hai", "Sirf insani ikhtiyar hai", "Dono nahi"],
         a: "Both affirmed: Allah's decree & human accountability",
         e: "Islam affirms divine decree and moral responsibility.",
         eh: "Islam me taqdeer sath sath zimmedari bhi tasleem ki jati."
@@ -255,7 +478,6 @@
         q: "Which belief protects from despair and arrogance?",
         qh: "Kaunsa yaqeen mayoosi aur ghuroor se bachata?",
         o: ["Hope & fear together", "Hope only", "Fear only", "Neither"],
-        oh: ["Umeed aur khauf dono sath", "Sirf umeed", "Sirf khauf", "Dono nahi"],
         a: "Hope & fear together",
         e: "Raja' (hope) and khauf keep the heart balanced.",
         eh: "Umeed o khauf dil ko mutawazin rakhte."
@@ -264,7 +486,6 @@
         q: "What is meant by 'Rabb'?",
         qh: "'Rabb' se kya murad?",
         o: ["Creator, Sustainer, Lord", "Only king", "Only friend", "Only guide"],
-        oh: ["Khaliq, Razzaq, Malik", "Sirf badshah", "Sirf dost", "Sirf rehnuma"],
         a: "Creator, Sustainer, Lord",
         e: "Rabb encompasses creation, nurture, and control.",
         eh: "Rabb ka lafz paidaish, parwarish aur ikhtiyar ko shamil karta."
@@ -273,7 +494,6 @@
         q: "Which is from the unseen (al-ghayb) realities we believe in?",
         qh: "Al-ghayb (ghaibi) haqaiq me se kis par iman laana hai?",
         o: ["Angels", "Only what we see", "Only what we reason", "None"],
-        oh: ["Farishtay", "Sirf jo hum dekhte hain", "Sirf jo hum samajhte hain", "Koi nahi"],
         a: "Angels",
         e: "Belief in angels is part of the six pillars of faith.",
         eh: "Farishton par iman arkan-e-iman me se hai."
@@ -282,7 +502,6 @@
         q: "What is a key sign of sincere repentance?",
         qh: "Sachi taubah ki ek aham alamat kya?",
         o: ["Persisting in sin", "Immediate cessation & remorse", "Publicizing sin", "Blaming others"],
-        oh: ["Gunah par musalsal rehna", "Fori chhorna aur nadamat", "Gunah ka elan karna", "Dusron ko ilzam dena"],
         a: "Immediate cessation & remorse",
         e: "Tawbah needs stop, regret, resolve, and rectification if needed.",
         eh: "Taubah me tark-e-gunah, nadamat, irada aur haquq ki adaigi shamil."
@@ -291,7 +510,6 @@
         q: "Which will be established for justice among people on the Last Day?",
         qh: "Qayamat ke din logon me insaf ke liye kya qaim hoga?",
         o: ["Mizan (Scale)", "Race", "Luck", "Guessing"],
-        oh: ["Mizan (Tarazu)", "Nasal", "Qismat", "Tukka"],
         a: "Mizan (Scale)",
         e: "Deeds are weighed by Allah's perfect justice.",
         eh: "Meezan par a'maal tole jayenge."
@@ -300,7 +518,6 @@
         q: "What is meant by 'Sabr' in creed and practice?",
         qh: "'Sabr' se aqeede aur amal me kya murad?",
         o: ["Passive despair", "Steadfastness upon obedience & patience in trials", "Anger", "Neglect"],
-        oh: ["Mayoosi", "Ita'at par istaqamat aur aazmaish me sabr", "Gussa", "Ghaflat"],
         a: "Steadfastness upon obedience & patience in trials",
         e: "Sabr includes patience in hardship and perseverance in worship.",
         eh: "Sabr me aazmaish me sabr aur ibadat par istiqamat shamil."
@@ -309,7 +526,6 @@
         q: "What is 'Shukr' towards Allah?",
         qh: "Allah ki taraf 'Shukr' se kya murad?",
         o: ["Deny blessings", "Recognize, praise, and use blessings rightly", "Show off", "Waste blessings"],
-        oh: ["Ne'maton ka inkar", "Pehchanana, tareef karna, aur theek istemal karna", "Dikhawa", "Ne'matein zaya karna"],
         a: "Recognize, praise, and use blessings rightly",
         e: "Shukr is gratitude by heart, tongue, and limbs.",
         eh: "Shukr dil, zabaan aur a'za se hota hai."
@@ -318,7 +534,6 @@
         q: "Which deed is emphasized most for rectifying the heart?",
         qh: "Dil ki islaah ke liye kaunsa amal sab se zyada aham?",
         o: ["Dhikr & Qur'an", "Heedlessness", "Pride", "Backbiting"],
-        oh: ["Zikr aur Qur'an", "Ghaflat", "Ghuroor", "Gheebat"],
         a: "Dhikr & Qur'an",
         e: "Remembrance and recitation purify the heart.",
         eh: "Zikr o tilawat dil ko pak karti."
@@ -327,7 +542,6 @@
         q: "What is the believer's view on calamities according to creed?",
         qh: "Aqeede ke mutabiq momin ka museebaton par kya rujhan hota?",
         o: ["Despair", "Sabr & hope", "Anger", "Denial"],
-        oh: ["Mayoosi", "Sabr aur umeed", "Gussa", "Inkar"],
         a: "Sabr & hope",
         e: "Patience with hope of reward is a sign of faith.",
         eh: "Sabr sath ajar ki umeed iman ki alamat."
@@ -336,7 +550,6 @@
         q: "Which concept affirms that Allah is above all deficiencies and partners?",
         qh: "Kaunsa mafhoom batata ke Allah har aib o shareek se baala-tar?",
         o: ["Tawheed", "Shirk", "Kufr", "Nifaq"],
-        oh: ["Tawheed", "Shirk", "Kufr", "Nifaq"],
         a: "Tawheed",
         e: "Tawheed is the oneness of Allah in every aspect.",
         eh: "Tawheed Allah ki yaktaai par mabni hai."
@@ -345,7 +558,6 @@
         q: "What best describes 'Raja'?",
         qh: "'Raja' ki behtareen wazahat kya?",
         o: ["Good hope in Allah", "Despair", "Boasting", "Negligence"],
-        oh: ["Allah se achhi umeed", "Mayoosi", "Shekhi bagharna", "Ghaflat"],
         a: "Good hope in Allah",
         e: "Raja' motivates striving with hope for Allah's mercy.",
         eh: "Raja' insaan ko mehnat par ubharti aur Rehmat ki umeed rakhti."
@@ -354,7 +566,6 @@
         q: "Which quality is praised as the 'peak' of religion by many narrations?",
         qh: "Kai riwayaton me kaunsi sifat ko 'deen ki choti' kaha gaya?",
         o: ["Modesty (Haya)", "Harshness", "Stinginess", "Mockery"],
-        oh: ["Haya (Sharm)", "Sakh-ti", "Kanjoosi", "Mazaq"],
         a: "Modesty (Haya)",
         e: "Haya is a core virtue linked with faith.",
         eh: "Haya imaan se judaa bunyadi sifat hai."
@@ -363,7 +574,6 @@
         q: "Which statement about angels is correct?",
         qh: "Farishton ke bare me kaunsa jumla durust?",
         o: ["They disobey often", "They do not disobey Allah", "They are humans", "They are jinn"],
-        oh: ["Wo aksar na-farmani karte hain", "Wo Allah ki na-farmani nahi karte", "Wo insaan hain", "Wo jinn hain"],
         a: "They do not disobey Allah",
         e: "Angels do as they are commanded by Allah.",
         eh: "Farishtay Allah ke hukm ke paband hain."
@@ -372,7 +582,6 @@
         q: "What is the comprehensive definition of 'Iman' in classical explanations?",
         qh: "Riwayati wazahat me 'Iman' ki jami' ta'reef kya?",
         o: ["Only belief in heart", "Belief, speech, and action; increases and decreases", "Only deeds", "Only speech"],
-        oh: ["Sirf dil me iman", "Aqeedah, qawl aur amal; jo barhta aur ghatta hai", "Sirf a'maal", "Sirf baatein"],
         a: "Belief, speech, and action; increases and decreases",
         e: "Iman includes belief, words, deeds, and fluctuates.",
         eh: "Iman aqeeda, qawl, amal par mushtamil hai; barhta ghatta."
@@ -381,7 +590,6 @@
         q: "Which belief regarding the unseen is required even if not perceived by senses?",
         qh: "Hawas se mehsoos na hon ke bawajood kis ghaibi haqeeqat par iman laana zaroori?",
         o: ["Jinn & Angels", "Only what we see", "Only what we test", "None"],
-        oh: ["Jinn aur Farishtay", "Sirf jo hum dekhein", "Sirf jise hum aazma sakein", "Koi nahi"],
         a: "Jinn & Angels",
         e: "Belief in the unseen includes jinn and angels.",
         eh: "Ghaib me jinn o farishte par iman shamil."
@@ -390,194 +598,57 @@
         q: "Which act is repeatedly linked to forgiveness in Qur'an/Sunnah with sincere repentance?",
         qh: "Qur'an/Sunnat me kaunsa amal sachi taubah ke sath bohat martaba maghfirat se jura?",
         o: ["Seeking forgiveness (Istighfar)", "Boasting", "Backbiting", "Envy"],
-        oh: ["Istighfar (Muafi maangna)", "Shekhi", "Gheebat", "Hasad"],
         a: "Seeking forgiveness (Istighfar)",
         e: "Istighfar with repentance brings Allah's mercy.",
         eh: "Taubah sath istighfar Allah ki rehmat ka zariya."
-      }, 
-      {
-        q: "Who was the first human created by Allah?",
-        qh: "Sab se pehla insaan Allah ne kisko paida kiya?",
-        o: ["Nuh (AS)", "Adam (AS)", "Idris (AS)", "Ibrahim (AS)"],
-        oh: ["Nuh (AS)", "Adam (AS)", "Idris (AS)", "Ibrahim (AS)"],
-        a: "Adam (AS)",
-        e: "Adam (AS) is the father of humanity.",
-        eh: "Hazrat Adam (AS) abul-bashar hain."
-      },
-      {
-        q: "Which creation is made from smokeless fire?",
-        qh: "Kaunsi makhlooq be-dhuan aag se paida hui?",
-        o: ["Angels", "Jinn", "Humans", "Animals"],
-        oh: ["Farishtay", "Jinn", "Insaan", "Janwar"],
-        a: "Jinn",
-        e: "Jinn from fire, Angels from light, humans from clay.",
-        eh: "Jinn aag se, Farishtay noor se, Insan mitti se paida huay."
-      },
-      {
-        q: "What does 'Tawheed al-Rububiyyah' emphasize?",
-        qh: "'Tawheed al-Rububiyyah' kis cheez par zor deti hai?",
-        o: ["Oneness in worship", "Oneness in Lordship", "Oneness in prophethood", "Oneness in lineage"],
-        oh: ["Ibadat ki wahdaniyat", "Rububiyyah ki wahdaniyat", "Nabuwwat", "Nasab"],
-        a: "Oneness in Lordship",
-        e: "Allah alone is Creator, Sustainer, Controller.",
-        eh: "Sirf Allah Khaliq, Razzaq aur Mudabbir hai."
-      },
-      {
-        q: "What does 'Tawheed al-Uluhiyyah' emphasize?",
-        qh: "'Tawheed al-Uluhiyyah' kya sikhati hai?",
-        o: ["Oneness in worship", "Oneness in creation", "Oneness in language", "Oneness in people"],
-        oh: ["Ibadat ki wahdaniyat", "Paidaish", "Zaban", "Log"],
-        a: "Oneness in worship",
-        e: "Only Allah deserves acts of worship (dua, salah, reliance).",
-        eh: "Ibadat ka haq sirf Allah ko hai."
-      },
-      {
-        q: "What does 'Tawheed al-Asma wa Sifat' mean?",
-        qh: "'Tawheed al-Asma wa Sifat' se kya murad hai?",
-        o: ["One Ummah", "Affirming Allah’s Names/Attributes as revealed", "One language", "One madhhab"],
-        oh: ["Aik Ummat", "Allah ke Asma wa Sifat ka iqrar jaisa bataya", "Aik zaban", "Aik madhhab"],
-        a: "Affirming Allah’s Names/Attributes as revealed",
-        e: "Affirm without distortion, denial, or likening to creation.",
-        eh: "Tahreef, ta’til aur tashbih ke baghair tasdiq."
-      },
-      {
-        q: "Which two Angels record a person’s deeds?",
-        qh: "Kaun se Farishtay insaan ke a’maal likhte hain?",
-        o: ["Munkar & Nakir", "Ridwan & Malik", "Kiraman Katibin", "Israfil & Jibril"],
-        oh: ["Munkar & Nakir", "Ridwan & Malik", "Kiraman Katibin", "Israfil & Jibril"],
-        a: "Kiraman Katibin",
-        e: "Right and left angels record deeds.",
-        eh: "Dayen-bayen Farishtay a’maal likhte hain."
-      },
-      {
-        q: "What is 'Barzakh'?",
-        qh: "'Barzakh' kya hai?",
-        o: ["Bridge over Hell", "Realm between death and resurrection", "Highest Paradise", "Lowest Hell"],
-        oh: ["Pul-e-Jahannam", "Maut aur Hashr ke darmiyan ka alam", "Aala Jannat", "Neechi Jahannam"],
-        a: "Realm between death and resurrection",
-        e: "Intermediate state until the Day of Resurrection.",
-        eh: "Qayamat tak ka darmiyani alam."
-      },
-      {
-        q: "Which Angel will blow the Trumpet?",
-        qh: "Soor kaun se Farishte foonkenge?",
-        o: ["Jibril", "Mikail", "Israfil", "Malik"],
-        oh: ["Jibril", "Mikail", "Israfil", "Malik"],
-        a: "Israfil",
-        e: "By the Trumpet the Last Day begins.",
-        eh: "Soor se Qayamat ka aaghaz hoga."
-      },
-      {
-        q: "What is the 'Sirat' in the Hereafter?",
-        qh: "Akhirat mein 'Pul-e-Sirat' kya hai?",
-        o: ["Valley in Paradise", "Scale of deeds", "Bridge over Hell to be crossed", "Name of an Angel"],
-        oh: ["Jannat ki wadi", "A’maal ka tarazu", "Jahannam par se guzarne wala pul", "Farishte ka naam"],
-        a: "Bridge over Hell to be crossed",
-        e: "People cross it in accordance with their deeds.",
-        eh: "Log apne a’maal ke mutabiq isay paar karenge."
-      },
-      {
-        q: "What happens at the 'Mizan' on the Last Day?",
-        qh: "Qayamat ke din 'Meezan' par kya hota hai?",
-        o: ["Names called", "Deeds weighed", "Languages tested", "Routes assigned"],
-        oh: ["Naam pukare jate", "A’maal tole jate", "Zabanein aazmai jati", "Raaste bataye jate"],
-        a: "Deeds weighed",
-        e: "Allah’s perfect justice is manifested.",
-        eh: "Meezan par Allah ka be-’ayb insaf zahir hota hai."
-      },
-      {
-        q: "What is 'Hawdh al-Kawthar'?",
-        qh: "'Hawdh al-Kawthar' kya hai?",
-        o: ["A cave", "A blessed basin to drink from", "A star", "A valley"],
-        oh: ["Ghaar", "Barkat wala howz", "Sitaara", "Wadi"],
-        a: "A blessed basin to drink from",
-        e: "Believers will drink and never thirst again.",
-        eh: "Mumineen is se piyenge aur phir kabhi pyaas na lagegi."
-      },
-      {
-        q: "What is emphasized as the greatest means for entry into Paradise?",
-        qh: "Jannat mein dakhil hone ka sab se bada zariya kya bataya gaya?",
-        o: ["Wealth", "Lineage", "Taqwa & good deeds", "Travel"],
-        oh: ["Daulat", "Nasab", "Taqwa aur nek a’maal", "Safar"],
-        a: "Taqwa & good deeds",
-        e: "By Allah’s mercy upon people of Taqwa and good action.",
-        eh: "Allah ki Rehmat Taqwa walon par nazil hoti hai."
-      },
-      {
-        q: "What is the end for those who reject faith and persist in evil without repentance?",
-        qh: "Jo iman ka inkar karke burai par qayam rahein unka anjaam kya?",
-        o: ["A’raf", "Jahannam", "Sirat", "Barzakh"],
-        oh: ["A’raf", "Jahannam", "Sirat", "Barzakh"],
-        a: "Jahannam",
-        e: "Hell is the abode for persistent rejection & evil.",
-        eh: "Musir inkar aur burai ka anjaam Jahannam hai."
-      },
-      {
-        q: "What is the highest level of Paradise called?",
-        qh: "Jannat ka sab se buland darja kya kehlata hai?",
-        o: ["Adn", "Na’im", "Mawa", "Firdaws"],
-        oh: ["Adn", "Na’im", "Mawa", "Firdaws"],
-        a: "Firdaws",
-        e: "The Prophet ﷺ encouraged asking Allah for Al‑Firdaws.",
-        eh: "Nabi ﷺ ne Al‑Firdaws maangne ki talqeen ki."
-      },
-      {
-        q: "What is 'Qadr' (Divine Decree) a pillar of?",
-        qh: "'Qadr' (Taqdeer) kis cheez ka rukun hai?",
-        o: ["Islam", "Iman", "Ihsan", "Jihad"],
-        oh: ["Islam", "Iman", "Ihsan", "Jihad"],
-        a: "Iman",
-        e: "Belief in Qadr is among the six articles of faith.",
-        eh: "Taqdeer par iman, Iman ke chhe arkan mein se hai."
-      },
-      {
-        q: "What is meant by Allah’s Mercy encompassing all things?",
-        qh: "Allah ki Rehmat har cheez ko gher leti hai — is ka kya matlab?",
-        o: ["No justice", "Infinite mercy alongside justice", "Only mercy", "Only punishment"],
-        oh: ["Bila insaf", "Be-intiha Rehmat sath sath insaf", "Sirf Rehmat", "Sirf azaab"],
-        a: "Infinite mercy alongside justice",
-        e: "Allah is Most Merciful yet perfectly Just.",
-        eh: "Allah sab se Zyada Rehm karne wale hain aur bilkul Aadil bhi."
-      },
-      {
-        q: "What does repentance (Tawbah) require?",
-        qh: "Taubah ke liye kya sharaait hain?",
-        o: ["Only words", "Regret, stopping sin, resolve not to return", "Public announcement", "Charity only"],
-        oh: ["Sirf alfaaz", "Nadamat, gunah chhorna, dobara na karne ka iraada", "Aam elan", "Sirf khairat"],
-        a: "Regret, stopping sin, resolve not to return",
-        e: "Real Tawbah needs regret, immediate stop, firm resolve, and restitution if rights were violated.",
-        eh: "Haqooq tode to adaigi zaroori; warna nadamat, fori tark aur mustaqbil ka iraada."
-      },
-      {
-        q: "Whose intercession will be granted by Allah on the Last Day?",
-        qh: "Qayamat ke din kiska shafa’at Allah ke izn se qabool hoga?",
-        o: ["Prophets and righteous with Allah’s permission", "Anyone freely", "No one", "Angels only"],
-        oh: ["Anbiya aur saleheen Allah ke izn se", "Koi bhi", "Koi nahi", "Sirf Farishtay"],
-        a: "Prophets and righteous with Allah’s permission",
-        e: "Intercession occurs by Allah’s permission and pleasure.",
-        eh: "Shafa’at sirf Allah ke izn aur raza se hoti hai."
-      },
-      {
-        q: "What is the meaning of 'Asmaul Husna'?",
-        qh: "'Asmaul Husna' ka kya matlab hai?",
-        o: ["Beautiful Names of Allah", "Names of Angels", "Names of Prophets", "Names of Books"],
-        oh: ["Allah ke khubsurat Asma", "Farishton ke naam", "Nabiyon ke naam", "Kitabon ke naam"],
-        a: "Beautiful Names of Allah",
-        e: "They describe Allah’s perfect attributes.",
-        eh: "Ye Allah ki kamil sifat ka bayan hain."
-      },
-      {
-        q: "What is meant by 'Arsh' in Islamic creed?",
-        qh: "Aqeedah mein 'Arsh' se kya murad hai?",
-        o: ["Sky", "Throne of Allah", "Paradise", "Kursi"],
-        oh: ["Aasman", "Allah ka Arsh", "Jannat", "Kursi"],
-        a: "Throne of Allah",
-        e: "The Arsh is the grand Throne; its reality is known to Allah.",
-        eh: "Arsh Allah ka azeem arsh hai; iska kamil ilm Allah ko hai."
       }
     ];
-
     let currentIndex = 0;
+
+    // ==========================================
+    // SIDEBAR & PROGRESS LOGIC
+    // ==========================================
+    function toggleProgress() {
+      document.getElementById('progress-sidebar').classList.toggle('open');
+      document.getElementById('topics-sidebar').classList.remove('open');
+      renderProgress();
+    }
+    
+    function toggleTopics() {
+      document.getElementById('topics-sidebar').classList.toggle('open');
+      document.getElementById('progress-sidebar').classList.remove('open');
+    }
+
+    function renderProgress() {
+       let savedProgress = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+       let html = '';
+       const allTopics = [
+         "Qur'an Essentials", "Hadith & Hadith Sciences", "Seerah (Life of the Prophet ﷺ)", 
+         "Aqeedah - Creation to Hereafter", "Fiqh of Worship (Non-Ramadan)", 
+         "Manners & Akhlaq", "General Knowledge (Islamic Themes)"
+       ];
+       
+       allTopics.forEach(t => {
+           let score = savedProgress[t] || 0;
+           let isCurrent = (t === PAGE_TITLE) ? "background: var(--soft-gold);" : "";
+           html += `<div style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding: 10px; border-radius:8px; ${isCurrent}">
+               <div style="color:var(--text-main); font-weight:600; line-height:1.2; margin-bottom:5px;">${t}</div>
+               <span style="color:var(--emerald); font-size: 0.85rem; font-weight:bold;">📍 Completed: ${score}</span>
+           </div>`;
+       });
+       document.getElementById('progress-list').innerHTML = html;
+    }
+
+    function saveProgress() {
+        let prog = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+        // Save the highest question number they reached
+        prog[PAGE_TITLE] = Math.max(prog[PAGE_TITLE] || 0, currentIndex + 1);
+        localStorage.setItem('iq_learning_prog', JSON.stringify(prog));
+    }
+
+    // ==========================================
+    // QUIZ LOGIC
+    // ==========================================
     function showPopup(title, message, icon, callback) {
       const modal = document.getElementById('app-modal');
       document.getElementById('modal-title').innerText = title;
@@ -593,16 +664,19 @@
     function loadQuestion() {
       const qData = QUESTIONS[currentIndex];
       const area = document.getElementById('quiz-area');
+      
       let html = `
         <p style="color:var(--gold); font-weight:600; text-align:center;">Question ${currentIndex + 1} of ${QUESTIONS.length}</p>
-        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px;">
+        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px; border: 1px solid var(--gold);">
           <h4 style="margin-top:0; margin-bottom:5px; line-height:1.4;">${qData.q}</h4>
           <p style="margin:0; font-style:italic; color:var(--emerald); font-size:0.95rem;">${qData.qh || ""}</p>
         </div>
         <div id="options-box"></div>
       `;
       area.innerHTML = html;
+
       const optionsBox = document.getElementById('options-box');
+      
       qData.o.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.className = 'main-btn';
@@ -617,14 +691,18 @@
       const isCorrect = selectedOption === qData.a;
       const title = isCorrect ? "Correct! ✨" : "Explanation";
       const icon = isCorrect ? "✅" : "ℹ️";
+      
       const fullExplanation = (qData.e || "") + (qData.eh ? `\n\n(${qData.eh})` : "");
+
       showPopup(title, fullExplanation, icon, () => {
+        saveProgress(); // Automatically saves progress on every question!
+        
         currentIndex++;
         if (currentIndex < QUESTIONS.length) {
           loadQuestion();
         } else {
           showPopup("Topic Completed!", "Masha'Allah, you have finished this learning module.", "🎓", () => {
-            window.location.href = '../index.html'; 
+            window.location.href = '../index.html?skipSplash=true&screen=learning'; 
           });
         }
       });
