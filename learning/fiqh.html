@@ -3,19 +3,74 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Fiqh of Worship - Islamic Questz</title>
+  <title>Fiqh of Worship</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+
   <style>
-    :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b; --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7; --border: #e2e8f0; --shadow: rgba(0,0,0,0.1); }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; color: var(--text-main); }
+    :root {
+      --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b;
+      --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7;
+      --border: #e2e8f0; --shadow: rgba(0,0,0,0.1);
+    }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: var(--bg-color); 
+      margin: 0; 
+      color: var(--text-main); 
+      overflow-x: hidden;
+    }
     .app-card { margin: 0 auto; max-width: 500px; padding: 20px; }
-    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); width: 100%; margin-bottom: 10px; text-align: left; }
+    
+    .main-btn { 
+      background: var(--card-bg); border: 1px solid var(--border); 
+      padding: 15px; border-radius: 15px; cursor: pointer; 
+      transition: 0.2s; font-weight: 600; color: var(--text-main); 
+      width: 100%; margin-bottom: 10px; text-align: left;
+    }
     .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
-    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
+    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; font-size: 1rem; margin:0;}
     .hidden { display: none !important; }
+
+    /* New Sidebars CSS for Feature 2 & 3 */
+    .sidebar { 
+      position: fixed; top: 0; height: 100%; width: 280px; 
+      background: var(--card-bg); z-index: 3000; 
+      box-shadow: 0 0 15px rgba(0,0,0,0.5); 
+      transition: transform 0.3s ease; padding: 20px; 
+      overflow-y: auto; box-sizing: border-box;
+    }
+    .left-sidebar { left: 0; transform: translateX(-100%); }
+    .left-sidebar.open { transform: translateX(0); }
+    .right-sidebar { right: 0; transform: translateX(100%); }
+    .right-sidebar.open { transform: translateX(0); }
+    
+    .close-btn { background: none; border: none; font-size: 2rem; float: right; cursor: pointer; color: var(--gold); line-height: 0.8; margin-bottom: 10px;}
+    .topic-link { display: block; padding: 15px 10px; border-bottom: 1px solid var(--border); color: var(--text-main); text-decoration: none; font-weight: 600; transition: 0.2s;}
+    .topic-link:hover { background: var(--soft-gold); border-radius: 8px; border-bottom: none;}
+    
+    .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card-bg); padding: 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); }
   </style>
 </head>
 <body>
+
+  <div id="progress-sidebar" class="sidebar left-sidebar">
+    <button class="close-btn" onclick="toggleProgress()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📊 My Progress</h3>
+    <div id="progress-list"></div>
+  </div>
+
+  <div id="topics-sidebar" class="sidebar right-sidebar">
+    <button class="close-btn" onclick="toggleTopics()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📚 All Topics</h3>
+    <a href="quran-essentials.html" class="topic-link">Qur'an Essentials</a>
+    <a href="hadith-sciences.html" class="topic-link">Hadith & Hadith Sciences</a>
+    <a href="seerah.html" class="topic-link">Seerah (Life of Prophet)</a>
+    <a href="aqeedah.html" class="topic-link">Aqeedah - Creation to Hereafter</a>
+    <a href="fiqh.html" class="topic-link">Fiqh of Worship</a>
+    <a href="manners.html" class="topic-link">Manners & Akhlaq</a>
+    <a href="general-knowledge.html" class="topic-link">General Knowledge</a>
+  </div>
 
   <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
@@ -27,19 +82,165 @@
   </div>
 
   <div class="app-card">
-    <button class="back-btn" onclick="window.location.href='../index.html'">← Back to Menu</button>
-    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);">Fiqh of Worship</h2>
+    
+    <div class="top-nav">
+      <button class="back-btn" onclick="window.location.href='../index.html?skipSplash=true&screen=learning'">← Menu</button>
+      <div style="display:flex; gap:10px;">
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto; background:var(--emerald); color:white;" onclick="toggleProgress()">📊 Progress</button>
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto;" onclick="toggleTopics()">📚 Topics</button>
+      </div>
+    </div>
+    
+    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);"></h2>
+    
     <div id="quiz-area" style="margin-top: 20px;"></div>
   </div>
 
   <script>
+    // ==========================================
+    // 1. UPDATE YOUR TOPIC INFO HERE FOR EACH FILE
+    // ==========================================
     const PAGE_TITLE = "Fiqh of Worship";
     const QUESTIONS = [
+    {
+      q: "How many obligatory (fard) prayers are there daily?",
+      qh: "Rozana farz namazain kitni hain?",
+      o: ["3", "4", "5", "6"],
+      oh: ["3", "4", "5", "6"],
+      a: "5",
+      e: "Fajr, Dhuhr, Asr, Maghrib, Isha are the five daily prayers.",
+      eh: "Fajr, Zuhr, Asr, Maghrib, Isha paanch waqt ki namaz hain."
+    },
+    {
+      q: "Which direction must one face during Salah?",
+      qh: "Namaz ke waqt kis simt rukh karna laazmi hai?",
+      o: ["East", "West", "Qiblah (Ka’bah)", "North"],
+      oh: ["Mashriq", "Maghrib", "Qiblah (Ka’bah)", "Shimal"],
+      a: "Qiblah (Ka’bah)",
+      e: "Facing the Ka’bah is obligatory unless a valid excuse exists.",
+      eh: "Qiblah ki taraf rukh farz hai siwae uzr ke."
+    },
+    {
+      q: "What does Wudu primarily provide?",
+      qh: "Wuzu se asal faida kya hota hai?",
+      o: ["Cooling", "Ritual purity for prayer", "Decoration", "Perfume use"],
+      oh: ["Thandak", "Namaz ke liye paakizgi", "Sajawat", "Itar lagana"],
+      a: "Ritual purity for prayer",
+      e: "Wudu removes minor ritual impurity; Ghusl removes major impurity.",
+      eh: "Wuzu chhoti hadas door karta, Ghusl badi hadas."
+    },
+    {
+      q: "Which prayer has two fard rak’ahs?",
+      qh: "Kis namaz ki farz rakatain do hoti hain?",
+      o: ["Dhuhr", "Asr", "Maghrib", "Fajr"],
+      oh: ["Zuhr", "Asr", "Maghrib", "Fajr"],
+      a: "Fajr",
+      e: "Fajr has 2 fard; Dhuhr/Asr 4; Maghrib 3; Isha 4.",
+      eh: "Fajr 2 farz; Zuhr/Asr 4; Maghrib 3; Isha 4."
+    },
+    {
+      q: "Which pillar requires an eligible Muslim to pay a share of wealth annually?",
+      qh: "Kaunsa rukun haqdaaron ko har saal maal dene ka taqaza karta hai?",
+      o: ["Salah", "Zakah", "Hajj", "Shahadah"],
+      oh: ["Namaz", "Zakat", "Hajj", "Kalimah"],
+      a: "Zakah",
+      e: "Zakah purifies wealth upon nisab and hawl.",
+      eh: "Zakat nisab aur hawl par farz hoti hai; maal ko paak karti hai."
+    },
+    {
+      q: "To whom can Zakah NOT be given from the following?",
+      qh: "In mein se Zakat kisko nahi di ja sakti?",
+      o: ["The poor", "The indebted", "Personal ascendants/descendants", "Those in Allah’s path"],
+      oh: ["Ghareeb", "Karzdar", "Asal/furu’ (walidain/bachay)", "Fi-Sabilillah"],
+      a: "Personal ascendants/descendants",
+      e: "Direct dependents like parents/children are your responsibility, not Zakah recipients.",
+      eh: "Walidain/bachay aap ke zimma; unko Zakat nahi di jati."
+    },
+    {
+      q: "What is the immediate call to start prayer after Adhan called?",
+      qh: "Azan ke baad namaz shuru karne ki pukar ko kya kehte hain?",
+      o: ["Takbir", "Tahlil", "Tasbih", "Iqamah"],
+      oh: ["Takbir", "Tahlil", "Tasbih", "Iqamah"],
+      a: "Iqamah",
+      e: "Iqamah signals the immediate start of Salah.",
+      eh: "Iqamah namaz ke fori aaghaz ka elan hai."
+    },
+    {
+      q: "What are 'conditions of Salah' before starting it?",
+      qh: "Namaz shuru karne se pehle ke 'Shara’it-us-Salah' kya hain?",
+      o: ["Purity, covering awrah, facing Qiblah, time in", "Ruku/Sujud", "Tashahhud", "Taslim"],
+      oh: ["Taharat, satr-e-aurat, Qiblah, waqt", "Ruku/Sajda", "Tashahhud", "Taslim"],
+      a: "Purity, covering awrah, facing Qiblah, time in",
+      e: "Pre-requisites include taharah, time entry, satr-e-aurah, and Qiblah.",
+      eh: "Shuruat se pehle taharat, waqt, satr-e-aurat, Qiblah laazmi hain."
+    },
+    {
+      q: "What is 'Sujood-us-Sahw'?",
+      qh: "'Sajda-e-Sahw' kya hota hai?",
+      o: ["Gratitude prostration", "Prostration for forgetfulness/errors", "Funeral prostration", "Hajj prostration"],
+      oh: ["Shukr ka sajda", "Bhool/khata par sajda", "Janazah ka sajda", "Hajj ka sajda"],
+      a: "Prostration for forgetfulness/errors",
+      e: "It compensates certain mistakes in Salah.",
+      eh: "Namaz ki ghaltiyon ki tas’heeh ke liye hota hai."
+    },
+    {
+      q: "Which ablution is required after major ritual impurity?",
+      qh: "Bari hadas ke baad kaunsa ghusl/paakiza karna lazmi hota hai?",
+      o: ["Wudu", "Ghusl", "Tayammum only", "No need"],
+      oh: ["Wuzu", "Ghusl", "Tayammum hi kafi", "Zarurat nahi"],
+      a: "Ghusl",
+      e: "Ghusl removes major ritual impurity.",
+      eh: "Ghusl badi hadas ko door karta hai."
+    },
+    {
+      q: "When is Tayammum permissible?",
+      qh: "Tayammum kab jaiz hota hai?",
+      o: ["No water or harmful to use", "Always", "Only rain", "Only after Isha"],
+      oh: ["Pani na ho ya nuqsan ho", "Hamesha", "Sirf barish mein", "Sirf Isha ke baad"],
+      a: "No water or harmful to use",
+      e: "Tayammum is allowed when water is unavailable or harmful.",
+      eh: "Pani na milay ya zarar ho to Tayammum jaiz hai."
+    },
+    {
+      q: "Which act invalidates Wudu?",
+      qh: "Kaunsa amal Wuzu ko tor deta hai?",
+      o: ["Sleeping firmly lying down", "Minor nose itch", "Wearing socks", "Raising hands in dua"],
+      oh: ["Mazboot so jana", "Naak me halka khujlana", "Mojay pehna", "Dua ke liye haath uthana"],
+      a: "Sleeping firmly lying down",
+      e: "Deep sleep in a laid posture breaks Wudu in many fiqh views.",
+      eh: "Mazboot neend (let kar) aksar wuzu tor deti hai."
+    },
+    {
+      q: "How often is Hajj obligatory for one who is able?",
+      qh: "Jo qudrat rakhta ho us par Hajj kab farz hota hai?",
+      o: ["Every year", "Once in a lifetime", "Twice in a lifetime", "Only in youth"],
+      oh: ["Har saal", "Zindagi mein ek dafa", "Do dafa", "Sirf jawani mein"],
+      a: "Once in a lifetime",
+      e: "Hajj is obligatory once for those able.",
+      eh: "Qudrat rakhne walon par Hajj zindagi mein aik martaba farz hai."
+    },
+    {
+      q: "Which pair is from the Sunnah of dress & cleanliness?",
+      qh: "Libas aur safai se muta’alliq Sunnat ka kaun sa amal hai?",
+      o: ["Long nails & perfume", "Siwak & trimming nails", "Avoid bathing", "Tearing clothes"],
+      oh: ["Lambe naakhun & itar", "Miswak & naakhun tarashna", "Ghusl se parhez", "Kapray pharna"],
+      a: "Siwak & trimming nails",
+      e: "Siwak, trimming nails, removing unwanted hair are from fitrah acts.",
+      eh: "Miswak, naakhun tarashna, ghair zaroori balon ko hatana fitrah ke a’mal hain."
+    },
+    {
+      q: "Which prayer format has no ruku or sujud?",
+      qh: "Kaunsi namaz mein ruku aur sujud nahi hota?",
+      o: ["Janazah prayer", "Witr", "Tahajjud", "Dhuhr"],
+      oh: ["Janazah", "Witr", "Tahajjud", "Zuhr"],
+      a: "Janazah prayer",
+      e: "Salat al-Janazah consists of standing and Takbirs.",
+      eh: "Namaz-e-Janazah mein qiyam aur takbirein hoti hain, ruku/sajda nahi."
+    },
       {
         q: "Which daily prayer has three fard rak‘ahs?",
         qh: "Rozana kis namaz ki farz rakatain teen hoti hain?",
         o: ["Fajr", "Dhuhr", "Maghrib", "Isha"],
-        oh: ["Fajr", "Zuhr", "Maghrib", "Isha"],
         a: "Maghrib",
         e: "Maghrib has 3 fard; Fajr 2; Dhuhr/Asr/Isha 4.",
         eh: "Maghrib 3 farz; Fajr 2; Zuhr/Asr/Isha 4."
@@ -48,7 +249,6 @@
         q: "Which two prayers are shortened for a traveler in many fiqh views?",
         qh: "Musafir ke liye kaun si do namazen aam tor par qasr ki jati hain (kai fiqhi ra’ay)?",
         o: ["Dhuhr & Asr", "Fajr & Maghrib", "Maghrib & Isha", "Only Fajr"],
-        oh: ["Zuhr aur Asr", "Fajr aur Maghrib", "Maghrib aur Isha", "Sirf Fajr"],
         a: "Dhuhr & Asr",
         e: "Commonly Dhuhr/Asr (and also Isha) may be shortened by travelers per fiqh.",
         eh: "Aksar Zuhr/Asr (aur Isha) musafir ke liye qasr hoti hain—fiqhi tafseelat ke sath."
@@ -57,7 +257,6 @@
         q: "What is wajib (obligatory) for the validity of Salah?",
         qh: "Namaz ke durust hone ke liye kaun si cheez lazmi (wajib/fard) hai?",
         o: ["Facing Qiblah if able", "Choosing any direction", "Skipping intention", "Skipping takbir"],
-        oh: ["Agar mumkin ho to Qiblah rukh hona", "Koi bhi simt chunna", "Niyyat chhor dena", "Takbir chhor dena"],
         a: "Facing Qiblah if able",
         e: "Facing the Qiblah is required unless genuinely unable.",
         eh: "Qiblah ki simt lazmi hai siwae uzr ke."
@@ -66,7 +265,6 @@
         q: "Which actions are fard elements in Wudu by consensus?",
         qh: "Wuzu ke kaun se a’mal ijma‘an farz hain?",
         o: ["Face, arms, wiping head, washing feet", "Only face", "Only arms", "Only feet"],
-        oh: ["Chehra, baazu, sar ka masah, paon dhona", "Sirf chehra", "Sirf baazu", "Sirf paon"],
         a: "Face, arms, wiping head, washing feet",
         e: "These are the pillars of Wudu agreed upon by jurists.",
         eh: "Chehra, baazu, masah, paon dhona—ijma‘an farz a’mal."
@@ -75,7 +273,6 @@
         q: "Which condition allows Tayammum instead of Wudu/Ghusl?",
         qh: "Kis surat me Wuzu/Ghusl ki jagah Tayammum jaiz hota?",
         o: ["No water or harmful to use", "Busy schedule", "Cold weather only", "None"],
-        oh: ["Pani na ho ya nuqsan-deh ho", "Masroofiyat", "Sirf sardi me", "Koi nahi"],
         a: "No water or harmful to use",
         e: "Absence of water or harm permits Tayammum.",
         eh: "Pani na milay ya zarar ho to Tayammum jaiz."
@@ -84,7 +281,6 @@
         q: "Which is the number of fard rak‘ahs for Friday (Jumu’ah) congregational prayer?",
         qh: "Jumu’ah ki farz rakatain kitni hoti hain?",
         o: ["2", "3", "4", "6"],
-        oh: ["2", "3", "4", "6"],
         a: "2",
         e: "The Friday congregational prayer is 2 fard rak‘ahs.",
         eh: "Jumu’ah ki farz 2 rakat hoti hai."
@@ -93,7 +289,6 @@
         q: "Which of the following invalidates Wudu in most fiqh views?",
         qh: "Aksar fiqhi ra’yon me in me se kya Wuzu ko tor deta?",
         o: ["Deep sleep lying down", "Smiling", "Sneezing", "Stretching"],
-        oh: ["Let kar mazboot neend so jana", "Muskurana", "Cheenkna", "Angrai lena"],
         a: "Deep sleep lying down",
         e: "Deep sleep while lying typically nullifies Wudu.",
         eh: "Mazboot neend (let kar) Wuzu ko khatam karti hai."
@@ -102,7 +297,6 @@
         q: "Which is a Sunnah practice related to oral hygiene?",
         qh: "Mooh ki safai se muta’alliq kaunsa amal Sunnat hai?",
         o: ["Siwak (Miswak)", "Skipping brushing", "Chewing gum always", "No cleaning"],
-        oh: ["Miswak karna", "Brush na karna", "Hamesha chewing gum chabana", "Safai na karna"],
         a: "Siwak (Miswak)",
         e: "Siwak is a highly recommended Sunnah.",
         eh: "Miswak bohot pasandeeda Sunnat hai."
@@ -111,7 +305,6 @@
         q: "Which statement about Witr is broadly accurate across schools?",
         qh: "Witr ke bare me kaunsi baat ‘aam tor par’ theek hai (madhahib me ikhtilaf ke bawajood)?",
         o: ["It is prayed at night in odd units", "It must be at noon", "It has ruku but no sujud", "It is 2 rak‘ah only"],
-        oh: ["Raat ko taaq (odd) rakaton me padhi jati hai", "Dopehar ko zaroori hai", "Ruku hai par sajda nahi", "Sirf 2 rakat hai"],
         a: "It is prayed at night in odd units",
         e: "Witr is an odd‑numbered night prayer; details vary by madhhab.",
         eh: "Witr raat ki taaq (odd) rakaton ki namaz hai—tafseelat farq hoti."
@@ -120,7 +313,6 @@
         q: "Which is a common pillar within Salah across schools?",
         qh: "Namaz me kaunsa rukn ‘aam tor par’ mushtarak mana jata?",
         o: ["Takbirat al-Ihram", "Optional tasbih", "Sitting anytime", "Skipping recitation"],
-        oh: ["Takbirat al-Ihram", "Nafl tasbih", "Kisi bhi waqt baithna", "Qirat chhor dena"],
         a: "Takbirat al-Ihram",
         e: "Opening Takbir is a fundamental pillar of Salah.",
         eh: "Takbirat al‑Ihram namaz ka bunyadi rukn hai."
@@ -129,7 +321,6 @@
         q: "Which action is recommended before Salah if one smells bad?",
         qh: "Agar boosada boo ho to Salah se pehle kaunsa amal sifarish shuda?",
         o: ["Use pleasant scent (non‑alcoholic) & clean mouth", "Avoid cleaning", "Eat raw onion now", "Delay Salah indefinitely"],
-        oh: ["Achhi khushboo lagana aur mooh saaf karna", "Safai se parhez", "Kacchi pyaz khana", "Namaz ko bilkul taakhir kar dena"],
         a: "Use pleasant scent (non‑alcoholic) & clean mouth",
         e: "Cleanliness and good smell suit the sanctity of Salah.",
         eh: "Paakizgi aur khooshboo Salah ki hurmat ke liye behtar hai."
@@ -138,7 +329,6 @@
         q: "Which of these may excuse facing exact Qiblah?",
         qh: "Kis surat me Qiblah ki bilkul sahi simt na hona ma’af ho sakta?",
         o: ["Legitimate fear or inability", "Laziness", "Preference", "None"],
-        oh: ["Jaiz khauf ya majboori", "Susti", "Apni marzi", "Koi nahi"],
         a: "Legitimate fear or inability",
         e: "Fear, danger or genuine inability can excuse precise Qiblah.",
         eh: "Khauf/majboori me bilkul sahi rukh na ho to uzr hai."
@@ -147,7 +337,6 @@
         q: "Which two prayers may commonly be combined in travel (per fiqh allowances)?",
         qh: "Safar me kaunsi do namazen jorna aam tor par jaiz hota (fiqhi ijazat)?",
         o: ["Dhuhr & Asr", "Fajr & Dhuhr", "Asr & Maghrib", "Fajr & Isha"],
-        oh: ["Zuhr aur Asr", "Fajr aur Zuhr", "Asr aur Maghrib", "Fajr aur Isha"],
         a: "Dhuhr & Asr",
         e: "Dhuhr‑Asr (and Maghrib‑Isha) are often allowed to combine in travel.",
         eh: "Zuhr‑Asr (aur Maghrib‑Isha) ka jam‘ safar me aksar jaiz hota."
@@ -156,7 +345,6 @@
         q: "Which is a widely‑taught etiquette when entering the masjid?",
         qh: "Masjid me dakhil hote waqt kaunsa adaab aam tor par sikhaya jata?",
         o: ["Enter with right foot & say the masjid dua", "Run loudly", "Talk loudly", "Eat inside casually"],
-        oh: ["Dain paon se aana aur masjid ki dua padhna", "Shor machate hue bhagna", "Zor se baatein karna", "Aise hi khana khana"],
         a: "Enter with right foot & say the masjid dua",
         e: "Etiquettes include right foot first and the entry supplication.",
         eh: "Dain paon se dakhil aur dua padhna adaab me shamil."
@@ -165,16 +353,14 @@
         q: "Which prayer is best delayed slightly within its time when heat is intense (many fiqh views)?",
         qh: "Sخت garmi me kaunsi namaz thori der karna behtar mana gaya (kai fiqhi ra’ay)?",
         o: ["Dhuhr", "Fajr", "Maghrib", "Isha"],
-        oh: ["Zuhr", "Fajr", "Maghrib", "Isha"],
         a: "Dhuhr",
         e: "Some jurists prefer delaying Dhuhr slightly in severe heat.",
         eh: "Sخت garmi me baaz fuqaha Zuhr me thori der ko behtar samajhte."
       },
-      {
+   {
         q: "Which prayer time begins at dawn break (true fajr)?",
         qh: "Kaunsi namaz ka waqt subh-e-sadiq se shuru hota?",
         o: ["Fajr", "Dhuhr", "Asr", "Maghrib"],
-        oh: ["Fajr", "Zuhr", "Asr", "Maghrib"],
         a: "Fajr",
         e: "Fajr starts at true dawn and ends at sunrise.",
         eh: "Fajr subh-e-sadiq se shuru aur sooraj nikalne par khatam."
@@ -183,7 +369,6 @@
         q: "Which prayer time starts after the sun passes its zenith?",
         qh: "Sooraj ke zawal ke baad kaunsi namaz ka waqt aata?",
         o: ["Dhuhr", "Asr", "Isha", "Maghrib"],
-        oh: ["Zuhr", "Asr", "Isha", "Maghrib"],
         a: "Dhuhr",
         e: "Dhuhr begins post-zenith until mid-afternoon.",
         eh: "Zuhr zawal ke baad se dopehar tak hoti."
@@ -192,7 +377,6 @@
         q: "Which prayer begins when the sun sets?",
         qh: "Sooraj ghuroob hone par kaunsi namaz ka waqt shuru hota?",
         o: ["Maghrib", "Asr", "Fajr", "Isha"],
-        oh: ["Maghrib", "Asr", "Fajr", "Isha"],
         a: "Maghrib",
         e: "Maghrib starts at sunset and lasts until twilight fades.",
         eh: "Maghrib ghuroob par shuru aur shafaq dhalnay tak rehti."
@@ -201,7 +385,6 @@
         q: "Which prayer begins after twilight disappears at night?",
         qh: "Shafaq mehal hone ke baad kaunsi namaz ka waqt aata?",
         o: ["Isha", "Asr", "Dhuhr", "Fajr"],
-        oh: ["Isha", "Asr", "Zuhr", "Fajr"],
         a: "Isha",
         e: "Isha begins after twilight and lasts until pre-dawn.",
         eh: "Isha shafaq ke baad se subh-e-sadiq tak."
@@ -210,7 +393,6 @@
         q: "Which act is recommended upon entering the masjid before sitting (if time allows)?",
         qh: "Masjid me dakhil hote baithne se pehle kaunsa amal mustahab (agar waqt ho)?",
         o: ["Tahiyyat al-Masjid (two units)", "Eat something", "Talk loudly", "Sleep"],
-        oh: ["Tahiyyat al-Masjid (2 rakat)", "Kuch khana", "Zor se bolna", "So jana"],
         a: "Tahiyyat al-Masjid (two units)",
         e: "Greeting the masjid is recommended when permitted.",
         eh: "Tahiyyat al-Masjid mustahab hai jab ijazat ho."
@@ -219,7 +401,6 @@
         q: "Which is generally required in Wudu for the head area?",
         qh: "Wuzu me sar ke hissa me aam tor par kya laazmi?",
         o: ["Wiping (Masah)", "Full wash like face", "No touch", "Perfume"],
-        oh: ["Masah karna", "Chehre ki tarah poora dhona", "Bilkul na chhoona", "Khushboo lagana"],
         a: "Wiping (Masah)",
         e: "Masah over the head is a pillar in Wudu.",
         eh: "Sar par masah Wuzu ke arkan me se hai."
@@ -228,7 +409,6 @@
         q: "Which footwear condition allows wiping over socks in some fiqh views?",
         qh: "Kin mojon ki surat me masah jaiz hota (kai fiqhi ra'ay)?",
         o: ["Thick/valid socks, conditions met", "Bare feet", "Wet floor", "Sandals"],
-        oh: ["Mote/jaiz mojay, shara'it poori hon", "Nangay paon", "Geela farsh", "Sandals"],
         a: "Thick/valid socks, conditions met",
         e: "Masah over khuff/valid socks allowed with conditions.",
         eh: "Khuff/munasib mojon par masah shara'iti tor par jaiz."
@@ -237,7 +417,6 @@
         q: "Which is the Qiblah for Muslims worldwide?",
         qh: "Duniya bhar ke Musalmanon ka Qiblah kya hai?",
         o: ["Masjid al-Aqsa", "Ka'bah (Makkah)", "Any direction", "Local landmark"],
-        oh: ["Masjid al-Aqsa", "Ka'bah (Makkah)", "Koi bhi simt", "Muqami mashhoor jagah"],
         a: "Ka'bah (Makkah)",
         e: "The Ka'bah is the universal Qiblah.",
         eh: "Ka'bah tamam Musalmanon ka Qiblah hai."
@@ -246,7 +425,6 @@
         q: "Which is recommended to break minor disputes in prayer rows?",
         qh: "Namaz ki safon me choti takraar ko khatam karne ke liye kya masnoon?",
         o: ["Gentle adjustment & fill gaps", "Argue loudly", "Leave the masjid", "Call off prayer"],
-        oh: ["Naram mijazi se theek karna aur khalian bharna", "Zor se behas karna", "Masjid se nikal jana", "Namaz khatam kar dena"],
         a: "Gentle adjustment & fill gaps",
         e: "Line up straight and fill gaps calmly.",
         eh: "Saff seedhi aur khalian araam se pur karna chahiye."
@@ -255,7 +433,6 @@
         q: "Which ruling applies if one genuinely cannot use water for Wudu/Ghusl?",
         qh: "Agar kisi ko pani istemal karna sach me mumkin na ho to kya hukm?",
         o: ["Tayammum", "Skip purification", "Delay prayer indefinitely", "No solution"],
-        oh: ["Tayammum", "Paki chhor dena", "Namaz ko bilkul taakhir kar dena", "Koi hal nahi"],
         a: "Tayammum",
         e: "Tayammum replaces water in genuine inability.",
         eh: "Ahal uzr ke liye Tayammum badal hai."
@@ -264,7 +441,6 @@
         q: "Which position is essential in each unit of Salah?",
         qh: "Har rakat me kaunsa rukn laazmi?",
         o: ["Sujood (prostration)", "Only sitting", "Only standing", "Only raising hands"],
-        oh: ["Sajda", "Sirf baithna", "Sirf khara hona", "Sirf haath uthana"],
         a: "Sujood (prostration)",
         e: "Sujood is a pillar of each rakat.",
         eh: "Har rakat me sajda rukun hai."
@@ -273,7 +449,6 @@
         q: "Which act is discouraged in the masjid per etiquettes?",
         qh: "Adaab ke mutabiq masjid me kaunsa amal napasandida?",
         o: ["Buying/selling loudly", "Dhikr", "Tilawah", "Dua"],
-        oh: ["Zor se khareed-o-farokht", "Zikr", "Tilawat", "Dua"],
         a: "Buying/selling loudly",
         e: "Masjid is for worship; trading noise disturbs.",
         eh: "Masjid ibadat ki jaga hai; tijarat ka shor munasib nahi."
@@ -282,7 +457,6 @@
         q: "Which action is advised if you arrive while the imam is in ruku?",
         qh: "Agar aap pohanchein aur imam ruku me ho to kya behtar?",
         o: ["Join in ruku calmly", "Run loudly", "Wait outside", "Shout to stop"],
-        oh: ["Sukun se ruku me shamil hona", "Shor machate hue bhagna", "Bahar intezar karna", "Rukne ke liye chillana"],
         a: "Join in ruku calmly",
         e: "Join without rushing; avoid unsafe haste.",
         eh: "Sukun se ruku me shamil ho; bhaag-daur se parhez."
@@ -291,7 +465,6 @@
         q: "Which basic intention (niyyah) rule is correct for Salah?",
         qh: "Namaz ki niyyat ka kaunsa usool durust?",
         o: ["In the heart; not necessarily spoken", "Must be shouted", "Must be written", "No need for intention"],
-        oh: ["Dil me; zaban se kehna zaroori nahi", "Chilla kar kehna zaroori hai", "Likhna zaroori hai", "Niyyat ki zaroorat nahi"],
         a: "In the heart; not necessarily spoken",
         e: "Niyyah is an inward resolve; verbalizing is optional by many.",
         eh: "Niyyah dil ka irada; zaban se kehna zaroori nahi."
@@ -300,149 +473,57 @@
         q: "Which action completes Salah formally?",
         qh: "Kaunsa amal namaz ko rasmi tor par tamam karta?",
         o: ["Taslim (saying salam)", "Sujood again", "Walking away silently", "Closing eyes"],
-        oh: ["Taslim (salam pherna)", "Dubara sajda karna", "Chup chap chale jana", "Aankhein band kar lena"],
         a: "Taslim (saying salam)",
         e: "Taslim to the right and left concludes Salah.",
         eh: "Dain/baen salam se namaz mukammal hoti."
-      },
-      {
-        q: "How many obligatory (fard) prayers are there daily?",
-        qh: "Rozana farz namazain kitni hain?",
-        o: ["3", "4", "5", "6"],
-        oh: ["3", "4", "5", "6"],
-        a: "5",
-        e: "Fajr, Dhuhr, Asr, Maghrib, Isha are the five daily prayers.",
-        eh: "Fajr, Zuhr, Asr, Maghrib, Isha paanch waqt ki namaz hain."
-      },
-      {
-        q: "Which direction must one face during Salah?",
-        qh: "Namaz ke waqt kis simt rukh karna laazmi hai?",
-        o: ["East", "West", "Qiblah (Ka’bah)", "North"],
-        oh: ["Mashriq", "Maghrib", "Qiblah (Ka’bah)", "Shimal"],
-        a: "Qiblah (Ka’bah)",
-        e: "Facing the Ka’bah is obligatory unless a valid excuse exists.",
-        eh: "Qiblah ki taraf rukh farz hai siwae uzr ke."
-      },
-      {
-        q: "What does Wudu primarily provide?",
-        qh: "Wuzu se asal faida kya hota hai?",
-        o: ["Cooling", "Ritual purity for prayer", "Decoration", "Perfume use"],
-        oh: ["Thandak", "Namaz ke liye paakizgi", "Sajawat", "Itar lagana"],
-        a: "Ritual purity for prayer",
-        e: "Wudu removes minor ritual impurity; Ghusl removes major impurity.",
-        eh: "Wuzu chhoti hadas door karta, Ghusl badi hadas."
-      },
-      {
-        q: "Which prayer has two fard rak’ahs?",
-        qh: "Kis namaz ki farz rakatain do hoti hain?",
-        o: ["Dhuhr", "Asr", "Maghrib", "Fajr"],
-        oh: ["Zuhr", "Asr", "Maghrib", "Fajr"],
-        a: "Fajr",
-        e: "Fajr has 2 fard; Dhuhr/Asr 4; Maghrib 3; Isha 4.",
-        eh: "Fajr 2 farz; Zuhr/Asr 4; Maghrib 3; Isha 4."
-      },
-      {
-        q: "Which pillar requires an eligible Muslim to pay a share of wealth annually?",
-        qh: "Kaunsa rukun haqdaaron ko har saal maal dene ka taqaza karta hai?",
-        o: ["Salah", "Zakah", "Hajj", "Shahadah"],
-        oh: ["Namaz", "Zakat", "Hajj", "Kalimah"],
-        a: "Zakah",
-        e: "Zakah purifies wealth upon nisab and hawl.",
-        eh: "Zakat nisab aur hawl par farz hoti hai; maal ko paak karti hai."
-      },
-      {
-        q: "To whom can Zakah NOT be given from the following?",
-        qh: "In mein se Zakat kisko nahi di ja sakti?",
-        o: ["The poor", "The indebted", "Personal ascendants/descendants", "Those in Allah’s path"],
-        oh: ["Ghareeb", "Karzdar", "Asal/furu’ (walidain/bachay)", "Fi-Sabilillah"],
-        a: "Personal ascendants/descendants",
-        e: "Direct dependents like parents/children are your responsibility, not Zakah recipients.",
-        eh: "Walidain/bachay aap ke zimma; unko Zakat nahi di jati."
-      },
-      {
-        q: "What is the immediate call to start prayer after Adhan called?",
-        qh: "Azan ke baad namaz shuru karne ki pukar ko kya kehte hain?",
-        o: ["Takbir", "Tahlil", "Tasbih", "Iqamah"],
-        oh: ["Takbir", "Tahlil", "Tasbih", "Iqamah"],
-        a: "Iqamah",
-        e: "Iqamah signals the immediate start of Salah.",
-        eh: "Iqamah namaz ke fori aaghaz ka elan hai."
-      },
-      {
-        q: "What are 'conditions of Salah' before starting it?",
-        qh: "Namaz shuru karne se pehle ke 'Shara’it-us-Salah' kya hain?",
-        o: ["Purity, covering awrah, facing Qiblah, time in", "Ruku/Sujud", "Tashahhud", "Taslim"],
-        oh: ["Taharat, satr-e-aurat, Qiblah, waqt", "Ruku/Sajda", "Tashahhud", "Taslim"],
-        a: "Purity, covering awrah, facing Qiblah, time in",
-        e: "Pre-requisites include taharah, time entry, satr-e-aurah, and Qiblah.",
-        eh: "Shuruat se pehle taharat, waqt, satr-e-aurat, Qiblah laazmi hain."
-      },
-      {
-        q: "What is 'Sujood-us-Sahw'?",
-        qh: "'Sajda-e-Sahw' kya hota hai?",
-        o: ["Gratitude prostration", "Prostration for forgetfulness/errors", "Funeral prostration", "Hajj prostration"],
-        oh: ["Shukr ka sajda", "Bhool/khata par sajda", "Janazah ka sajda", "Hajj ka sajda"],
-        a: "Prostration for forgetfulness/errors",
-        e: "It compensates certain mistakes in Salah.",
-        eh: "Namaz ki ghaltiyon ki tas’heeh ke liye hota hai."
-      },
-      {
-        q: "Which ablution is required after major ritual impurity?",
-        qh: "Bari hadas ke baad kaunsa ghusl/paakiza karna lazmi hota hai?",
-        o: ["Wudu", "Ghusl", "Tayammum only", "No need"],
-        oh: ["Wuzu", "Ghusl", "Tayammum hi kafi", "Zarurat nahi"],
-        a: "Ghusl",
-        e: "Ghusl removes major ritual impurity.",
-        eh: "Ghusl badi hadas ko door karta hai."
-      },
-      {
-        q: "When is Tayammum permissible?",
-        qh: "Tayammum kab jaiz hota hai?",
-        o: ["No water or harmful to use", "Always", "Only rain", "Only after Isha"],
-        oh: ["Pani na ho ya nuqsan ho", "Hamesha", "Sirf barish mein", "Sirf Isha ke baad"],
-        a: "No water or harmful to use",
-        e: "Tayammum is allowed when water is unavailable or harmful.",
-        eh: "Pani na milay ya zarar ho to Tayammum jaiz hai."
-      },
-      {
-        q: "Which act invalidates Wudu?",
-        qh: "Kaunsa amal Wuzu ko tor deta hai?",
-        o: ["Sleeping firmly lying down", "Minor nose itch", "Wearing socks", "Raising hands in dua"],
-        oh: ["Mazboot so jana", "Naak me halka khujlana", "Mojay pehna", "Dua ke liye haath uthana"],
-        a: "Sleeping firmly lying down",
-        e: "Deep sleep in a laid posture breaks Wudu in many fiqh views.",
-        eh: "Mazboot neend (let kar) aksar wuzu tor deti hai."
-      },
-      {
-        q: "How often is Hajj obligatory for one who is able?",
-        qh: "Jo qudrat rakhta ho us par Hajj kab farz hota hai?",
-        o: ["Every year", "Once in a lifetime", "Twice in a lifetime", "Only in youth"],
-        oh: ["Har saal", "Zindagi mein ek dafa", "Do dafa", "Sirf jawani mein"],
-        a: "Once in a lifetime",
-        e: "Hajj is obligatory once for those able.",
-        eh: "Qudrat rakhne walon par Hajj zindagi mein aik martaba farz hai."
-      },
-      {
-        q: "Which pair is from the Sunnah of dress & cleanliness?",
-        qh: "Libas aur safai se muta’alliq Sunnat ka kaun sa amal hai?",
-        o: ["Long nails & perfume", "Siwak & trimming nails", "Avoid bathing", "Tearing clothes"],
-        oh: ["Lambe naakhun & itar", "Miswak & naakhun tarashna", "Ghusl se parhez", "Kapray pharna"],
-        a: "Siwak & trimming nails",
-        e: "Siwak, trimming nails, removing unwanted hair are from fitrah acts.",
-        eh: "Miswak, naakhun tarashna, ghair zaroori balon ko hatana fitrah ke a’mal hain."
-      },
-      {
-        q: "Which prayer format has no ruku or sujud?",
-        qh: "Kaunsi namaz mein ruku aur sujud nahi hota?",
-        o: ["Janazah prayer", "Witr", "Tahajjud", "Dhuhr"],
-        oh: ["Janazah", "Witr", "Tahajjud", "Zuhr"],
-        a: "Janazah prayer",
-        e: "Salat al-Janazah consists of standing and Takbirs.",
-        eh: "Namaz-e-Janazah mein qiyam aur takbirein hoti hain, ruku/sajda nahi."
       }
-    ];
-
+     ];
     let currentIndex = 0;
+
+    // ==========================================
+    // SIDEBAR & PROGRESS LOGIC
+    // ==========================================
+    function toggleProgress() {
+      document.getElementById('progress-sidebar').classList.toggle('open');
+      document.getElementById('topics-sidebar').classList.remove('open');
+      renderProgress();
+    }
+    
+    function toggleTopics() {
+      document.getElementById('topics-sidebar').classList.toggle('open');
+      document.getElementById('progress-sidebar').classList.remove('open');
+    }
+
+    function renderProgress() {
+       let savedProgress = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+       let html = '';
+       const allTopics = [
+         "Qur'an Essentials", "Hadith & Hadith Sciences", "Seerah (Life of the Prophet ﷺ)", 
+         "Aqeedah - Creation to Hereafter", "Fiqh of Worship (Non-Ramadan)", 
+         "Manners & Akhlaq", "General Knowledge (Islamic Themes)"
+       ];
+       
+       allTopics.forEach(t => {
+           let score = savedProgress[t] || 0;
+           let isCurrent = (t === PAGE_TITLE) ? "background: var(--soft-gold);" : "";
+           html += `<div style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding: 10px; border-radius:8px; ${isCurrent}">
+               <div style="color:var(--text-main); font-weight:600; line-height:1.2; margin-bottom:5px;">${t}</div>
+               <span style="color:var(--emerald); font-size: 0.85rem; font-weight:bold;">📍 Completed: ${score}</span>
+           </div>`;
+       });
+       document.getElementById('progress-list').innerHTML = html;
+    }
+
+    function saveProgress() {
+        let prog = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+        // Save the highest question number they reached
+        prog[PAGE_TITLE] = Math.max(prog[PAGE_TITLE] || 0, currentIndex + 1);
+        localStorage.setItem('iq_learning_prog', JSON.stringify(prog));
+    }
+
+    // ==========================================
+    // QUIZ LOGIC
+    // ==========================================
     function showPopup(title, message, icon, callback) {
       const modal = document.getElementById('app-modal');
       document.getElementById('modal-title').innerText = title;
@@ -458,16 +539,19 @@
     function loadQuestion() {
       const qData = QUESTIONS[currentIndex];
       const area = document.getElementById('quiz-area');
+      
       let html = `
         <p style="color:var(--gold); font-weight:600; text-align:center;">Question ${currentIndex + 1} of ${QUESTIONS.length}</p>
-        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px;">
+        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px; border: 1px solid var(--gold);">
           <h4 style="margin-top:0; margin-bottom:5px; line-height:1.4;">${qData.q}</h4>
           <p style="margin:0; font-style:italic; color:var(--emerald); font-size:0.95rem;">${qData.qh || ""}</p>
         </div>
         <div id="options-box"></div>
       `;
       area.innerHTML = html;
+
       const optionsBox = document.getElementById('options-box');
+      
       qData.o.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.className = 'main-btn';
@@ -482,14 +566,18 @@
       const isCorrect = selectedOption === qData.a;
       const title = isCorrect ? "Correct! ✨" : "Explanation";
       const icon = isCorrect ? "✅" : "ℹ️";
+      
       const fullExplanation = (qData.e || "") + (qData.eh ? `\n\n(${qData.eh})` : "");
+
       showPopup(title, fullExplanation, icon, () => {
+        saveProgress(); // Automatically saves progress on every question!
+        
         currentIndex++;
         if (currentIndex < QUESTIONS.length) {
           loadQuestion();
         } else {
           showPopup("Topic Completed!", "Masha'Allah, you have finished this learning module.", "🎓", () => {
-            window.location.href = '../index.html'; 
+            window.location.href = '../index.html?skipSplash=true&screen=learning'; 
           });
         }
       });
