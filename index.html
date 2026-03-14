@@ -202,53 +202,30 @@
 
 
 
-  <nav id="sidebar">
-
+ <nav id="sidebar">
     <div class="profile-section">
-
       <div id="review-link" class="nav-item hidden" onclick="showReview()">📚 Review All Answers</div>
-
       <div class="avatar" onclick="document.getElementById('upload-pic').click()">
-
         <span id="avatar-init">?</span>
-
         <img id="profile-img" src="" alt="Profile">
-
       </div>
-
       <input type="file" id="upload-pic" class="hidden" accept="image/*" onchange="uploadImage(this)">
-
       <div id="user-display-name" style="font-weight: 600; margin-top: 5px;">Guest User</div>
-
     </div>
-
     <div class="nav-item" onclick="showScreen('home'); toggleMenu();">🏠 Home</div>
-
     <div class="nav-item" onclick="showScreen('ramadan-grid'); toggleMenu();">🌙 Ramadan Quiz</div>
-
     <div class="nav-item" onclick="openLearningQuiz(); toggleMenu();">📖 Knowledge & Learning</div>
-
-    <div class="nav-item" onclick="showHadith(); toggleMenu();">📜 Daily Hadith</div>
-
-    <div class="nav-item" onclick="loadLeaderboard(); toggleMenu();">🏆 Leaderboard</div>
-
-    <div class="nav-item" onclick="showDuas(); toggleMenu();">🤲 Duas for Daily Living</div>
-
-    <div class="nav-item" onclick="showFeedback(); toggleMenu();">💡 Feedback</div>
-
-    <div class="nav-item" onclick="shareApp(); toggleMenu();">📤 Invite or Share</div>
-
-    <div class="nav-item" onclick="toggleTheme(); toggleMenu();">🌓 Theme Mode</div>
-
     <div class="nav-item" onclick="showDailyAyah(); toggleMenu();">📖 Daily Qur'an Verse</div>
-
-<div class="nav-item" onclick="showQiblaCompass(); toggleMenu();">🕋 Qibla Direction</div>
-
-<div class="nav-item" onclick="showSavedAyahs(); toggleMenu();">⭐ Saved Verses</div>
-
+    <div class="nav-item" onclick="showQiblaCompass(); toggleMenu();">🕋 Qibla Direction</div>
+    <div class="nav-item" onclick="showHadith(); toggleMenu();">📜 Daily Hadith</div>
+    <div class="nav-item" onclick="loadLeaderboard(); toggleMenu();">🏆 Leaderboard</div>
+    <div class="nav-item" onclick="showDuas(); toggleMenu();">🤲 Duas for Daily Living</div>
+    <div class="nav-item" onclick="showSavedAyahs(); toggleMenu();">⭐ Saved Verses</div>
+    <div class="nav-item" onclick="showFeedback(); toggleMenu();">💡 Feedback</div>
+    <div class="nav-item" onclick="shareApp(); toggleMenu();">📤 Invite or Share</div>
+    <div class="nav-item" onclick="toggleTheme(); toggleMenu();">🌓 Theme Mode</div>
     <div class="nav-item" onclick="toggleMenu()" style="color:gray; border-top: 1px solid var(--border);">Close</div>
-
-  </nav>
+</nav>
 
 
 
@@ -1002,84 +979,46 @@ function showHadith() {
 
 }
 
-
-
 function safeKey(name) {
-
+  // Fixes Firebase "invalid key" errors
   return String(name || 'guest').replace(/[.#$/\[\]\/]/g, '_').slice(0, 60);
-
 }
 
 function submitScore(username, score) {
-
   const key = safeKey(username);
-
   const ref = db.ref('leaderboardUsers/' + key);
-
   ref.once('value').then(snap => {
-
     const current = snap.val();
-
-    if (!current || Number(score) > Number((current || {}).score)) {
-
-      ref.set({ name: username, score: Number(score), timestamp: Date.now() })
-
-        .catch(err => console.error("Leaderboard Write Error", err));
-
+    // Only update if the new score is higher
+    if (!current || Number(score) > Number(current.score)) {
+      return ref.set({ name: username, score: Number(score), timestamp: Date.now() });
     }
-
-  }).catch(err => console.error('Leaderboard Read Error:', err));
-
+  }).catch(err => console.error('Leaderboard error:', err));
 }
 
 function loadLeaderboard() {
-
   showScreen('content');
-
   const body = document.getElementById('dynamic-body');
-
-  body.innerHTML = "<h2 style=\"font-family:'Cinzel'; text-align:center;\">🏆 Global Leaderboard</h2><p>Loading Top 50...</p>";
-
+  body.innerHTML = "<h2>🏆 Global Leaderboard</h2><p>Loading Top 50...</p>";
   
-
-  const ref = db.ref('leaderboardUsers');
-
-  ref.orderByChild('score').limitToLast(50).on('value', (snapshot) => {
-
+  // Consistently uses leaderboardUsers node
+  db.ref('leaderboardUsers').orderByChild('score').limitToLast(50).once('value', (snapshot) => {
     let rows = [];
-
     snapshot.forEach(c => rows.push(c.val()));
-
-    rows.sort((a,b) => b.score - a.score);
-
+    rows.sort((a,b) => b.score - a.score); // Highest score on top
+    
     let html = '<table style="width:100%; margin-top:20px; border-collapse:collapse; text-align:left;">';
-
     html += '<tr style="border-bottom:2px solid var(--gold);"><th style="padding:10px;">Rank</th><th>Name</th><th>Points</th></tr>';
-
     rows.forEach((p, i) => {
-
       html += `<tr style="border-bottom:1px solid #eee; height:45px;">
-
-        <td style="padding:10px; font-weight:bold;">${i + 1}</td>
-
-        <td>${(p && p.name) ? p.name : '-'}</td>
-
-        <td style="color:var(--gold); font-weight:bold;">${(p && p.score) ? p.score : 0}</td>
-
-      </tr>`;
-
+                <td style="padding:10px; font-weight:bold;">${i + 1}</td>
+                <td>${p.name || 'Anonymous'}</td>
+                <td style="color:var(--gold); font-weight:bold;">${p.score || 0}</td>
+               </tr>`;
     });
-
     html += '</table>';
-
     body.innerHTML = html;
-
-  }, (err) => {
-
-    body.innerHTML = `<p style="color:crimson; text-align:center;">Error loading leaderboard.</p>`;
-
   });
-
 }
 
 
