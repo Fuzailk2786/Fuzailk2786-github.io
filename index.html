@@ -479,27 +479,75 @@ function showDuas() {
   });
 }
 
+/* --- UPDATED: AUTOMATIC HADITH WITH MASTER OVERRIDE --- */
+const AUTO_HADITH_LIST = [
+  "The best among you are those who learn the Quran and teach it.",
+  "Cleanliness is half of faith.",
+  "A good word is a charity.",
+  "He who does not show mercy to others will not be shown mercy.",
+  "The most beloved of deeds to Allah are those that are most consistent, even if they are small.",
+  "Seek knowledge from the cradle to the grave.",
+  "None of you truly believes until he loves for his brother what he loves for himself."
+];
+
 function showHadith() {
   showScreen('content');
   const body = document.getElementById('dynamic-body');
-  body.innerHTML = "<h2 style=\"font-family:'Cinzel'; text-align:center;\">Hadith of the Day</h2><p>Loading...</p>";
+  body.innerHTML = "<h2 style=\"font-family:'Cinzel'; text-align:center;\">Hadith of the Day</h2><p style='text-align:center;'>Loading...</p>";
+
+  // 1. Check Firebase for a manual 'Master' update first
   db.ref('dailyHadith').on('value', (snapshot) => {
     const data = snapshot.val();
-    if (!data) {
+    const todayStr = new Date().toLocaleDateString(); // DD/MM/YYYY
+    const isAdmin = localStorage.getItem('is_admin') === 'true'; // Check Master Access
+    
+    const adminBtn = isAdmin ? `<button onclick="renderAdminPanel()" class="main-btn" style="margin-top:20px; background:var(--gold); color:white;">📝 Master: Override Hadith</button>` : '';
+
+    // 2. Logic: If Firebase has data AND it was updated today, show it
+    if (data && new Date(data.timestamp).toLocaleDateString() === todayStr) {
       body.innerHTML = `
         <h2 style="font-family:'Cinzel'; text-align:center;">Hadith of the Day</h2>
-        <div class="dua-card" style="font-size:1.1rem; line-height:1.6; text-align:center;">"Cleanliness is half of faith."</div>
+        <div class="dua-card" style="font-size:1.1rem; line-height:1.6; border-left:5px solid var(--gold);">
+          "${data.content}"
+        </div>
+        <p style="text-align:right; font-size:0.8rem; color:gray; margin-top:10px;">
+          (Verified Update)
+        </p>
+        ${adminBtn}
       `;
-      return;
+    } 
+    // 3. Otherwise: Show the Automatic Rotating Hadith
+    else {
+      const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+      const autoHadith = AUTO_HADITH_LIST[dayOfYear % AUTO_HADITH_LIST.length];
+      
+      body.innerHTML = `
+        <h2 style="font-family:'Cinzel'; text-align:center;">Hadith of the Day</h2>
+        <div class="dua-card" style="font-size:1.1rem; line-height:1.6;">
+          "${autoHadith}"
+        </div>
+        <p style="text-align:right; font-size:0.8rem; color:gray; margin-top:10px;">
+          Daily Inspiration
+        </p>
+        ${adminBtn}
+      `;
     }
-    body.innerHTML = `
-      <h2 style="font-family:'Cinzel'; text-align:center;">Hadith of the Day</h2>
-      <div class="dua-card" style="font-size:1.1rem; line-height:1.6;">"${data.content}"</div>
-      <p style="text-align:right; font-size:0.8rem; color:gray; margin-top:10px;">
-        Last Updated: ${new Date(data.timestamp).toLocaleDateString()}
-      </p>
-    `;
   });
+}
+
+function renderAdminPanel() {
+  if (localStorage.getItem('is_admin') !== 'true') return;
+  const body = document.getElementById('dynamic-body');
+  body.innerHTML = `
+    <div style="padding:20px; background:var(--soft-gold); border-radius:15px; border:2px solid var(--gold);">
+      <h2 style="color:var(--emerald);">📜 Master Override</h2>
+      <p style="font-size:0.85rem;">Entering text here will replace the automatic Hadith for everyone today.</p>
+      <textarea id="hadith-text" placeholder="Type the correct Hadith here..." 
+        style="width:100%; height:150px; border-radius:10px; border:1px solid #ccc; padding:10px; margin-bottom:10px; font-family:inherit;"></textarea>
+      <button onclick="saveHadithToCloud()" class="main-btn" style="width:100%; background:var(--emerald); color:white;">Broadcast Override</button>
+      <button onclick="showHadith()" class="main-btn" style="width:100%; margin-top:10px; background:gray; color:white;">Cancel</button>
+    </div>
+  `;
 }
 
 function safeKey(name) {
