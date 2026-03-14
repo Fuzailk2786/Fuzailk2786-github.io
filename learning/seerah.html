@@ -3,19 +3,74 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Seerah - Islamic Questz</title>
+  <title>Qur'an Essentials - Islamic Questz</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+
   <style>
-    :root { --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b; --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7; --border: #e2e8f0; --shadow: rgba(0,0,0,0.1); }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; color: var(--text-main); }
+    :root {
+      --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b;
+      --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7;
+      --border: #e2e8f0; --shadow: rgba(0,0,0,0.1);
+    }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: var(--bg-color); 
+      margin: 0; 
+      color: var(--text-main); 
+      overflow-x: hidden;
+    }
     .app-card { margin: 0 auto; max-width: 500px; padding: 20px; }
-    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); width: 100%; margin-bottom: 10px; text-align: left; }
+    
+    .main-btn { 
+      background: var(--card-bg); border: 1px solid var(--border); 
+      padding: 15px; border-radius: 15px; cursor: pointer; 
+      transition: 0.2s; font-weight: 600; color: var(--text-main); 
+      width: 100%; margin-bottom: 10px; text-align: left;
+    }
     .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
-    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
+    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; font-size: 1rem; margin:0;}
     .hidden { display: none !important; }
+
+    /* New Sidebars CSS for Feature 2 & 3 */
+    .sidebar { 
+      position: fixed; top: 0; height: 100%; width: 280px; 
+      background: var(--card-bg); z-index: 3000; 
+      box-shadow: 0 0 15px rgba(0,0,0,0.5); 
+      transition: transform 0.3s ease; padding: 20px; 
+      overflow-y: auto; box-sizing: border-box;
+    }
+    .left-sidebar { left: 0; transform: translateX(-100%); }
+    .left-sidebar.open { transform: translateX(0); }
+    .right-sidebar { right: 0; transform: translateX(100%); }
+    .right-sidebar.open { transform: translateX(0); }
+    
+    .close-btn { background: none; border: none; font-size: 2rem; float: right; cursor: pointer; color: var(--gold); line-height: 0.8; margin-bottom: 10px;}
+    .topic-link { display: block; padding: 15px 10px; border-bottom: 1px solid var(--border); color: var(--text-main); text-decoration: none; font-weight: 600; transition: 0.2s;}
+    .topic-link:hover { background: var(--soft-gold); border-radius: 8px; border-bottom: none;}
+    
+    .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card-bg); padding: 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); }
   </style>
 </head>
 <body>
+
+  <div id="progress-sidebar" class="sidebar left-sidebar">
+    <button class="close-btn" onclick="toggleProgress()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📊 My Progress</h3>
+    <div id="progress-list"></div>
+  </div>
+
+  <div id="topics-sidebar" class="sidebar right-sidebar">
+    <button class="close-btn" onclick="toggleTopics()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📚 All Topics</h3>
+    <a href="quran-essentials.html" class="topic-link">Qur'an Essentials</a>
+    <a href="hadith-sciences.html" class="topic-link">Hadith & Hadith Sciences</a>
+    <a href="seerah.html" class="topic-link">Seerah (Life of Prophet)</a>
+    <a href="aqeedah.html" class="topic-link">Aqeedah - Creation to Hereafter</a>
+    <a href="fiqh.html" class="topic-link">Fiqh of Worship</a>
+    <a href="manners.html" class="topic-link">Manners & Akhlaq</a>
+    <a href="general-knowledge.html" class="topic-link">General Knowledge</a>
+  </div>
 
   <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
@@ -27,28 +82,173 @@
   </div>
 
   <div class="app-card">
-    <button class="back-btn" onclick="window.location.href='../index.html'">← Back to Menu</button>
-    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);">Seerah</h2>
+    
+    <div class="top-nav">
+      <button class="back-btn" onclick="window.location.href='../index.html?skipSplash=true&screen=learning'">← Menu</button>
+      <div style="display:flex; gap:10px;">
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto; background:var(--emerald); color:white;" onclick="toggleProgress()">📊 Progress</button>
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto;" onclick="toggleTopics()">📚 Topics</button>
+      </div>
+    </div>
+    
+    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);"></h2>
+    
     <div id="quiz-area" style="margin-top: 20px;"></div>
   </div>
 
   <script>
-    const PAGE_TITLE = "Seerah (Life of the Prophet ﷺ)";
-    const QUESTIONS = [
-      {
+    // ==========================================
+    // 1. UPDATE YOUR TOPIC INFO HERE FOR EACH FILE
+    // ==========================================
+    const PAGE_TITLE = "Qur'an Essentials";
+    const QUESTIONS = [   
+{
+      q: "In which city was the Prophet Muhammad ﷺ born?",
+      qh: "Nabi Muhammad ﷺ ki paidaish kis shehar mein hui?",
+      o: ["Madinah", "Makkah", "Ta’if", "Jerusalem"],
+      oh: ["Madinah", "Makkah", "Ta’if", "Bait-ul-Maqdis"],
+      a: "Makkah",
+      e: "He was born in Makkah in the Year of the Elephant.",
+      eh: "Aap ﷺ ki paidaish Aam-ul-Feel ke saal Makkah mein hui."
+    },
+    {
+      q: "Who was the Prophet’s ﷺ wet-nurse in early childhood?",
+      qh: "Bachpan mein Aap ﷺ ki razai maa kaun thin?",
+      o: ["Aminah", "Halimah as-Sa’diyyah", "Khadijah", "Safiyyah"],
+      oh: ["Aminah", "Halimah as-Sa’diyyah", "Khadijah", "Safiyyah"],
+      a: "Halimah as-Sa’diyyah",
+      e: "He spent part of infancy in Banu Sa’d with Halimah’s family.",
+      eh: "Aap ﷺ ne bachpan ka hissa Banu Sa’d mein Halimah ke ghar guzara."
+    },
+    {
+      q: "Which cave was the place of the first revelation?",
+      qh: "Pehli wahi kis ghaar mein nazil hui?",
+      o: ["Ghar Hira", "Ghar Thawr", "Ghar Saur", "Ghar Kubais"],
+      oh: ["Ghar Hira", "Ghar Thawr", "Ghar Saur", "Ghar Kubais"],
+      a: "Ghar Hira",
+      e: "The first revelation 'Iqra’' descended in Cave Hira.",
+      eh: "Pehli wahi 'Iqra’' Ghar Hira mein aayi."
+    },
+    {
+      q: "Which event marks the start of the Islamic calendar?",
+      qh: "Islami calendar ki ibtida kis waqea se hoti hai?",
+      o: ["Birth", "Hijrah", "Badr", "Hudaybiyyah"],
+      oh: ["Wiladat", "Hijrat", "Badr", "Hudaybiyyah"],
+      a: "Hijrah",
+      e: "The Islamic calendar starts from the Prophet’s ﷺ migration to Madinah.",
+      eh: "Islami saal ki shuruat Hijrat-e-Madinah se hoti hai."
+    },
+    {
+      q: "Which treaty enabled a period of peace and da’wah expansion before the conquest?",
+      qh: "Fath se pehle aman aur da’wat ke liye kaunsa muahida bunyadi sabit hua?",
+      o: ["Najran", "Hudaybiyyah", "Aqabah", "Ta’if"],
+      oh: ["Najran", "Hudaybiyyah", "Aqabah", "Ta’if"],
+      a: "Hudaybiyyah",
+      e: "The Treaty of Hudaybiyyah paved the way for wider outreach.",
+      eh: "Muahida Hudaybiyyah ne wasee da’wat ke raaste khol diye."
+    },
+    {
+      q: "Who wrote revelation among the Companions (one example)?",
+      qh: "Sahaba mein se wahi likhne walon mein se ek kaun thay?",
+      o: ["Zayd ibn Thabit", "Abu Hurayrah", "Bilal", "Ibn Umar"],
+      oh: ["Zayd ibn Thabit", "Abu Hurayrah", "Bilal", "Ibn Umar"],
+      a: "Zayd ibn Thabit",
+      e: "Zayd (RA) was among the primary scribes of revelation.",
+      eh: "Zayd (RA) markazi kuttab-e-wahi mein se thay."
+    },
+    {
+      q: "Which battle was a major setback where the Prophet ﷺ was injured?",
+      qh: "Kaunsi jung mein nuqsan pohancha aur Aap ﷺ zakhmi huay?",
+      o: ["Badr", "Uhud", "Khandaq", "Khaybar"],
+      oh: ["Badr", "Uhud", "Khandaq", "Khaybar"],
+      a: "Uhud",
+      e: "The Prophet ﷺ was injured and a tooth broke in Uhud.",
+      eh: "Uhud mein Aap ﷺ ko chot lagi aur ek daant toot gaya."
+    },
+    {
+      q: "What do we call the final sermon delivered during the last Hajj?",
+      qh: "Aakhri Hajj ke dauran diya gaya aakhri khutba kis naam se mashhoor hai?",
+      o: ["Khutbah-e-Jumu’ah", "Khutbah-e-Hajjat-ul-Wida", "Khutbah-e-Nikah", "Khutbah-e-Eid"],
+      oh: ["Khutbah-e-Jumu’ah", "Khutbah-e-Hajjat-ul-Wida", "Khutbah-e-Nikah", "Khutbah-e-Eid"],
+      a: "Khutbah-e-Hajjat-ul-Wida",
+      e: "It summarized rights, duties, and the sanctity of life and property.",
+      eh: "Ismein huqooq, zimmedariyan aur jaan-o-maal ki hurmat bayan hui."
+    },
+    {
+      q: "Who was the first person to accept Islam among women?",
+      qh: "Auratun mein sab se pehle Islam kis ne qubool kiya?",
+      o: ["Aishah", "Khadijah", "Fatimah", "Hafsa"],
+      oh: ["Aishah", "Khadijah", "Fatimah", "Hafsa"],
+      a: "Khadijah",
+      e: "Khadijah (RA) was the first believer and supporter.",
+      eh: "Khadijah (RA) sab se pehli mo’minah thin."
+    },
+    {
+      q: "Who was the first Caliph after the Prophet ﷺ?",
+      qh: "Nabi ﷺ ke baad pehle Khalifah kaun thay?",
+      o: ["Umar", "Uthman", "Ali", "Abu Bakr"],
+      oh: ["Umar", "Uthman", "Ali", "Abu Bakr"],
+      a: "Abu Bakr",
+      e: "Abu Bakr as-Siddiq (RA) led after the Prophet’s passing.",
+      eh: "Abu Bakr Siddiq (RA) pehle Khalifah huay."
+    },
+    {
+      q: "Which grandmotherly caregiver raised the Prophet ﷺ after his mother?",
+      qh: "Walida ke baad Aap ﷺ ki parwarish kis ne ki (ghar walon mein)?",
+      o: ["Abu Talib", "Abdul Muttalib", "Khadijah", "Barakah (Umm Ayman)"],
+      oh: ["Abu Talib", "Abdul Muttalib", "Khadijah", "Barakah (Umm Ayman)"],
+      a: "Abdul Muttalib",
+      e: "After Aminah, his grandfather Abdul Muttalib cared for him, then Abu Talib.",
+      eh: "Aminah ke baad Dada Abdul Muttalib, phir Abu Talib ne hifazat ki."
+    },
+    {
+      q: "Which city did Muslims migrate to first before Madinah?",
+      qh: "Madinah se pehle Musalman kahan hijrat kar gaye thay?",
+      o: ["Yemen", "Abyssinia (Habsha)", "Syria", "Egypt"],
+      oh: ["Yemen", "Habsha", "Syria", "Misr"],
+      a: "Abyssinia (Habsha)",
+      e: "They went to Habsha to escape persecution.",
+      eh: "Zulm se bachne ke liye pehli hijrat Habsha ki taraf hui."
+    },
+    {
+      q: "Which just Christian king sheltered the early Muslims?",
+      qh: "Kaun sa adil Isai badshah tha jisne Musalmanon ko panaah di?",
+      o: ["Heraclius", "Negus (Najashi)", "Caesar", "Pharaoh"],
+      oh: ["Heraclius", "Najashi", "Caesar", "Firaun"],
+      a: "Negus (Najashi)",
+      e: "The Negus protected the migrants in Abyssinia.",
+      eh: "Najashi ne Habsha mein muhajireen ko panaah di."
+    },
+    {
+      q: "Which household relationship did the Prophet ﷺ honor with deep bonds (milk kinship)?",
+      qh: "Nabi ﷺ ne razai rishton ki izzat par zor diya — ye kaisa rishta hota hai?",
+      o: ["Adoption only", "Milk-kinship (radha’ah)", "Trade pact", "Political treaty"],
+      oh: ["Sirf godh lena", "Razai rishta (radha’ah)", "Tijarati muahida", "Siyasi bartari"],
+      a: "Milk-kinship (radha’ah)",
+      e: "Milk-kinship creates familial ties in Islamic law.",
+      eh: "Razai rishta Shari’ah mein aham khandani rishta paida karta hai."
+    },
+    {
+      q: "Which Surah addressed manners for entering the Prophet’s ﷺ home and social etiquette?",
+      qh: "Kaunsi Surah ne Nabi ﷺ ke ghar ke adaab aur muashrati usool sikhaye?",
+      o: ["Al-Ahzab", "An-Nur", "Al-Hujurat", "Al-Ma’idah"],
+      oh: ["Al-Ahzab", "An-Nur", "Al-Hujurat", "Al-Ma’idah"],
+      a: "Al-Ahzab",
+      e: "Al-Ahzab and Al-Hujurat together teach refined etiquette.",
+      eh: "Al-Ahzab aur Al-Hujurat dono muashrati adaab ki tarbiyat deti hain."
+    },
+{
         q: "Which pact before Prophethood aimed to uphold justice among Makkans?",
         qh: "Nabuwwat se pehle Makkah me insaf kay liye kaunsa moahida hua?",
         o: ["Hilf al-Fudul", "Hudaybiyyah", "Aqabah", "Fath pact"],
-        oh: ["Hilf al-Fudul", "Hudaybiyyah", "Aqabah", "Fath ka muahida"],
         a: "Hilf al-Fudul",
-        e: "Hilf al-Fudul was a pre-Islamic alliance supporting justice.",
-        eh: "Hilf al-Fudul zulm ke khilaf insaf ki tehreek thi."
+        e: "Hilf al‑Fudul was a pre‑Islamic alliance supporting justice.",
+        eh: "Hilf al‑Fudul zulm ke khilaf insaf ki tehreek thi."
       },
       {
         q: "Who was the first male from the Prophet’s household to accept Islam?",
         qh: "Nabi ﷺ ke gharane se pehle mard kis ne Islam qubool kiya?",
         o: ["Abu Bakr (RA)", "Ali (RA)", "Zayd ibn Harithah (RA)", "Uthman (RA)"],
-        oh: ["Abu Bakr (RA)", "Ali (RA)", "Zayd ibn Harithah (RA)", "Uthman (RA)"],
         a: "Ali (RA)",
         e: "Ali (RA), from the Prophet’s household, accepted Islam early.",
         eh: "Ali (RA) ne bohat awwal daur me Islam qabool kiya."
@@ -57,16 +257,14 @@
         q: "Which Companion is known as the 'sincere friend' who believed instantly?",
         qh: "Kaun se Sahabi turant tasdiq karne ki wajah se mashhoor 'Siddiq' kehlaye?",
         o: ["Umar (RA)", "Abu Bakr (RA)", "Uthman (RA)", "Talha (RA)"],
-        oh: ["Umar (RA)", "Abu Bakr (RA)", "Uthman (RA)", "Talha (RA)"],
         a: "Abu Bakr (RA)",
-        e: "Abu Bakr (RA) is titled As-Siddiq for instant belief and support.",
-        eh: "Abu Bakr (RA) ko As-Siddiq ka laqab hasil hai."
+        e: "Abu Bakr (RA) is titled As‑Siddiq for instant belief and support.",
+        eh: "Abu Bakr (RA) ko As‑Siddiq ka laqab hasil hai."
       },
       {
         q: "Which journey did the Prophet ﷺ undertake to call people in a nearby town but faced rejection?",
         qh: "Nabi ﷺ ne kis qareebi shehar me da’wat di jahan sakht rade ka samna hua?",
         o: ["Ta’if", "Yemen", "Najd", "Tabuk"],
-        oh: ["Ta’if", "Yemen", "Najd", "Tabuk"],
         a: "Ta’if",
         e: "The Da’wah visit to Ta’if met severe rejection and hurt.",
         eh: "Ta’if me da’wat ke dauran shadeed rade ka samna hua."
@@ -75,25 +273,22 @@
         q: "Which pledge solidified support from Yathrib (Madinah)?",
         qh: "Yathrib (Madinah) se sari madad kis bai’at me paki hui?",
         o: ["First Pledge of Aqabah", "Second Pledge of Aqabah", "Hudaybiyyah", "Najran Treaty"],
-        oh: ["Aqabah ki pehli bai'at", "Aqabah ki doosri bai'at", "Hudaybiyyah", "Najran ka muahida"],
         a: "Second Pledge of Aqabah",
         e: "The second pledge committed protection and acceptance.",
-        eh: "Doosri Bai’at-e-Aqabah me himayat ka wa’ada hua."
+        eh: "Doosri Bai’at‑e‑Aqabah me himayat ka wa’ada hua."
       },
       {
         q: "Which was the first mosque built after Hijrah to Madinah?",
         qh: "Hijrat ke baad sab se pehli masjid kaunsi banayi gayi?",
         o: ["Masjid Quba", "Masjid Nabawi", "Masjid Qiblatain", "Masjid al-Aqsa"],
-        oh: ["Masjid Quba", "Masjid Nabawi", "Masjid Qiblatain", "Masjid al-Aqsa"],
         a: "Masjid Quba",
-        e: "Masjid Quba is the first mosque established post-Hijrah.",
+        e: "Masjid Quba is the first mosque established post‑Hijrah.",
         eh: "Masjid Quba Hijrat ke baad sab se pehli masjid hai."
       },
       {
         q: "What was the brotherhood formed between Muhajirun and Ansar called?",
         qh: "Muhajireen aur Ansar ke darmiyan ka bhai chara kis naam se mashhoor hai?",
         o: ["Hilf", "Mu’akhah", "Shura", "Hudna"],
-        oh: ["Hilf", "Mu’akhah", "Shura", "Hudna"],
         a: "Mu’akhah",
         e: "Mu’akhah created bonds of support in Madinah society.",
         eh: "Mu’akhah ne Madinah me madad aur ukhuwwat ko mustahkam kiya."
@@ -102,16 +297,14 @@
         q: "Which battle involved digging a defensive trench around Madinah?",
         qh: "Kis jung me Madinah ke gird khandaq khodi gayi?",
         o: ["Badr", "Uhud", "Khandaq (Ahzab)", "Khaybar"],
-        oh: ["Badr", "Uhud", "Khandaq (Ahzab)", "Khaybar"],
         a: "Khandaq (Ahzab)",
         e: "The Battle of the Trench thwarted a coalition attack.",
-        eh: "Jang-e-Khandaq me ittehadi lashkar ka rukh mod diya gaya."
+        eh: "Jang‑e‑Khandaq me ittehadi lashkar ka rukh mod diya gaya."
       },
       {
         q: "Which year is called ‘Year of Delegations’ due to many tribes embracing Islam?",
-        qh: "Kaunsa saal 'Aam al-Wufud' (Wufud ka saal) kehlata hai?",
+        qh: "Kaunsa saal 'Aam al‑Wufud' (Wufud ka saal) kehlata hai?",
         o: ["7 AH", "8 AH", "9 AH", "11 AH"],
-        oh: ["7 AH", "8 AH", "9 AH", "11 AH"],
         a: "9 AH",
         e: "In 9 AH many delegations came to Madinah to accept Islam.",
         eh: "9 Hijri me qabeelon ke wafd Madinah aaye."
@@ -120,61 +313,54 @@
         q: "In which year did the Prophet ﷺ pass away?",
         qh: "Nabi ﷺ ka inteqal kis saal hua?",
         o: ["8 AH", "9 AH", "10 AH", "11 AH"],
-        oh: ["8 AH", "9 AH", "10 AH", "11 AH"],
         a: "11 AH",
-        e: "He passed away in Rabi’ al-Awwal 11 AH.",
-        eh: "Rabi’ al-Awwal 11 Hijri me aap ﷺ ka inteqal hua."
+        e: "He passed away in Rabi’ al‑Awwal 11 AH.",
+        eh: "Rabi’ al‑Awwal 11 Hijri me aap ﷺ ka inteqal hua."
       },
       {
         q: "Where is the Prophet ﷺ buried?",
         qh: "Nabi ﷺ ki qabr mubarak kahan hai?",
         o: ["Jannat al-Baqi", "In Aishah’s chamber (Raudah area)", "Uhud", "Quba"],
-        oh: ["Jannat al-Baqi", "Aishah (RA) ke hujre mein", "Uhud", "Quba"],
         a: "In Aishah’s chamber (Raudah area)",
         e: "He is buried in Aishah’s (RA) chamber, near the Rawdah.",
-        eh: "Aap ﷺ Ummul-Moomineen Aishah (RA) ke hujre me madfoon hain."
+        eh: "Aap ﷺ Ummul‑Moomineen Aishah (RA) ke hujre me madfoon hain."
       },
       {
         q: "How many years did the Prophethood last?",
         qh: "Nabuwwat kitne saal jaari rahi?",
         o: ["10", "13", "23", "33"],
-        oh: ["10", "13", "23", "33"],
         a: "23",
         e: "Revelation lasted about 13 years in Makkah and 10 in Madinah.",
         eh: "Makkah me taqreeban 13, aur Madinah me 10 saal."
       },
       {
         q: "What is the significance of the Conquest of Makkah?",
-        qh: "Fath-e-Makkah ki ahmiyat kya hai?",
+        qh: "Fath‑e‑Makkah ki ahmiyat kya hai?",
         o: ["It abolished all idols in Ka’bah", "It stopped trade", "It ended Hijrah", "It started revelation"],
-        oh: ["Ka'bah se but khatam kiye", "Tijarat rok di", "Hijrat khatam hui", "Wahi shuru hui"],
         a: "It abolished all idols in Ka’bah",
         e: "Idols were removed and Makkah embraced Islam.",
-        eh: "But-shikani hui aur Makkah ne Islam qabool kiya."
+        eh: "But‑shikani hui aur Makkah ne Islam qabool kiya."
       },
       {
         q: "Which Companion’s house hosted early gatherings to learn Islam in Makkah?",
         qh: "Makkah me Islam ki taleem ke lihaz se kaun se Sahabi ke ghar awwal majalis hoti thin?",
         o: ["Arqam ibn Abi Arqam (RA)", "Abu Hurayrah (RA)", "Talha (RA)", "Zubayr (RA)"],
-        oh: ["Arqam ibn Abi Arqam (RA)", "Abu Hurayrah (RA)", "Talha (RA)", "Zubayr (RA)"],
         a: "Arqam ibn Abi Arqam (RA)",
-        e: "Dar-ul-Arqam became an early learning hub.",
-        eh: "Dar-ul-Arqam ibtida’i markaz-e-ta’lim tha."
+        e: "Dar‑ul‑Arqam became an early learning hub.",
+        eh: "Dar‑ul‑Arqam ibtida’i markaz‑e‑ta’lim tha."
       },
       {
         q: "Which Companion was appointed as the first muezzin?",
         qh: "Sab se pehle Mu’azzin kis ko banaya gaya?",
         o: ["Zayd (RA)", "Bilal (RA)", "Ibn Umm Maktum (RA)", "Anas (RA)"],
-        oh: ["Zayd (RA)", "Bilal (RA)", "Ibn Umm Maktum (RA)", "Anas (RA)"],
         a: "Bilal (RA)",
         e: "Bilal (RA) was known for his beautiful call to prayer.",
         eh: "Bilal (RA) ki Azaan mashhoor thi."
       },
-      {
+{
         q: "What was the age of the Prophet when the first revelation descended?",
         qh: "Pehli wahi ke waqt Nabi ki umar kitni thi?",
         o: ["25", "30", "40", "50"],
-        oh: ["25", "30", "40", "50"],
         a: "40",
         e: "Revelation began when the Prophet was forty years old.",
         eh: "Nabi par wahi 40 saal ki umr me nazil hui."
@@ -183,7 +369,6 @@
         q: "Who accompanied the Prophet on the Hijrah journey to Madinah?",
         qh: "Hijrat-e-Madinah me Nabi ke sath kaun thay?",
         o: ["Uthman (RA)", "Ali (RA)", "Abu Bakr (RA)", "Zubayr (RA)"],
-        oh: ["Uthman (RA)", "Ali (RA)", "Abu Bakr (RA)", "Zubayr (RA)"],
         a: "Abu Bakr (RA)",
         e: "Abu Bakr (RA) was the companion in the Cave of Thawr during Hijrah.",
         eh: "Ghar-e-Thawr me Hijrat ke dauran Abu Bakr (RA) hamraah thay."
@@ -192,7 +377,6 @@
         q: "Which scribe compiled the treaty text at Hudaybiyyah?",
         qh: "Hudaybiyyah ke muahide ka matn kis ne likha?",
         o: ["Umar (RA)", "Ali (RA)", "Zayd ibn Thabit (RA)", "Mu'awiyah (RA)"],
-        oh: ["Umar (RA)", "Ali (RA)", "Zayd ibn Thabit (RA)", "Mu'awiyah (RA)"],
         a: "Ali (RA)",
         e: "Ali ibn Abi Talib (RA) wrote the treaty text by agreement.",
         eh: "Ali (RA) ne muahida-e-Hudaybiyyah ka matn likha."
@@ -201,7 +385,6 @@
         q: "What was the first major expedition after Hijrah involving a significant victory?",
         qh: "Hijrat ke baad pehli bari muhim jo azeem fatah par khatam hui kaunsi thi?",
         o: ["Khaybar", "Badr", "Uhud", "Hunayn"],
-        oh: ["Khaybar", "Badr", "Uhud", "Hunayn"],
         a: "Badr",
         e: "The Battle of Badr was the first major victory in Islam.",
         eh: "Jang-e-Badr Islam ki pehli bari fatah thi."
@@ -210,7 +393,6 @@
         q: "Which Companion narrated a vast number of hadith despite accepting Islam later in Madinah?",
         qh: "Kaun se Sahabi ne Madinah me Islam qubool karne ke bawajood bohat si ahadith riwayat ki?",
         o: ["Abu Hurayrah (RA)", "Ibn Umar (RA)", "Anas (RA)", "Jabir (RA)"],
-        oh: ["Abu Hurayrah (RA)", "Ibn Umar (RA)", "Anas (RA)", "Jabir (RA)"],
         a: "Abu Hurayrah (RA)",
         e: "Abu Hurayrah (RA) dedicated himself to learning and narrating hadith.",
         eh: "Abu Hurayrah (RA) ne ilm-o-riwayat me apna waqt lagaya."
@@ -219,7 +401,6 @@
         q: "Which expedition opened the oasis of Khaybar to Muslims?",
         qh: "Kaunsi muhim ne Khaybar ko Musalmanon ke liye fatah kiya?",
         o: ["Tabuk", "Khaybar", "Hunayn", "Mu'tah"],
-        oh: ["Tabuk", "Khaybar", "Hunayn", "Mu'tah"],
         a: "Khaybar",
         e: "The campaign of Khaybar brought significant resources to the community.",
         eh: "Khaybar ki muhim se ummat ko wasee wasail mile."
@@ -228,7 +409,6 @@
         q: "Which battle faced a temporary setback due to archers leaving their post?",
         qh: "Kis jung me nishanabazon ke morchay chorne par arzi nuqsan hua?",
         o: ["Badr", "Uhud", "Khandaq", "Tabuk"],
-        oh: ["Badr", "Uhud", "Khandaq", "Tabuk"],
         a: "Uhud",
         e: "At Uhud, archers leaving their pass led to a counter-attack.",
         eh: "Uhud me rumaah ka morcha chorna palatwar ka sabab bana."
@@ -237,7 +417,6 @@
         q: "During which year was the Farewell Hajj performed?",
         qh: "Hajjat-ul-Wida kis saal ada hua?",
         o: ["8 AH", "9 AH", "10 AH", "11 AH"],
-        oh: ["8 AH", "9 AH", "10 AH", "11 AH"],
         a: "10 AH",
         e: "The Farewell Hajj occurred in 10 AH with the final sermon.",
         eh: "10 Hijri me Hajjat-ul-Wida hua."
@@ -246,7 +425,6 @@
         q: "Which letter, sent to a foreign ruler, started with 'Bismillahir Rahmanir Rahim' and the call to Islam?",
         qh: "Kaunsa khat ajnabi hukmaran ko 'Bismillahir Rahmanir Rahim' ke sath da'wat-e-Islam deta?",
         o: ["To Heraclius", "To Negus", "To Muqawqis", "All of these"],
-        oh: ["Heraclius ko", "Najashi ko", "Muqawqis ko", "In sab ko"],
         a: "All of these",
         e: "Letters were sent to multiple rulers inviting them to Islam.",
         eh: "Mukhtalif hukmaranon ko da'wat-e-Islam ke khat bheje gaye."
@@ -255,7 +433,6 @@
         q: "Who was known for reciting the Adhan in the Prophet's time besides Bilal (RA)?",
         qh: "Nabi ke daur me Bilal (RA) ke siva aur kaun azaan dete thay?",
         o: ["Ibn Umm Maktum (RA)", "Abu Musa (RA)", "Anas (RA)", "Ibn Mas'ud (RA)"],
-        oh: ["Ibn Umm Maktum (RA)", "Abu Musa (RA)", "Anas (RA)", "Ibn Mas'ud (RA)"],
         a: "Ibn Umm Maktum (RA)",
         e: "Ibn Umm Maktum (RA) also gave Adhan at times in Madinah.",
         eh: "Ibn Umm Maktum (RA) kabhi kabhi Madinah me azaan detey thay."
@@ -264,7 +441,6 @@
         q: "Which vow or pledge formalized loyalty at the time of the Treaty of Hudaybiyyah?",
         qh: "Hudaybiyyah ke waqt wafaadari ka kaunsa ahd (bay'ah) liya gaya?",
         o: ["Bay'ah ar-Ridwan", "Bay'ah al-Aqabah", "Bay'ah al-Fath", "Bay'ah al-Islah"],
-        oh: ["Bay'ah ar-Ridwan", "Bay'ah al-Aqabah", "Bay'ah al-Fath", "Bay'ah al-Islah"],
         a: "Bay'ah ar-Ridwan",
         e: "Bay'ah ar-Ridwan under the tree signified steadfast loyalty.",
         eh: "Bay'ah ar-Ridwan darakht ke neeche wafaadari ki nishani bani."
@@ -273,7 +449,6 @@
         q: "Which Companion's migration story includes leaving valuables to return them to people of Makkah?",
         qh: "Kis Sahabi ki hijrat me Makkah walon ki amaanat wapas karne ke liye rukna shamil tha?",
         o: ["Ali (RA)", "Abu Bakr (RA)", "Umar (RA)", "Usman (RA)"],
-        oh: ["Ali (RA)", "Abu Bakr (RA)", "Umar (RA)", "Usman (RA)"],
         a: "Ali (RA)",
         e: "Ali (RA) returned people's trusts before leaving for Madinah.",
         eh: "Ali (RA) ne logon ki amaanat wapas karne ke baad Madinah ka rukh kiya."
@@ -282,7 +457,6 @@
         q: "Which Companion carried the banner at multiple key battles?",
         qh: "Kai aham jungon me kis Sahabi ne alam bardari ki?",
         o: ["Zubayr (RA)", "Ali (RA)", "Khalid (RA)", "Sa'd (RA)"],
-        oh: ["Zubayr (RA)", "Ali (RA)", "Khalid (RA)", "Sa'd (RA)"],
         a: "Ali (RA)",
         e: "Ali (RA) held the banner on several pivotal occasions.",
         eh: "Ali (RA) ne kai maqamat par alam uthaya."
@@ -291,149 +465,57 @@
         q: "Which Companion was famed for teaching Qur'an recitation in the Prophet's mosque?",
         qh: "Kis Sahabi ko Masjid-e-Nabawi me Qur'an ki taleem ke liye mashhoor mana jata?",
         o: ["Ubayy ibn Ka'b (RA)", "Ibn Abbas (RA)", "Abu Hurayrah (RA)", "Ibn Umar (RA)"],
-        oh: ["Ubayy ibn Ka'b (RA)", "Ibn Abbas (RA)", "Abu Hurayrah (RA)", "Ibn Umar (RA)"],
         a: "Ubayy ibn Ka'b (RA)",
         e: "Ubayy (RA) was a leading reciter and teacher of Qur'an.",
         eh: "Ubayy (RA) mashhoor qari aur mu'allim-e-Qur'an thay."
-      },
-      {
-        q: "In which city was the Prophet Muhammad ﷺ born?",
-        qh: "Nabi Muhammad ﷺ ki paidaish kis shehar mein hui?",
-        o: ["Madinah", "Makkah", "Ta’if", "Jerusalem"],
-        oh: ["Madinah", "Makkah", "Ta’if", "Bait-ul-Maqdis"],
-        a: "Makkah",
-        e: "He was born in Makkah in the Year of the Elephant.",
-        eh: "Aap ﷺ ki paidaish Aam-ul-Feel ke saal Makkah mein hui."
-      },
-      {
-        q: "Who was the Prophet’s ﷺ wet-nurse in early childhood?",
-        qh: "Bachpan mein Aap ﷺ ki razai maa kaun thin?",
-        o: ["Aminah", "Halimah as-Sa’diyyah", "Khadijah", "Safiyyah"],
-        oh: ["Aminah", "Halimah as-Sa’diyyah", "Khadijah", "Safiyyah"],
-        a: "Halimah as-Sa’diyyah",
-        e: "He spent part of infancy in Banu Sa’d with Halimah’s family.",
-        eh: "Aap ﷺ ne bachpan ka hissa Banu Sa’d mein Halimah ke ghar guzara."
-      },
-      {
-        q: "Which cave was the place of the first revelation?",
-        qh: "Pehli wahi kis ghaar mein nazil hui?",
-        o: ["Ghar Hira", "Ghar Thawr", "Ghar Saur", "Ghar Kubais"],
-        oh: ["Ghar Hira", "Ghar Thawr", "Ghar Saur", "Ghar Kubais"],
-        a: "Ghar Hira",
-        e: "The first revelation 'Iqra’' descended in Cave Hira.",
-        eh: "Pehli wahi 'Iqra’' Ghar Hira mein aayi."
-      },
-      {
-        q: "Which event marks the start of the Islamic calendar?",
-        qh: "Islami calendar ki ibtida kis waqea se hoti hai?",
-        o: ["Birth", "Hijrah", "Badr", "Hudaybiyyah"],
-        oh: ["Wiladat", "Hijrat", "Badr", "Hudaybiyyah"],
-        a: "Hijrah",
-        e: "The Islamic calendar starts from the Prophet’s ﷺ migration to Madinah.",
-        eh: "Islami saal ki shuruat Hijrat-e-Madinah se hoti hai."
-      },
-      {
-        q: "Which treaty enabled a period of peace and da’wah expansion before the conquest?",
-        qh: "Fath se pehle aman aur da’wat ke liye kaunsa muahida bunyadi sabit hua?",
-        o: ["Najran", "Hudaybiyyah", "Aqabah", "Ta’if"],
-        oh: ["Najran", "Hudaybiyyah", "Aqabah", "Ta’if"],
-        a: "Hudaybiyyah",
-        e: "The Treaty of Hudaybiyyah paved the way for wider outreach.",
-        eh: "Muahida Hudaybiyyah ne wasee da’wat ke raaste khol diye."
-      },
-      {
-        q: "Who wrote revelation among the Companions (one example)?",
-        qh: "Sahaba mein se wahi likhne walon mein se ek kaun thay?",
-        o: ["Zayd ibn Thabit", "Abu Hurayrah", "Bilal", "Ibn Umar"],
-        oh: ["Zayd ibn Thabit", "Abu Hurayrah", "Bilal", "Ibn Umar"],
-        a: "Zayd ibn Thabit",
-        e: "Zayd (RA) was among the primary scribes of revelation.",
-        eh: "Zayd (RA) markazi kuttab-e-wahi mein se thay."
-      },
-      {
-        q: "Which battle was a major setback where the Prophet ﷺ was injured?",
-        qh: "Kaunsi jung mein nuqsan pohancha aur Aap ﷺ zakhmi huay?",
-        o: ["Badr", "Uhud", "Khandaq", "Khaybar"],
-        oh: ["Badr", "Uhud", "Khandaq", "Khaybar"],
-        a: "Uhud",
-        e: "The Prophet ﷺ was injured and a tooth broke in Uhud.",
-        eh: "Uhud mein Aap ﷺ ko chot lagi aur ek daant toot gaya."
-      },
-      {
-        q: "What do we call the final sermon delivered during the last Hajj?",
-        qh: "Aakhri Hajj ke dauran diya gaya aakhri khutba kis naam se mashhoor hai?",
-        o: ["Khutbah-e-Jumu’ah", "Khutbah-e-Hajjat-ul-Wida", "Khutbah-e-Nikah", "Khutbah-e-Eid"],
-        oh: ["Khutbah-e-Jumu’ah", "Khutbah-e-Hajjat-ul-Wida", "Khutbah-e-Nikah", "Khutbah-e-Eid"],
-        a: "Khutbah-e-Hajjat-ul-Wida",
-        e: "It summarized rights, duties, and the sanctity of life and property.",
-        eh: "Ismein huqooq, zimmedariyan aur jaan-o-maal ki hurmat bayan hui."
-      },
-      {
-        q: "Who was the first person to accept Islam among women?",
-        qh: "Auratun mein sab se pehle Islam kis ne qubool kiya?",
-        o: ["Aishah", "Khadijah", "Fatimah", "Hafsa"],
-        oh: ["Aishah", "Khadijah", "Fatimah", "Hafsa"],
-        a: "Khadijah",
-        e: "Khadijah (RA) was the first believer and supporter.",
-        eh: "Khadijah (RA) sab se pehli mo’minah thin."
-      },
-      {
-        q: "Who was the first Caliph after the Prophet ﷺ?",
-        qh: "Nabi ﷺ ke baad pehle Khalifah kaun thay?",
-        o: ["Umar", "Uthman", "Ali", "Abu Bakr"],
-        oh: ["Umar", "Uthman", "Ali", "Abu Bakr"],
-        a: "Abu Bakr",
-        e: "Abu Bakr as-Siddiq (RA) led after the Prophet’s passing.",
-        eh: "Abu Bakr Siddiq (RA) pehle Khalifah huay."
-      },
-      {
-        q: "Which grandmotherly caregiver raised the Prophet ﷺ after his mother?",
-        qh: "Walida ke baad Aap ﷺ ki parwarish kis ne ki (ghar walon mein)?",
-        o: ["Abu Talib", "Abdul Muttalib", "Khadijah", "Barakah (Umm Ayman)"],
-        oh: ["Abu Talib", "Abdul Muttalib", "Khadijah", "Barakah (Umm Ayman)"],
-        a: "Abdul Muttalib",
-        e: "After Aminah, his grandfather Abdul Muttalib cared for him, then Abu Talib.",
-        eh: "Aminah ke baad Dada Abdul Muttalib, phir Abu Talib ne hifazat ki."
-      },
-      {
-        q: "Which city did Muslims migrate to first before Madinah?",
-        qh: "Madinah se pehle Musalman kahan hijrat kar gaye thay?",
-        o: ["Yemen", "Abyssinia (Habsha)", "Syria", "Egypt"],
-        oh: ["Yemen", "Habsha", "Syria", "Misr"],
-        a: "Abyssinia (Habsha)",
-        e: "They went to Habsha to escape persecution.",
-        eh: "Zulm se bachne ke liye pehli hijrat Habsha ki taraf hui."
-      },
-      {
-        q: "Which just Christian king sheltered the early Muslims?",
-        qh: "Kaun sa adil Isai badshah tha jisne Musalmanon ko panaah di?",
-        o: ["Heraclius", "Negus (Najashi)", "Caesar", "Pharaoh"],
-        oh: ["Heraclius", "Najashi", "Caesar", "Firaun"],
-        a: "Negus (Najashi)",
-        e: "The Negus protected the migrants in Abyssinia.",
-        eh: "Najashi ne Habsha mein muhajireen ko panaah di."
-      },
-      {
-        q: "Which household relationship did the Prophet ﷺ honor with deep bonds (milk kinship)?",
-        qh: "Nabi ﷺ ne razai rishton ki izzat par zor diya — ye kaisa rishta hota hai?",
-        o: ["Adoption only", "Milk-kinship (radha’ah)", "Trade pact", "Political treaty"],
-        oh: ["Sirf godh lena", "Razai rishta (radha’ah)", "Tijarati muahida", "Siyasi bartari"],
-        a: "Milk-kinship (radha’ah)",
-        e: "Milk-kinship creates familial ties in Islamic law.",
-        eh: "Razai rishta Shari’ah mein aham khandani rishta paida karta hai."
-      },
-      {
-        q: "Which Surah addressed manners for entering the Prophet’s ﷺ home and social etiquette?",
-        qh: "Kaunsi Surah ne Nabi ﷺ ke ghar ke adaab aur muashrati usool sikhaye?",
-        o: ["Al-Ahzab", "An-Nur", "Al-Hujurat", "Al-Ma’idah"],
-        oh: ["Al-Ahzab", "An-Nur", "Al-Hujurat", "Al-Ma’idah"],
-        a: "Al-Ahzab",
-        e: "Al-Ahzab and Al-Hujurat together teach refined etiquette.",
-        eh: "Al-Ahzab aur Al-Hujurat dono muashrati adaab ki tarbiyat deti hain."
       }
     ];
-
     let currentIndex = 0;
+
+    // ==========================================
+    // SIDEBAR & PROGRESS LOGIC
+    // ==========================================
+    function toggleProgress() {
+      document.getElementById('progress-sidebar').classList.toggle('open');
+      document.getElementById('topics-sidebar').classList.remove('open');
+      renderProgress();
+    }
+    
+    function toggleTopics() {
+      document.getElementById('topics-sidebar').classList.toggle('open');
+      document.getElementById('progress-sidebar').classList.remove('open');
+    }
+
+    function renderProgress() {
+       let savedProgress = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+       let html = '';
+       const allTopics = [
+         "Qur'an Essentials", "Hadith & Hadith Sciences", "Seerah (Life of the Prophet ﷺ)", 
+         "Aqeedah - Creation to Hereafter", "Fiqh of Worship (Non-Ramadan)", 
+         "Manners & Akhlaq", "General Knowledge (Islamic Themes)"
+       ];
+       
+       allTopics.forEach(t => {
+           let score = savedProgress[t] || 0;
+           let isCurrent = (t === PAGE_TITLE) ? "background: var(--soft-gold);" : "";
+           html += `<div style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding: 10px; border-radius:8px; ${isCurrent}">
+               <div style="color:var(--text-main); font-weight:600; line-height:1.2; margin-bottom:5px;">${t}</div>
+               <span style="color:var(--emerald); font-size: 0.85rem; font-weight:bold;">📍 Completed: ${score}</span>
+           </div>`;
+       });
+       document.getElementById('progress-list').innerHTML = html;
+    }
+
+    function saveProgress() {
+        let prog = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+        // Save the highest question number they reached
+        prog[PAGE_TITLE] = Math.max(prog[PAGE_TITLE] || 0, currentIndex + 1);
+        localStorage.setItem('iq_learning_prog', JSON.stringify(prog));
+    }
+
+    // ==========================================
+    // QUIZ LOGIC
+    // ==========================================
     function showPopup(title, message, icon, callback) {
       const modal = document.getElementById('app-modal');
       document.getElementById('modal-title').innerText = title;
@@ -449,16 +531,19 @@
     function loadQuestion() {
       const qData = QUESTIONS[currentIndex];
       const area = document.getElementById('quiz-area');
+      
       let html = `
         <p style="color:var(--gold); font-weight:600; text-align:center;">Question ${currentIndex + 1} of ${QUESTIONS.length}</p>
-        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px;">
+        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px; border: 1px solid var(--gold);">
           <h4 style="margin-top:0; margin-bottom:5px; line-height:1.4;">${qData.q}</h4>
           <p style="margin:0; font-style:italic; color:var(--emerald); font-size:0.95rem;">${qData.qh || ""}</p>
         </div>
         <div id="options-box"></div>
       `;
       area.innerHTML = html;
+
       const optionsBox = document.getElementById('options-box');
+      
       qData.o.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.className = 'main-btn';
@@ -473,14 +558,18 @@
       const isCorrect = selectedOption === qData.a;
       const title = isCorrect ? "Correct! ✨" : "Explanation";
       const icon = isCorrect ? "✅" : "ℹ️";
+      
       const fullExplanation = (qData.e || "") + (qData.eh ? `\n\n(${qData.eh})` : "");
+
       showPopup(title, fullExplanation, icon, () => {
+        saveProgress(); // Automatically saves progress on every question!
+        
         currentIndex++;
         if (currentIndex < QUESTIONS.length) {
           loadQuestion();
         } else {
           showPopup("Topic Completed!", "Masha'Allah, you have finished this learning module.", "🎓", () => {
-            window.location.href = '../index.html'; 
+            window.location.href = '../index.html?skipSplash=true&screen=learning'; 
           });
         }
       });
