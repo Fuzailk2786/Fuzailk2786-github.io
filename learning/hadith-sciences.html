@@ -3,23 +3,74 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hadith Sciences - Islamic Questz</title>
+  <title>Qur'an Essentials - Islamic Questz</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+
   <style>
     :root {
       --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #064e3b;
       --emerald: #065f46; --gold: #b45309; --soft-gold: #fef3c7;
       --border: #e2e8f0; --shadow: rgba(0,0,0,0.1);
     }
-    body { font-family: 'Poppins', sans-serif; background: var(--bg-color); margin: 0; color: var(--text-main); }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      background: var(--bg-color); 
+      margin: 0; 
+      color: var(--text-main); 
+      overflow-x: hidden;
+    }
     .app-card { margin: 0 auto; max-width: 500px; padding: 20px; }
-    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); width: 100%; margin-bottom: 10px; text-align: left; }
+    
+    .main-btn { 
+      background: var(--card-bg); border: 1px solid var(--border); 
+      padding: 15px; border-radius: 15px; cursor: pointer; 
+      transition: 0.2s; font-weight: 600; color: var(--text-main); 
+      width: 100%; margin-bottom: 10px; text-align: left;
+    }
     .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
-    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
+    .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; font-size: 1rem; margin:0;}
     .hidden { display: none !important; }
+
+    /* New Sidebars CSS for Feature 2 & 3 */
+    .sidebar { 
+      position: fixed; top: 0; height: 100%; width: 280px; 
+      background: var(--card-bg); z-index: 3000; 
+      box-shadow: 0 0 15px rgba(0,0,0,0.5); 
+      transition: transform 0.3s ease; padding: 20px; 
+      overflow-y: auto; box-sizing: border-box;
+    }
+    .left-sidebar { left: 0; transform: translateX(-100%); }
+    .left-sidebar.open { transform: translateX(0); }
+    .right-sidebar { right: 0; transform: translateX(100%); }
+    .right-sidebar.open { transform: translateX(0); }
+    
+    .close-btn { background: none; border: none; font-size: 2rem; float: right; cursor: pointer; color: var(--gold); line-height: 0.8; margin-bottom: 10px;}
+    .topic-link { display: block; padding: 15px 10px; border-bottom: 1px solid var(--border); color: var(--text-main); text-decoration: none; font-weight: 600; transition: 0.2s;}
+    .topic-link:hover { background: var(--soft-gold); border-radius: 8px; border-bottom: none;}
+    
+    .top-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card-bg); padding: 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); }
   </style>
 </head>
 <body>
+
+  <div id="progress-sidebar" class="sidebar left-sidebar">
+    <button class="close-btn" onclick="toggleProgress()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📊 My Progress</h3>
+    <div id="progress-list"></div>
+  </div>
+
+  <div id="topics-sidebar" class="sidebar right-sidebar">
+    <button class="close-btn" onclick="toggleTopics()">×</button>
+    <h3 style="font-family:'Cinzel'; color:var(--emerald); margin-top:0;">📚 All Topics</h3>
+    <a href="quran-essentials.html" class="topic-link">Qur'an Essentials</a>
+    <a href="hadith-sciences.html" class="topic-link">Hadith & Hadith Sciences</a>
+    <a href="seerah.html" class="topic-link">Seerah (Life of Prophet)</a>
+    <a href="aqeedah.html" class="topic-link">Aqeedah - Creation to Hereafter</a>
+    <a href="fiqh.html" class="topic-link">Fiqh of Worship</a>
+    <a href="manners.html" class="topic-link">Manners & Akhlaq</a>
+    <a href="general-knowledge.html" class="topic-link">General Knowledge</a>
+  </div>
 
   <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
@@ -31,15 +82,27 @@
   </div>
 
   <div class="app-card">
-    <button class="back-btn" onclick="window.location.href='../index.html'">← Back to Menu</button>
-    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);">Hadith Sciences</h2>
+    
+    <div class="top-nav">
+      <button class="back-btn" onclick="window.location.href='../index.html?skipSplash=true&screen=learning'">← Menu</button>
+      <div style="display:flex; gap:10px;">
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto; background:var(--emerald); color:white;" onclick="toggleProgress()">📊 Progress</button>
+        <button class="main-btn" style="padding: 8px 12px; margin:0; width:auto;" onclick="toggleTopics()">📚 Topics</button>
+      </div>
+    </div>
+    
+    <h2 id="page-title" style="font-family: 'Cinzel'; text-align:center; color: var(--emerald);"></h2>
+    
     <div id="quiz-area" style="margin-top: 20px;"></div>
   </div>
 
   <script>
-    const PAGE_TITLE = "Hadith & Hadith Sciences";
+    // ==========================================
+    // 1. UPDATE YOUR TOPIC INFO HERE FOR EACH FILE
+    // ==========================================
+    const PAGE_TITLE = "Qur'an Essentials";
     const QUESTIONS = [
-       {
+    {
       q: "What does 'Hadith' comprise in Islamic sciences?",
       qh: "'Hadith' se Islami uloom mein kya murad hoti hai?",
       o: ["Only law", "Sayings/actions/approvals of the Prophet ﷺ", "Only biography", "Only history"],
@@ -174,7 +237,7 @@
       e: "Imam Nawawi’s 40 Hadith summarize key principles of Islam.",
       eh: "Imam Nawawi ki Chalees Ahadith Islam ke bunyadi asoolon ka khulasa deti hain."
     },
-{
+	{
         q: "What does 'Mashhur' Hadith indicate in terms of transmission?",
         qh: "'Mashhur' Hadith rawayat ki kis haisiyat ko dikhati hai?",
         o: ["Known by very few", "Known by many after initial level", "Only fabricated", "Only in poetry"],
@@ -281,7 +344,7 @@
       {
         q: "Which set is commonly referred to as 'Sihah Sittah' (Six Books)?",
         qh: "Sihah Sittah (chhe maruf majame’ Hadith) me se kaunsi misal durust hai?",
-        o: ["Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, Ibn Majah", "Bukhari, Muslim, Muwatta, Ahmad, Bayhaqi, Darimi", "Muslim, Tirmidhi, Tabarani, Bayhaqi, Nisai, Ibn Hibban", 	"Bukhari, Muslim, Razi, Baydawi, Qurtubi, Tabari"],
+        o: ["Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, Ibn Majah", "Bukhari, Muslim, Muwatta, Ahmad, Bayhaqi, Darimi", "Muslim, Tirmidhi, Tabarani, Bayhaqi, Nisai, Ibn Hibban", "Bukhari, Muslim, Razi, Baydawi, Qurtubi, Tabari"],
         a: "Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, Ibn Majah",
         e: "The classic six are: Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, and Ibn Majah.",
         eh: "Mashhur chhe: Bukhari, Muslim, Abu Dawud, Tirmidhi, Nasa’i, Ibn Majah."
@@ -294,144 +357,173 @@
         e: "Mustalah explains the technical terms and evaluation rules.",
         eh: "Mustalah hadith ke qawaid aur istilahat ki wazahat karta hai."
       },
-	{
-      q: "What does 'Hadith' comprise in Islamic sciences?",
-      qh: "'Hadith' se Islami uloom mein kya murad hoti hai?",
-      o: ["Only law", "Sayings/actions/approvals of the Prophet ﷺ", "Only biography", "Only history"],
-      oh: ["Sirf qanoon", "Nabi ﷺ ke aqwal/af’al/taqreer", "Sirf seerat", "Sirf tareekh"],
-      a: "Sayings/actions/approvals of the Prophet ﷺ",
-      e: "Hadith includes what the Prophet ﷺ said, did, or silently approved.",
-      eh: "Hadith mein Nabi ﷺ ki baatein, a’maal, aur jo aap ne tasdeeq farmayi shamil hota hai."
-    },
-    {
-      q: "What is 'Isnad'?",
-      qh: "'Isnad' kya hota hai?",
-      o: ["Text", "Chain of narrators", "Commentary", "Chapter"],
-      oh: ["Matn", "Rawayat ki sanad", "Sharh", "Baab"],
-      a: "Chain of narrators",
-      e: "Isnad is the chain connecting narrators back to the Prophet ﷺ.",
-      eh: "Isnad rawiyon ki wo zanjeer hai jo Nabi ﷺ tak pohanchti hai."
-    },
-    {
-      q: "What is 'Matn' in Hadith terminology?",
-      qh: "'Matn' se Hadith ke hawale se kya murad hoti hai?",
-      o: ["Chain", "Content of the report", "Footnote", "Fiqh ruling"],
-      oh: ["Sanad", "Riwayat ka matn/muha’tawa", "Hawashi", "Fiqhi hukm"],
-      a: "Content of the report",
-      e: "Matn is the wording/content of a Hadith.",
-      eh: "Matn Hadith ka lafzi muha’tawa hota hai."
-    },
-    {
-      q: "What is a 'Sahih' Hadith?",
-      qh: "'Sahih' Hadith kisay kehte hain?",
-      o: ["Weak chain", "Authentic chain & text", "Unknown chain", "Abrogated text"],
-      oh: ["Kamzor sanad", "Sahih sanad aur matn", "Ghair ma’loom sanad", "Mansookh matn"],
-      a: "Authentic chain & text",
-      e: "Sahih = reliable narrators, continuous chain, sound text.",
-      eh: "Sahih mein rawi sadiq, sanad muttasil, aur matn sehat-mand hota hai."
-    },
-    {
-      q: "How is 'Hasan' different from 'Sahih'?",
-      qh: "'Hasan' aur 'Sahih' mein kya farq hai?",
-      o: ["Hasan is fabricated", "Hasan is authentic but slightly lower strength", "No difference", "Sahih is weaker"],
-      oh: ["Hasan jhooti", "Hasan sahih hai magar quwwat thodi kam", "Koi farq nahi", "Sahih kamzor"],
-      a: "Hasan is authentic but slightly lower strength",
-      e: "Both accepted; Hasan narrators have slightly less precision than Sahih.",
-      eh: "Dono maqbool; Hasan ke rawi ki zabt Sahih se kuch kam hoti hai."
-    },
-    {
-      q: "What is a 'Da’if' Hadith?",
-      qh: "'Da’if' Hadith kise kehte hain?",
-      o: ["Authentic", "Weak due to chain/text issue", "Mutawatir", "Hasan"],
-      oh: ["Bilkul sahih", "Sanad/matn ki kami", "Mutawatir", "Hasan"],
-      a: "Weak due to chain/text issue",
-      e: "Da’if has weakness in the chain or the text.",
-      eh: "Da’if mein sanad ya matn ki kamzori hoti hai."
-    },
-    {
-      q: "What is 'Mutawatir' Hadith?",
-      qh: "'Mutawatir' Hadith kya hai?",
-      o: ["Only one narrator", "Narrated by many at every level", "Anonymous", "Contradictory"],
-      oh: ["Aik rawi", "Har tabaqe mein bahut se rawi", "Gumnam", "Mutazaad"],
-      a: "Narrated by many at every level",
-      e: "Mutawatir: so many narrators at each layer that collusion is impossible.",
-      eh: "Har satah par itne rawi ke jhoot par ittefaq mumkin nahi."
-    },
-    {
-      q: "Which collection is widely considered most authentic after the Qur’an?",
-      qh: "Quran ke baad sab se sahih majmooa aam tor par kaunsa mana jata hai?",
-      o: ["Sahih al-Bukhari", "Musnad Ahmad", "Sunan Ibn Majah", "Muwatta Malik"],
-      oh: ["Sahih al-Bukhari", "Musnad Ahmad", "Sunan Ibn Majah", "Muwatta Malik"],
-      a: "Sahih al-Bukhari",
-      e: "Sahih al-Bukhari is regarded as the most authentic compilation.",
-      eh: "Sahih Bukhari ko sab se zyada sahih majmooa mana jata hai."
-    },
-    {
-      q: "What is 'Jarh wa Ta’dil'?",
-      qh: "'Jarh wa Ta’dil' kya hota hai?",
-      o: ["Qur’an grammar", "Criticism/validation of narrators", "Seerah events", "Prayer timings"],
-      oh: ["Qur’an ki nahw", "Rawiyon ki tanqeed o tasdiq", "Seerah", "Namaz ke auqat"],
-      a: "Criticism/validation of narrators",
-      e: "A science that evaluates narrators’ reliability and precision.",
-      eh: "Rawiyon ki adaalt aur zabt ka jaiza lene ka fun."
-    },
-    {
-      q: "What does 'Gharib' in Hadith classification refer to?",
-      qh: "Hadith ki istilah mein 'Gharib' ka kya matlab hai?",
-      o: ["Well-known", "Singleton narrator at some level", "Fabricated", "Continuous chain"],
-      oh: ["Mashhoor", "Kisi marhala par aik rawi", "Mawdu’", "Muttasil"],
-      a: "Singleton narrator at some level",
-      e: "Gharib suggests a narration with singularity at a layer of the chain.",
-      eh: "Gharib se murad wo riwayat jahan kisi tabqe par riwayat tanha ho."
-    },
-    {
-      q: "What is 'Mawdu’' Hadith?",
-      qh: "'Mawdu’' Hadith kise kehte hain?",
-      o: ["Sound", "Weak", "Fabricated", "Mutawatir"],
-      oh: ["Sahih", "Da’if", "Jhooti/ghair-asli", "Mutawatir"],
-      a: "Fabricated",
-      e: "Mawdu’ indicates a fabricated narration falsely attributed.",
-      eh: "Mawdu’ jhooti riwayat hoti hai jo jali tor par mansoob ki jati hai."
-    },
-    {
-      q: "What is a 'Musnad' compilation?",
-      qh: "'Musnad' majmooa kya hota hai?",
-      o: ["Arranged by topics", "Arranged by narrator (Companion)", "Arranged by years", "Arranged by city"],
-      oh: ["Mauzuaat kay mutabiq", "Ravi/Sahabi ke mutabiq", "Saal ke mutabiq", "Shehr ke mutabiq"],
-      a: "Arranged by narrator (Companion)",
-      e: "A Musnad groups narrations under each Companion’s name.",
-      eh: "Musnad mein riwayat Sahaba ke naam ke neeche jama ki jati hain."
-    },
-    {
-      q: "What is 'Mursal' Hadith?",
-      qh: "'Mursal' Hadith se kya murad hai?",
-      o: ["Companion omitted", "Multiple chains", "Strong chain", "Narration in poetry"],
-      oh: ["Sahabi chhoot gaya", "Kai sanad", "Mazboot sanad", "Nazm ki riwayat"],
-      a: "Companion omitted",
-      e: "In Mursal, a Successor narrates directly from the Prophet ﷺ skipping the Companion.",
-      eh: "Mursal mein Tabi’i ne seedha Nabi ﷺ se riwayat batayi ho aur Sahabi ka zikar na ho."
-    },
-    {
-      q: "What is 'Mu’allaq' Hadith?",
-      qh: "'Mu’allaq' Hadith kya hoti hai?",
-      o: ["Chain entirely present", "Beginning of chain missing", "Text missing", "Contradiction present"],
-      oh: ["Puri sanad", "Sanad ka ibtidai hissa nahin", "Matn nahin", "Tazad"],
-      a: "Beginning of chain missing",
-      e: "Mu’allaq: one or more narrators are omitted from the start.",
-      eh: "Mu’allaq mein sanad ke aaghaz se ek ya zyada rawi chhoot jate hain."
-    },
-    {
-      q: "Which book is known for concise, foundational 40 Hadith?",
-      qh: "Mukhtasar bunyadi chalees Ahadith ka majmooa kaunsa mashhoor hai?",
-      o: ["Riyad as-Salihin", "Forty Nawawi", "Sahih Muslim", "Adab al-Mufrad"],
-      oh: ["Riyad as-Salihin", "Chalees Nawawi", "Sahih Muslim", "Adab al-Mufrad"],
-      a: "Forty Nawawi",
-      e: "Imam Nawawi’s 40 Hadith summarize key principles of Islam.",
-      eh: "Imam Nawawi ki Chalees Ahadith Islam ke bunyadi asoolon ka khulasa deti hain."
-    }
+{
+        q: "Which work compiles concise hadith on legal rulings by Imam Nawawi besides his Forty?",
+        qh: "Imam Nawawi ki 'Chalees' ke ilawa kaunsi mukhtasar hadith ki fiqhi majmu'a mashhoor hai?",
+        o: ["Riyad as-Salihin", "Al-Minhaj", "Al-Arba'in", "Al-Maqasid"],
+        a: "Riyad as-Salihin",
+        e: "Riyad as-Salihin collects hadith on morality, piety, and practice.",
+        eh: "Riyad as-Salihin akhlaq, taqwa aur amal par hadith jama karti hai."
+      },
+      {
+        q: "Which hadith term signifies a report with multiple routes supporting it, though not at mutawatir level?",
+        qh: "Kaunsi istilah aisi riwayat ke liye hai jise kai tareeqat sahara dete hon lekin mutawatir na ho?",
+        o: ["Mashhur", "Mutawatir", "Ma'lul", "Mawdu'"],
+        a: "Mashhur",
+        e: "Mashhur gains strength via multiple chains after the initial level.",
+        eh: "Mashhur me baad ke tabaqat me kai sanadein isay taqat deti."
+      },
+      {
+        q: "What does 'Musnad Ahmad' organize primarily by?",
+        qh: "'Musnad Ahmad' bunyadi taur par kis usool par tartib di gayi?",
+        o: ["Fiqh topics", "Companions (narrators)", "Chronology", "Cities"],
+        a: "Companions (narrators)",
+        e: "Musnad Ahmad groups hadith under the names of Companions.",
+        eh: "Musnad Ahmad me hadith Sahaba ke naam ke zair jama hoti hai."
+      },
+      {
+        q: "Which hadith category is used in exhortations (fadail) with conditions though not for creed/law proofs?",
+        qh: "Kaun si riwayat qisam mansoob tor par fazail me shartiyah tor par chalti magar aqeeda/ahkam me daleel nahi?",
+        o: ["Da'if", "Hasan", "Sahih", "Mawdu'"],
+        a: "Da'if",
+        e: "Weak hadith may be used in virtues under strict conditions; not for doctrine/law.",
+        eh: "Da'if ko fazail me shara'it ke sath chala lete; aqeeda/ahkam me daleel nahi."
+      },
+      {
+        q: "What is the goal of 'Takhrij' in hadith studies?",
+        qh: "Hadith uloom me 'Takhrij' ka maqsad kya hai?",
+        o: ["Narrator grading", "Tracing sources & chains", "Text criticism only", "Arabic grammar"],
+        a: "Tracing sources & chains",
+        e: "Takhrij documents where hadith is found and with which chains.",
+        eh: "Takhrij me hadith ke masadir aur sanad ka pata lagaya jata."
+      },
+      {
+        q: "Which scholar authored 'Al-Mustadrak' to include narrations on the conditions of Bukhari and Muslim that they didn't cite?",
+        qh: "Kaun se muhaddis ne 'Al-Mustadrak' likhi jo un riwayaton ko jama karti jo Bukhari/Muslim ki shara'it par hon magar unhon ne na li?",
+        o: ["Al-Hakim an-Naysaburi", "Ibn Hibban", "Ibn Khuzaymah", "Al-Bayhaqi"],
+        a: "Al-Hakim an-Naysaburi",
+        e: "Al-Hakim compiled Al-Mustadrak with such reports (later scholars discussed its standards).",
+        eh: "Al-Hakim ne Al-Mustadrak me un riwayat ko jama kiya; baad me tanqeed hui."
+      },
+      {
+        q: "Which term denotes a hadith that outwardly appears sound but contains a hidden flaw?",
+        qh: "Kaunsi istilah us hadith ke liye hai jo zaheran sahih magar pinhawa aib rakhti ho?",
+        o: ["Sahih", "Ma'lul (Mu'allal)", "Hasan", "Mashhur"],
+        a: "Ma'lul (Mu'allal)",
+        e: "Ma'lul means affected by a subtle, hidden defect.",
+        eh: "Ma'lul me ek naazuk pinhawa nuqs hota hai jo mahir pehchante."
+      },
+      {
+        q: "Which collection by Imam Malik is among the earliest hadith compendia?",
+        qh: "Imam Malik ki kaunsi hadith majmu'a sab se purani majame' me shumar hoti?",
+        o: ["Al-Muwatta", "Musnad Ahmad", "Sahih Muslim", "Sunan Abi Dawud"],
+        a: "Al-Muwatta",
+        e: "Al-Muwatta compiles hadith and athar with Madinan practice.",
+        eh: "Al-Muwatta riwayat aur Madani 'amal ko jama karti hai."
+      },
+      {
+        q: "What does 'Tabaqat' literature focus on?",
+        qh: "'Tabaqat' adab/kutub me aam tor par kis par focus hota?",
+        o: ["Biographical layers of narrators/scholars", "Only grammar", "Only tafsir", "Only fiqh verdicts"],
+        a: "Biographical layers of narrators/scholars",
+        e: "Tabaqat classifies scholars in generations/levels.",
+        eh: "Tabaqat uloom ke ahl ko tabaqat me taqseem karti."
+      },
+      {
+        q: "Which scholar compiled 'Sahih Ibn Khuzaymah' and 'Sahih Ibn Hibban' style works (two different scholars)?",
+        qh: "Kaun se muhaddisin ne 'Sahih Ibn Khuzaymah' aur 'Sahih Ibn Hibban' qisam ki kutub tahrir ki (do alag ulama)?",
+        o: ["Ibn Khuzaymah & Ibn Hibban", "Ibn Hibban & Al-Hakim", "Al-Bukhari & Muslim", "Ibn Majah & Nasa'i"],
+        a: "Ibn Khuzaymah & Ibn Hibban",
+        e: "Both authored important hadith works classifying authentic reports.",
+        eh: "Dono ne aham sihah kutub ta'lif ki."
+      },
+      {
+        q: "Which of the following is a hadith commentary (sharh) work?",
+        qh: "In me se kaunsi hadith ki sharh (commentary) kitaab hai?",
+        o: ["Fath al-Bari", "Tafsir al-Jalalayn", "Al-Ahkam as-Sultaniyyah", "Al-Muwatta"],
+        a: "Fath al-Bari",
+        e: "Ibn Hajar's Fath al-Bari is a celebrated commentary on Sahih Bukhari.",
+        eh: "Ibn Hajar ki Fath al-Bari Sahih Bukhari par mashhoor sharh hai."
+      },
+      {
+        q: "What is the primary difference between 'Sunan' and 'Jami'' books?",
+        qh: "'Sunan' aur 'Jami'' kutub me bunyadi farq kya hai?",
+        o: ["Sunan focus on legal chapters; Jami' cover broader subjects", "Both exactly same", "Jami' only on grammar", "Sunan only biographies"],
+        a: "Sunan focus on legal chapters; Jami' cover broader subjects",
+        e: "Sunan organize by fiqh topics; Jami' aim for eight categories (aqidah, adab, tafsir, etc.).",
+        eh: "Sunan fiqhi abwab par; Jami' wasaa mauzuaat shamil karte."
+      },
+      {
+        q: "Which is an example of a hadith encyclopedia with extensive chains and variants?",
+        qh: "Kaunsi hadith daira-ma'arif (encyclopedia) misali tor par bohat se sanad/riwayat jama karti?",
+        o: ["Majma' az-Zawa'id", "Al-Muwatta", "Ar-Risalah", "Al-Minhaj"],
+        a: "Majma' az-Zawa'id",
+        e: "Al-Haythami's work compiles additional chains and variants across collections.",
+        eh: "Al-Haythami ne mukhtalif majame' se zawa'id ko jama kiya."
+      },
+      {
+        q: "What is a key objective of hadith memorization (hifz al-hadith)?",
+        qh: "Hadith hifz karne ka aham maqsad kya hai?",
+        o: ["Beautification of voice only", "Preservation, quick recall, and cross-verification", "Public fame", "Argumentation only"],
+        a: "Preservation, quick recall, and cross-verification",
+        e: "Hifz supports isnad verification and precise transmission.",
+        eh: "Hifz se sanad ki tasdeeq aur sahih naql me madad milti."
+      },
+      {
+        q: "Which term denotes narrations from the Companions (not marfu' to the Prophet)?",
+        qh: "Kaunsi istilah se Sahaba ki riwayat (jo marfu' na ho) ko pukara jata?",
+        o: ["Athar", "Marfu'", "Mawquf", "Maudu'"],
+        a: "Athar",
+        e: "Athar can refer to reports from Companions/Successors as well.",
+        eh: "Athar aksar Sahaba/Tabi'een ki riwayaat par bhi bola jata."
+      }
     ];
-
     let currentIndex = 0;
+
+    // ==========================================
+    // SIDEBAR & PROGRESS LOGIC
+    // ==========================================
+    function toggleProgress() {
+      document.getElementById('progress-sidebar').classList.toggle('open');
+      document.getElementById('topics-sidebar').classList.remove('open');
+      renderProgress();
+    }
+    
+    function toggleTopics() {
+      document.getElementById('topics-sidebar').classList.toggle('open');
+      document.getElementById('progress-sidebar').classList.remove('open');
+    }
+
+    function renderProgress() {
+       let savedProgress = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+       let html = '';
+       const allTopics = [
+         "Qur'an Essentials", "Hadith & Hadith Sciences", "Seerah (Life of the Prophet ﷺ)", 
+         "Aqeedah - Creation to Hereafter", "Fiqh of Worship (Non-Ramadan)", 
+         "Manners & Akhlaq", "General Knowledge (Islamic Themes)"
+       ];
+       
+       allTopics.forEach(t => {
+           let score = savedProgress[t] || 0;
+           let isCurrent = (t === PAGE_TITLE) ? "background: var(--soft-gold);" : "";
+           html += `<div style="margin-bottom: 15px; border-bottom: 1px solid var(--border); padding: 10px; border-radius:8px; ${isCurrent}">
+               <div style="color:var(--text-main); font-weight:600; line-height:1.2; margin-bottom:5px;">${t}</div>
+               <span style="color:var(--emerald); font-size: 0.85rem; font-weight:bold;">📍 Completed: ${score}</span>
+           </div>`;
+       });
+       document.getElementById('progress-list').innerHTML = html;
+    }
+
+    function saveProgress() {
+        let prog = JSON.parse(localStorage.getItem('iq_learning_prog') || '{}');
+        // Save the highest question number they reached
+        prog[PAGE_TITLE] = Math.max(prog[PAGE_TITLE] || 0, currentIndex + 1);
+        localStorage.setItem('iq_learning_prog', JSON.stringify(prog));
+    }
+
+    // ==========================================
+    // QUIZ LOGIC
+    // ==========================================
     function showPopup(title, message, icon, callback) {
       const modal = document.getElementById('app-modal');
       document.getElementById('modal-title').innerText = title;
@@ -447,16 +539,19 @@
     function loadQuestion() {
       const qData = QUESTIONS[currentIndex];
       const area = document.getElementById('quiz-area');
+      
       let html = `
         <p style="color:var(--gold); font-weight:600; text-align:center;">Question ${currentIndex + 1} of ${QUESTIONS.length}</p>
-        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px;">
+        <div style="margin-bottom:20px; background: var(--soft-gold); padding: 15px; border-radius: 10px; border: 1px solid var(--gold);">
           <h4 style="margin-top:0; margin-bottom:5px; line-height:1.4;">${qData.q}</h4>
           <p style="margin:0; font-style:italic; color:var(--emerald); font-size:0.95rem;">${qData.qh || ""}</p>
         </div>
         <div id="options-box"></div>
       `;
       area.innerHTML = html;
+
       const optionsBox = document.getElementById('options-box');
+      
       qData.o.forEach((opt, i) => {
         const btn = document.createElement('button');
         btn.className = 'main-btn';
@@ -471,14 +566,18 @@
       const isCorrect = selectedOption === qData.a;
       const title = isCorrect ? "Correct! ✨" : "Explanation";
       const icon = isCorrect ? "✅" : "ℹ️";
+      
       const fullExplanation = (qData.e || "") + (qData.eh ? `\n\n(${qData.eh})` : "");
+
       showPopup(title, fullExplanation, icon, () => {
+        saveProgress(); // Automatically saves progress on every question!
+        
         currentIndex++;
         if (currentIndex < QUESTIONS.length) {
           loadQuestion();
         } else {
           showPopup("Topic Completed!", "Masha'Allah, you have finished this learning module.", "🎓", () => {
-            window.location.href = '../index.html'; 
+            window.location.href = '../index.html?skipSplash=true&screen=learning'; 
           });
         }
       });
