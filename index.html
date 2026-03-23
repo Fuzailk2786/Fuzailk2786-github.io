@@ -117,6 +117,7 @@
     <div class="nav-item" onclick="showFeedback(); toggleMenu();">💡 Feedback</div>
     <div class="nav-item" onclick="shareApp(); toggleMenu();">📤 Invite or Share</div>
     <div class="nav-item" onclick="toggleTheme(); toggleMenu();">🌓 Theme Mode</div>
+    <div class="nav-item" onclick="showCertificate(); toggleMenu();">🎓 My Certificate</div>
     <div class="nav-item" onclick="toggleMenu()" style="color:gray; border-top: 1px solid var(--border);">Close</div>
   </nav>
 
@@ -299,6 +300,42 @@
       }
       if (document.getElementById('sidebar').classList.contains('open')) toggleMenu();
     }
+    function renderRamadanGrid() {
+  const container = document.getElementById('dynamic-body');
+  const ramadanStart = new Date('2026-02-19T00:00:00+05:30'); 
+  const now = new Date();
+  const currentDay = Math.floor((now - ramadanStart) / (1000 * 60 * 60 * 24)) + 1;
+  
+  // Header text
+  let html = `<h2 style="font-family:'Cinzel'; text-align:center;">Ramadan Challenge 2026</h2>`;
+  
+  // Show Certificate Button at the top if Day 31 is completed
+  if (isLevelCompleted(31)) {
+    html += `
+      <div style="margin-bottom:20px; text-align:center;">
+        <button class="main-btn" style="background:var(--emerald); color:white; width:100%; border:2px solid var(--gold);" 
+          onclick="showCertificate()">📜 View Your Earned Certificate</button>
+      </div>`;
+  }
+  
+  html += `<div class="level-grid" id="grid"></div>`;
+  container.innerHTML = html;
+
+  // Build the grid buttons
+  for (let i = 1; i <= 31; i++) {
+    const btn = document.createElement('button');
+    btn.className = 'lvl' + (isLevelCompleted(i) ? ' completed' : '');
+    btn.innerText = i === 31 ? "EID" : i;
+    
+    if (i > currentDay && i !== 31) {
+      btn.classList.add('locked');
+      btn.onclick = () => showPopup("Locked", `Unlocks on Day ${i}.`, "🔒");
+    } else {
+      btn.onclick = () => i === 31 ? startEidQuiz() : startRamadanLevel(i);
+    }
+    document.getElementById('grid').appendChild(btn);
+  }
+}
 
     /* ------------------ Features Logic ------------------ */
     function showQiblaCompass() {
