@@ -31,13 +31,21 @@
     #profile-img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: none; }
     .nav-item { padding: 12px 25px; display: flex; align-items: center; gap: 10px; color: var(--text-main); text-decoration: none; cursor: pointer; border-bottom: 1px solid var(--border); }
     .nav-item:hover { background: var(--soft-gold); }
-    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); text-align: center; }
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; text-align: center; }
+    .main-btn { background: var(--card-bg); border: 1px solid var(--border); padding: 15px; border-radius: 15px; cursor: pointer; transition: 0.2s; font-weight: 600; color: var(--text-main); }
     .main-btn:hover { border-color: var(--gold); transform: translateY(-2px); }
-    .dua-card { background: var(--card-bg); border-left: 5px solid var(--gold); padding: 15px; margin: 10px 0; border-radius: 10px; box-shadow: 0 2px 5px var(--shadow); }
+    .level-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin: 20px 0; }
+    .lvl { padding: 15px 5px; border-radius: 12px; border: 2px solid var(--emerald); background: none; color: var(--text-main); font-weight: bold; cursor: pointer; }
+    .lvl.completed { background: var(--emerald) !important; color: white !important; }
+    .dua-card { background: var(--card-bg); border-left: 5px solid var(--gold); padding: 15px; margin: 10px 0; border-radius: 10px; box-shadow: 0 2px 5px var(--shadow); text-align: left; }
     .hidden { display: none !important; }
     #menu-btn { position: fixed; top: 15px; right: 15px; font-size: 1.5rem; z-index: 2001; cursor: pointer; background: var(--gold); color: white; border: none; border-radius: 8px; width: 40px; height: 40px; }
     .back-btn { background: none; border: none; color: var(--gold); font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 1rem; }
+    .compass-container { position: relative; width: 260px; height: 260px; margin: 30px auto; border: 8px solid var(--gold); border-radius: 50%; background: radial-gradient(circle, var(--soft-gold) 0%, var(--card-bg) 100%); }
+    .compass-face { position: relative; width: 100%; height: 100%; transition: transform 0.1s ease-out; }
+    .kaaba-icon { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); font-size: 2.2rem; }
+    .needle { position: absolute; top: 50%; left: 50%; width: 6px; height: 110px; background: linear-gradient(to top, transparent 50%, var(--emerald) 50%); transform-origin: bottom center; transform: translate(-50%, -100%) rotate(0deg); }
+    .needle::after { content: '▲'; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); color: var(--emerald); font-size: 24px; }
   </style>
 </head>
 <body>
@@ -50,7 +58,7 @@
   <div id="app-modal" class="hidden" style="position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;">
     <div style="background: var(--card-bg); width: 100%; max-width: 400px; border-radius: 20px; padding: 25px; text-align: center; border: 2px solid var(--gold);">
       <div id="modal-icon" style="font-size: 3rem; margin-bottom: 10px;"></div>
-      <h3 id="modal-title" style="font-family: 'Cinzel'; color: var(--emerald);"></h3>
+      <h3 id="modal-title" style="font-family: 'Cinzel'; margin-top: 0; color: var(--emerald);"></h3>
       <p id="modal-message" style="margin-bottom: 25px; color: var(--text-main);"></p>
       <button id="modal-btn" class="main-btn" style="width: 100%; background: var(--emerald); color: white;">Continue</button>
     </div>
@@ -67,23 +75,26 @@
       <input type="file" id="upload-pic" class="hidden" accept="image/*" onchange="uploadImage(this)">
       <div id="user-display-name" style="font-weight: 600; margin-top: 5px;">Guest User</div>
     </div>
-    <div class="nav-item" onclick="showScreen('home');">🏠 Home</div>
-    <div class="nav-item" onclick="showDailyQuran();">📖 Qur'an Journey</div>
-    <div class="nav-item" onclick="showScreen('ramadan-grid');">🌙 Ramadan Quiz</div>
-    <div class="nav-item" onclick="openLearningQuiz();">📖 Knowledge & Learning</div>
-    <div class="nav-item" onclick="loadLeaderboard();">🏆 Leaderboard</div>
-    <div class="nav-item" onclick="showQiblaCompass();">🕋 Qibla Direction</div>
-    <div class="nav-item" onclick="toggleTheme();">🌓 Theme Mode</div>
+    <div class="nav-item" onclick="showScreen('home'); toggleMenu();">🏠 Home</div>
+    <div class="nav-item" onclick="showScreen('ramadan-grid'); toggleMenu();">🌙 Ramadan Quiz</div>
+    <div class="nav-item" onclick="openLearningQuiz(); toggleMenu();">📖 Knowledge & Learning</div>
+    <div class="nav-item" onclick="showDailyQuran(); toggleMenu();">📖 Daily Qur'an Journey</div>
+    <div class="nav-item" onclick="showQiblaCompass(); toggleMenu();">🕋 Qibla Direction</div>
+    <div class="nav-item" onclick="loadLeaderboard(); toggleMenu();">🏆 Leaderboard</div>
+    <div class="nav-item" onclick="showDuas(); toggleMenu();">🤲 Daily Duas</div>
+    <div class="nav-item" onclick="showSavedItems(); toggleMenu();">⭐ Saved Journey</div>
+    <div class="nav-item" onclick="showFeedback(); toggleMenu();">💡 Feedback</div>
+    <div class="nav-item" onclick="shareApp(); toggleMenu();">📤 Invite or Share</div>
+    <div class="nav-item" onclick="toggleTheme(); toggleMenu();">🌓 Theme Mode</div>
     <div class="nav-item" onclick="toggleMenu()" style="color:gray;">Close</div>
   </nav>
 
   <div id="main-container" class="hidden">
-    <div class="app-card" style="margin: 0 auto; max-width: 600px;">
-      
+    <div class="app-card" style="margin: 0 auto; max-width: 600px; padding: 20px;">
       <div id="screen-auth">
         <h2 style="font-family: 'Cinzel'; text-align:center;">Welcome</h2>
         <div id="login-box" style="text-align:center;">
-          <input type="email" id="auth-email" placeholder="Enter Email" style="width: 80%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--border);">
+          <input type="email" id="auth-email" class="auth-input" placeholder="Enter Email" style="width: 80%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--border);">
           <button class="main-btn" style="width: 85%; background: var(--emerald); color: white;" onclick="handleAuth('register')">Register & Login</button>
           <div style="margin: 15px 0;">OR</div>
           <button class="main-btn" style="width: 85%; background: var(--gold); color: white;" onclick="handleAuth('guest')">Continue as Guest</button>
@@ -93,11 +104,14 @@
       <div id="screen-home" class="hidden">
         <h1 style="font-family: 'Cinzel'; text-align:center; color:var(--emerald);">Islamic Questz</h1>
         <div class="mode-grid">
-          <div class="main-btn" onclick="showDailyQuran()">📖<br>Qur'an Journey</div>
           <div class="main-btn" onclick="showScreen('ramadan-grid')">🌙<br>Ramadan Quiz</div>
           <div class="main-btn" onclick="openLearningQuiz()">📖<br>Learning</div>
+          <div class="main-btn" onclick="showDailyQuran()">📖<br>Qur'an Journey</div>
+          <div class="main-btn" onclick="showDuas()">🤲<br>Daily Duas</div>
           <div class="main-btn" onclick="showQiblaCompass()">🕋<br>Qibla</div>
           <div class="main-btn" onclick="loadLeaderboard()">🏆<br>Leaderboard</div>
+          <div class="main-btn" onclick="showSavedItems()">⭐<br>Saved</div>
+          <div class="main-btn" onclick="showFeedback()">💡<br>Feedback</div>
           <div class="main-btn" onclick="shareApp()">📤<br>Invite</div>
         </div>
         <button id="install-btn" class="main-btn" style="width: 100%; margin-top: 20px; background: #3b82f6; color: white;">📲 Install App</button>
@@ -110,124 +124,171 @@
     </div>
   </div>
 
+  <script src="questions_ramadan.js"></script>
   <script>
-    /* --- Firebase Config --- */
-    const firebaseConfig = {
-      apiKey: "AIzaSyD6v6BFkqUmgfJWGIm1eMEEOQX7wnWkq8k",
-      authDomain: "islamicquestz.firebaseapp.com",
-      databaseURL: "https://islamicquestz-default-rtdb.firebaseio.com",
-      projectId: "islamicquestz",
-      storageBucket: "islamicquestz.firebasestorage.app",
-      appId: "1:740000996250:web:444a3b4ba9c92dad64b823",
-      messagingSenderId: "740000996250",
-      measurementId: "G-YSH95XR38D"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+/* ------------------ Firebase Init ------------------ */
+const firebaseConfig = {
+  apiKey: "AIzaSyD6v6BFkqUmgfJWGIm1eMEEOQX7wnWkq8k",
+  authDomain: "islamicquestz.firebaseapp.com",
+  databaseURL: "https://islamicquestz-default-rtdb.firebaseio.com",
+  projectId: "islamicquestz",
+  storageBucket: "islamicquestz.firebasestorage.app",
+  appId: "1:740000996250:web:444a3b4ba9c92dad64b823",
+  messagingSenderId: "740000996250",
+  measurementId: "G-YSH95XR38D"
+};
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    /* --- Qur'an Journey Data (Add your Surahs/Pages here) --- */
-    const QURAN_JOURNEY = [
-      {
-        day: 1, title: "Surah Al-Fatihah", 
-        arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ (1) الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ (2)...",
-        urdu: "اللہ کے نام سے شروع جو بڑا مہربان نہایت رحم والا ہے۔ سب تعریفیں اللہ کے لیے ہیں...",
-        hinglish: "Allah ke naam se shuru jo bada meherbaan... Sab tareefein Allah ke liye hain...",
-        audioUrl: "https://everyayah.com/data/Alafasy_128kbps/001001.mp3",
-        pages: "Complete"
-      },
-      {
-        day: 2, title: "Surah Al-Baqarah (Pages 1-2)", 
-        arabic: "الم (1) ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ ۛ هُدًى لِّلْمُتَّقِينَ (2)...",
-        urdu: "الف لام میم۔ یہ وہ کتاب ہے جس میں کوئی شک نہیں، ہدایت ہے ڈرنے والوں کے لیے...",
-        hinglish: "Alif-Laam-Meem. Yeh woh kitab hai jisme koi shak nahi, hidayat hai darne walon ke liye...",
-        audioUrl: "https://everyayah.com/data/Alafasy_128kbps/002001.mp3",
-        pages: "1-2"
-      }
-    ];
+/* ------------------ QUR'AN JOURNEY DATA (Example) ------------------ */
+const QURAN_JOURNEY = [
+  { day: 1, title: "Surah Al-Fatihah", arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ...", urdu: "اللہ کے نام سے شروع...", hinglish: "Allah ke naam se shuru...", audioUrl: "https://everyayah.com/data/Alafasy_128kbps/001001.mp3" },
+  { day: 2, title: "Surah Al-Baqarah (Part 1)", arabic: "الم۔ ذَٰلِكَ الْكِتَابُ...", urdu: "الف لام میم۔ یہ کتاب...", hinglish: "Alif-Laam-Meem. Yeh kitab...", audioUrl: "https://everyayah.com/data/Alafasy_128kbps/002001.mp3" }
+];
 
-    /* --- Core Functions --- */
-    function showScreen(id) {
-      ['screen-auth', 'screen-home', 'screen-content'].forEach(s => document.getElementById(s).classList.add('hidden'));
-      const target = id === 'ramadan-grid' ? 'content' : id;
-      document.getElementById('screen-' + target).classList.remove('hidden');
-      if (id === 'ramadan-grid') renderRamadanGrid();
-      if (document.getElementById('sidebar').classList.contains('open')) toggleMenu();
-    }
+/* ------------------ Qur'an Journey Logic ------------------ */
+function showDailyQuran() {
+    showScreen('content');
+    const body = document.getElementById('dynamic-body');
+    body.innerHTML = `<h2 style="text-align:center;">📖 Qur'an Journey</h2><div id="quran-container">Loading...</div>`;
 
-    function showDailyQuran() {
-        showScreen('content');
-        const body = document.getElementById('dynamic-body');
-        body.innerHTML = `<h2 style="text-align:center;">📖 Qur'an Journey</h2><div id="quran-container" style="text-align:center;">Loading...</div>`;
-
-        db.ref('quranJourney/currentDay').on('value', snap => {
-            const currentDay = snap.val() || 1;
-            const data = QURAN_JOURNEY.find(j => j.day === currentDay);
-            if (!data) return body.innerHTML = "<p>New content coming soon!</p>";
-            renderQuranDisplay(data, currentDay);
-        });
-    }
-
-    function renderQuranDisplay(d, dayNum) {
-        const isAdmin = localStorage.getItem('is_admin') === 'true';
-        const adminBtn = isAdmin ? `<button onclick="db.ref('quranJourney/currentDay').set(${dayNum + 1})" class="main-btn" style="background:var(--gold); color:white; margin-top:20px;">🔓 Unlock Next Day</button>` : '';
-
-        document.getElementById('quran-container').innerHTML = `
-            <div class="dua-card">
-                <h3 style="color:var(--emerald);">${d.title}</h3>
-                <p style="font-size:0.8rem; color:gray;">Journey Day ${d.day} (${d.pages})</p>
-                <div style="font-size:1.6rem; direction:rtl; margin:20px 0; font-family:serif; line-height:1.8; background:#fffcf0; padding:15px; border-radius:10px;">${d.arabic}</div>
-                <div style="text-align:left; border-top:2px solid var(--soft-gold); padding-top:15px;">
-                    <p style="font-weight:bold; color:var(--emerald);">Urdu:</p><p>${d.urdu}</p>
-                    <p style="font-weight:bold; color:var(--gold);">Hinglish:</p><p style="font-style:italic;">${d.hinglish}</p>
-                </div>
-                <div style="margin-top:20px; display:flex; gap:10px; justify-content:center;">
-                    <button class="main-btn" onclick="new Audio('${d.audioUrl}').play()">▶ Play Audio</button>
-                    <button class="main-btn" style="background:var(--emerald); color:white;" onclick="viewArchive()">📜 Archive</button>
-                </div>
-            </div> ${adminBtn}`;
-    }
-
-    function viewArchive() {
-        const body = document.getElementById('dynamic-body');
-        body.innerHTML = `<h2 style="text-align:center;">📜 Qur'an Archive</h2><div id="archive-list"></div>`;
-        db.ref('quranJourney/currentDay').once('value', snap => {
-            const maxDay = snap.val() || 1;
-            QURAN_JOURNEY.forEach(item => {
-                if (item.day <= maxDay) {
-                    const row = document.createElement('div');
-                    row.className = 'dua-card'; row.style.cursor = 'pointer';
-                    row.innerHTML = `<strong>Day ${item.day}:</strong> ${item.title}`;
-                    row.onclick = () => renderQuranDisplay(item, maxDay);
-                    document.getElementById('archive-list').appendChild(row);
-                }
-            });
-        });
-    }
-
-    /* --- Auth & Initialization --- */
-    function handleAuth(type) {
-      let u = { name: type === 'guest' ? "Guest_" + Math.floor(Math.random()*9000) : document.getElementById('auth-email').value.split('@')[0] };
-      localStorage.setItem('iq_user', JSON.stringify(u)); 
-      loginUser(u);
-    }
-    function loginUser(u) {
-      document.getElementById('screen-auth').classList.add('hidden');
-      document.getElementById('screen-home').classList.remove('hidden');
-      document.getElementById('menu-btn').classList.remove('hidden');
-      document.getElementById('user-display-name').innerText = u.name;
-    }
-    function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-    function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
-
-    window.addEventListener('load', () => {
-      const checkAdmin = new URLSearchParams(window.location.search).get('master');
-      if (checkAdmin === 'admin786') localStorage.setItem('is_admin', 'true');
-      setTimeout(() => { 
-        document.getElementById('bismillah-overlay').classList.add('hidden'); 
-        document.getElementById('main-container').classList.remove('hidden');
-        const saved = localStorage.getItem('iq_user'); if (saved) loginUser(JSON.parse(saved));
-      }, 2500);
+    db.ref('quranJourney/currentDay').on('value', snap => {
+        const currentDay = snap.val() || 1;
+        const data = QURAN_JOURNEY.find(j => j.day === currentDay);
+        if (!data) return body.innerHTML = "<p>New reading coming soon!</p>";
+        renderQuranDisplay(data, currentDay);
     });
+}
+
+function renderQuranDisplay(d, dayNum) {
+    const container = document.getElementById('quran-container');
+    const isAdmin = localStorage.getItem('is_admin') === 'true';
+    const adminBtn = isAdmin ? `<button onclick="nextJourneyDay(${dayNum})" class="main-btn" style="background:var(--gold); color:white; width:100%; margin-top:15px;">🔓 Post Next Reading</button>` : '';
+
+    container.innerHTML = `
+        <div class="dua-card">
+            <h3 style="color:var(--emerald);">${d.title} (Day ${d.day})</h3>
+            <div style="font-size:1.6rem; direction:rtl; margin:15px 0; font-family:serif; line-height:1.8; text-align:right; background:#fdfbf0; padding:10px;">${d.arabic}</div>
+            <p><strong>Urdu:</strong> ${d.urdu}</p>
+            <p style="font-style:italic; color:#555;"><strong>Hinglish:</strong> ${d.hinglish}</p>
+            <div style="margin-top:20px; display:flex; gap:10px;">
+                <button class="main-btn" onclick="new Audio('${d.audioUrl}').play()">▶ Play</button>
+                <button class="main-btn" style="background:var(--emerald); color:white;" onclick="viewQuranArchive()">📜 Archive</button>
+            </div>
+        </div>
+        ${adminBtn}`;
+}
+
+function viewQuranArchive() {
+    const body = document.getElementById('dynamic-body');
+    body.innerHTML = `<h2>📜 Journey Archive</h2><div id="archive-list"></div>`;
+    db.ref('quranJourney/currentDay').once('value', snap => {
+        const max = snap.val() || 1;
+        QURAN_JOURNEY.forEach(item => {
+            if (item.day <= max) {
+                const div = document.createElement('div');
+                div.className = 'dua-card'; div.style.cursor = 'pointer';
+                div.innerHTML = `Day ${item.day}: ${item.title}`;
+                div.onclick = () => renderQuranDisplay(item, max);
+                document.getElementById('archive-list').appendChild(div);
+            }
+        });
+    });
+}
+
+function nextJourneyDay(current) {
+    if(confirm("Post Day " + (current+1) + " for everyone?")) db.ref('quranJourney/currentDay').set(current + 1);
+}
+
+/* ------------------ Core Auth & Logic ------------------ */
+function showPopup(title, message, icon, callback) {
+  const modal = document.getElementById('app-modal');
+  document.getElementById('modal-title').innerText = title;
+  document.getElementById('modal-message').innerText = message;
+  document.getElementById('modal-icon').innerText = icon || '';
+  modal.classList.remove('hidden');
+  document.getElementById('modal-btn').onclick = () => { modal.classList.add('hidden'); if (callback) callback(); };
+}
+function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+function toggleTheme() { const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.body.setAttribute('data-theme', t); }
+function shareApp() { if (navigator.share) navigator.share({ title:'Islamic Questz', url: location.href }); }
+
+function handleAuth(type) {
+  let u = { name: type === 'guest' ? "Guest_" + Math.floor(Math.random()*9000) : document.getElementById('auth-email').value.split('@')[0] };
+  localStorage.setItem('iq_user', JSON.stringify(u)); localStorage.setItem('user_name', u.name);
+  loginUser(u);
+}
+function loginUser(u) {
+  ['screen-auth', 'menu-btn'].forEach((id, i) => i ? document.getElementById(id).classList.remove('hidden') : document.getElementById(id).classList.add('hidden'));
+  document.getElementById('screen-home').classList.remove('hidden');
+  document.getElementById('user-display-name').innerText = u.name;
+  document.getElementById('avatar-init').innerText = (u.name || '?')[0].toUpperCase();
+}
+function checkExistingLogin() { const s = localStorage.getItem('iq_user'); if (s) loginUser(JSON.parse(s)); }
+
+function showScreen(id) {
+  ['screen-auth', 'screen-home', 'screen-content'].forEach(s => document.getElementById(s).classList.add('hidden'));
+  const target = id === 'ramadan-grid' ? 'content' : id;
+  document.getElementById('screen-' + target).classList.remove('hidden');
+  if (id === 'ramadan-grid') renderRamadanGrid();
+  if (document.getElementById('sidebar').classList.contains('open')) toggleMenu();
+}
+
+/* ------------------ Other Features ------------------ */
+function showQiblaCompass() {
+    showScreen('content');
+    const body = document.getElementById('dynamic-body');
+    body.innerHTML = `<h2 style="text-align:center;">🕋 Qibla</h2><div class="compass-container"><div id="compass-face" class="compass-face"><div class="kaaba-icon">🕋</div><div id="qibla-needle" class="needle"></div></div></div>`;
+    navigator.geolocation.getCurrentPosition(pos => {
+        const qibla = (Math.atan2(Math.sin((39.8262-pos.coords.longitude)*Math.PI/180), Math.cos(pos.coords.latitude*Math.PI/180)*Math.tan(21.4225*Math.PI/180)-Math.sin(pos.coords.latitude*Math.PI/180)*Math.cos((39.8262-pos.coords.longitude)*Math.PI/180))*180/Math.PI+360)%360;
+        window.addEventListener('deviceorientationabsolute', e => {
+            let h = e.alpha || e.webkitCompassHeading;
+            if(h !== undefined) document.getElementById('qibla-needle').style.transform = `translate(-50%, -100%) rotate(${qibla - h}deg)`;
+        }, true);
+    });
+}
+
+function loadLeaderboard() {
+  showScreen('content');
+  const body = document.getElementById('dynamic-body');
+  body.innerHTML = "<h2>🏆 Leaderboard</h2><p>Loading...</p>";
+  db.ref('leaderboardUsers').orderByChild('score').limitToLast(50).on('value', snap => {
+    let rows = []; snap.forEach(c => rows.push(c.val()));
+    rows.sort((a,b) => b.score - a.score);
+    let html = '<table style="width:100%; border-collapse:collapse; text-align:left;"><tr><th>Rank</th><th>Name</th><th>Points</th></tr>';
+    rows.forEach((p, i) => { html += `<tr style="border-bottom:1px solid #eee; height:45px;"><td>${i+1}</td><td>${p.name}</td><td style="color:var(--gold); font-weight:bold;">${p.score}</td></tr>`; });
+    body.innerHTML = html + '</table>';
+  });
+}
+
+function showDuas() {
+  showScreen('content');
+  const body = document.getElementById('dynamic-body');
+  body.innerHTML = '<h2>Daily Duas</h2><div class="dua-card"><strong>Before Eating</strong><br>بِسْمِ اللَّهِ</div>';
+}
+
+function showSavedItems() {
+  showScreen('content');
+  document.getElementById('dynamic-body').innerHTML = '<h2>⭐ Saved Journey</h2><p>Your saved bookmarks will appear here.</p>';
+}
+
+function showFeedback() {
+  showScreen('content');
+  document.getElementById('dynamic-body').innerHTML = '<h2>💡 Feedback</h2><p>Tell us what you think at: islamicquestz@support.com</p>';
+}
+
+function openLearningQuiz() {
+    showScreen('content');
+    const container = document.getElementById('dynamic-body');
+    container.innerHTML = '<h2>📖 Learning Pathways</h2><p>Coming Soon!</p>';
+}
+
+/* ------------------ Initialization ------------------ */
+window.addEventListener('load', () => {
+  const checkAdmin = new URLSearchParams(window.location.search).get('master');
+  if (checkAdmin === 'admin786') localStorage.setItem('is_admin', 'true');
+  setTimeout(() => { document.getElementById('bismillah-overlay').classList.add('hidden'); document.getElementById('main-container').classList.remove('hidden'); checkExistingLogin(); }, 2500);
+});
   </script>
 </body>
 </html>
