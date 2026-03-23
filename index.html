@@ -317,6 +317,47 @@
           onclick="showCertificate()">📜 View Your Earned Certificate</button>
       </div>`;
   }
+      function showCertificate() {
+  const isCompleted = isLevelCompleted(31);
+  const body = document.getElementById('dynamic-body');
+  
+  if (!isCompleted) {
+    body.innerHTML = `
+      <div style="text-align:center; padding:40px;">
+        <div style="font-size:50px;">🔒</div>
+        <h3 style="font-family:'Cinzel';">Certificate Locked</h3>
+        <p>Complete all 30 days and the EID Finale to earn your certificate.</p>
+        <button class="main-btn" onclick="showScreen('ramadan-grid')">Go to Quiz</button>
+      </div>`;
+    showScreen('content');
+    return;
+  }
+
+  // If completed, show the existing certificate design...
+  const user = JSON.parse(localStorage.getItem('iq_user') || '{}');
+  const name = user.name || "Valued Learner";
+  const date = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  body.innerHTML = `
+    <div id="certificate-print-area" style="border:15px double var(--gold); padding:30px; text-align:center; background:white; color:#064e3b; font-family:'Cinzel', serif;">
+      <div style="border:2px solid var(--emerald); padding:20px;">
+        <h1 style="margin:0; font-size:2.2rem;">CERTIFICATE</h1>
+        <p style="letter-spacing:3px;">OF COMPLETION</p>
+        <hr style="width:50%; border:1px solid var(--gold);">
+        <p>This is to certify that</p>
+        <h2 style="font-size:2rem; text-decoration:underline; margin:10px 0;">${name}</h2>
+        <p>has successfully completed the</p>
+        <h3 style="color:var(--emerald)">30-DAY RAMADAN QUEST 2026</h3>
+        <div style="margin-top:30px; display:flex; justify-content:space-between; align-items:flex-end;">
+          <div style="text-align:left;"><small>Date: ${date}</small></div>
+          <div style="text-align:right;"><small>Verified by Islamic Questz</small></div>
+        </div>
+      </div>
+    </div>
+    <button class="main-btn" style="width:100%; margin-top:20px; background:var(--emerald); color:white;" onclick="window.print()">📥 Save as PDF / Print</button>
+  `;
+  showScreen('content');
+}
   
   html += `<div class="level-grid" id="grid"></div>`;
   container.innerHTML = html;
